@@ -8,6 +8,11 @@
 # Skip Silence
 "Skip Silence" is a browser extension that allows you to autmatically skip parts of a video that are silent.
 It is highly inspired by CaryKH's [automatic on-the-fly video editing tool](https://www.youtube.com/watch?v=DQ8orIurGxw).
+The extension works with most websites that use HTML5 `audio` and `video` elements (like YouTube).
+
+## Demo
+<img src="demo.gif" height="300">
+(Video used: Unedited part of <https://youtu.be/DQ8orIurGxw?t=234>)
 
 ## Installation
 "Skip Silence" is availible through the [chrome web store](https://chrome.google.com/webstore/detail/skip-silence/fhdmkhbefcbhakffdihhceaklaigdllh).
