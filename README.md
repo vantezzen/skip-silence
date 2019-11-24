@@ -12,6 +12,7 @@ The extension works with most websites that use HTML5 `audio` and `video` elemen
 
 ## Demo
 <img src="demo.gif" height="300">
+
 (Video used: Unedited part of <https://youtu.be/DQ8orIurGxw?t=234>)
 
 ## Installation
