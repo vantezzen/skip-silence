@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "Skip Silence",
+  "version": "1.0",
+
+  "description": "Skip silent parts in videos and audio files",
+  "homepage_url": "https://github.com/vantezzen/skip-silence",
+  "icons": {
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png"
+  },
+
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/main.js"]
+    }
+  ],
+
+  "page_action": {
+    "default_icon": {
+      "32": "icons/icon-32.png"
+    },
+    "default_title": "Skip Silence",
+    "default_popup": "popup/index.html"
+  }
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Skip Silence</title>
+
+  <link rel="stylesheet" href="water.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 class="title">Skip Silence</h1>
+
+  <!-- VU METER -->
+  <canvas id="vu_meter"></canvas>
+
+  <!-- ENABLE/DISABLE BUTTON -->
+  <div class="toggle-container">
+    <div class="toggle" id="enable-toggle">
+      <input type="checkbox" id="enable" name="enable" />
+      <label for="enable"></label>
+    </div>
+  </div><br />
+
+  <!-- SETTINGS -->
+  <label for="slider">Volume Threshold</label>
+  <input type="range" min="1" max="200" value="30" class="slider" id="slider">
+  <p class="small">
+    If the volume is under the red line, the video will be sped up.
+  </p><br />
+  
+  <label for="samples">Sample Threshold</label>
+  <input type="range" min="1" max="50" value="10" class="samples" id="samples">
+  <p class="small">
+    Number of samples of slience needed before speeding up.
+  </p><br />
+
+  <label for="playback">Playback Speed</label>
+  <select name="playback" id="playback">
+    <option value="0.5">0.5x</option>
+    <option value="0.75">0.75x</option>
+    <option value="1" selected>1x</option>
+    <option value="1.25">1.25x</option>
+    <option value="1.5">1.5x</option>
+    <option value="1.75">1.75x</option>
+    <option value="2">2x</option>
+    <option value="2.25">2.25x</option>
+    <option value="2.5">2.5x</option>
+    <option value="2.75">2.75x</option>
+    <option value="3">3x</option>
+    <option value="3.5">3.5x</option>
+    <option value="4">4x</option>
+    <option value="4.5">4.5x</option>
+    <option value="5">5x</option>
+  </select>
+  <p class="small">
+    Speed the normal video will be played at.
+  </p><br />
+
+
+  <label for="silence">Silence Speed</label>
+  <select name="silence" id="silence">
+    <option value="0.5">0.5x</option>
+    <option value="0.75">0.75x</option>
+    <option value="1">1x</option>
+    <option value="1.25">1.25x</option>
+    <option value="1.5">1.5x</option>
+    <option value="1.75">1.75x</option>
+    <option value="2">2x</option>
+    <option value="2.25">2.25x</option>
+    <option value="2.5">2.5x</option>
+    <option value="2.75">2.75x</option>
+    <option value="3" selected>3x</option>
+    <option value="3.5">3.5x</option>
+    <option value="4">4x</option>
+    <option value="4.5">4.5x</option>
+    <option value="5">5x</option>
+  </select>
+  <p class="small">
+    Speed for silent parts.
+  </p>
+
+  <script src="main.js"></script>
+</body>
+</html>
