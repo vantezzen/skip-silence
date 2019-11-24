@@ -19,6 +19,29 @@ The extension works with most websites that use HTML5 `audio` and `video` elemen
 "Skip Silence" is availible through the [chrome web store](https://chrome.google.com/webstore/detail/skip-silence/fhdmkhbefcbhakffdihhceaklaigdllh).
 You can also install this extension on Firefox or Chrome by downloading the source from GitHub and loading the unpacked extension through "about:debugging" as a "Temporary Add-On".
 
+## Usage
+When "Skip Silence" detects a compatible element on the current page, its icon in the menubar will be colored.
+
+![Changing icon](images/icon_change.png)
+
+You can now click on this icon to reveal the settings popup.
+
+![Settings popup](images/popup.png)
+
+You can now:
+- Click the big red button to enable and disable "Skip Silence" for the current page
+- Change "Skip Silence"'s settings
+- View the current volume using the VU meter
+  - The VU Meter will be blue when on normal speed and green when currently in a silent part
+  - The red line represents your current volume threshold
+
+![Settings popup when in use](images/popup.gif)
+
+## Limitations
+- Will only work when the tab is in focus. It will not work if the tab is in the background
+- The first few samples after a silent part may be skipped or will clip
+- Won't work on sites that use other methods to play video or audio (e.g. Spotify Web Player)
+
 ## How does it work?
 The extension attaches a JavaScript audio analyser to the current video or audio source and will speed up or slow down the video using the current volume of the audio. This unfortunately results in the first few samples of audio after a period of silence will still be sped up.
 
