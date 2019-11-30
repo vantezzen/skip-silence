@@ -17,7 +17,10 @@ The extension works with most websites that use HTML5 `audio` and `video` elemen
 
 ## Installation
 "Skip Silence" is availible through the [chrome web store](https://chrome.google.com/webstore/detail/skip-silence/fhdmkhbefcbhakffdihhceaklaigdllh).
-You can also install this extension on Firefox or Chrome by downloading the source from GitHub and loading the unpacked extension through "about:debugging" as a "Temporary Add-On".
+You can also install this extension on Chrome by downloading the source from GitHub and loading the unpacked extension through "chrome://extensions" as a "Temporary Add-On".
+
+## Why is Firefox unsupported?
+"Sip Silence" uses JavaScript's video.playbackRate and MediaSourceElement simultaneously to achieve its effect. Unfortunately, Firefox currently [has a bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1517199) that stops video.playbackRate from working when already using MediaSourceElement - making this extension useless.
 
 ## Usage
 When "Skip Silence" detects a compatible element on the current page, its icon in the menubar will be colored.
