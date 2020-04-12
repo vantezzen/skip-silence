@@ -8,17 +8,18 @@
  * @license MIT License
  */
 // Currently disabled: Log info to page console
-const debug = log => {
-  // console.log('[Skip Silence] ' + log);
+const debug = (log) => {
+  console.log('[Skip Silence] ' + log);
 }
 
 // Configuration
 let THRESHOLD = 30;
 let SAMPLES_THRESHOLD = 10;
-let AUDIO_DELAY = 0.08;
 let PLAYBACK_SPEED = 1;
 let SILENCE_SPEED = 3;
 let IS_ENABLED = false;
+
+let isVideo = false;
 
 // Enable or disable browser action for current tab using background script
 const enableExtension = () => {
@@ -33,23 +34,51 @@ const attachAnalyser = element => {
   debug('Attaching analyser');
   const audio = new AudioContext()
 
+  let audioSrc = element.cloneNode();
+  // if (isVideo) {
+  //   audioSrc = document.createElement('video');
+  //   audioSrc.src = element.src;
+  // } else {
+  //   audioSrc = new Audio(element.src);
+  // }
+  
+  console.log(audioSrc);
+  
   // Create Context components
   const analyser = audio.createAnalyser();
-  const source = audio.createMediaElementSource(element);
-  const delay = audio.createDelay();
-  const gain = audio.createGain();
-
-  delay.delayTime.setValueAtTime(AUDIO_DELAY, audio.currentTime);
-
+  const source = audio.createMediaElementSource(audioSrc);
+  
   // Connect components
   source.connect(analyser);
-  analyser.connect(delay);
-  delay.connect(gain);
-  gain.connect(audio.destination);
+  // analyser.connect(audio.destination);
+
+  const updateAudioTime = () => {
+    debug('Update audio timing', element.currentTime);
+    audioSrc.currentTime = element.currentTime + 0.2;
+  }
+
+  let shouldUpdateTime = false;
+  element.addEventListener('play', () => {
+    debug('Started playing');
+    audioSrc.play();
+    if (shouldUpdateTime) {
+      updateAudioTime();
+      shouldUpdateTime = false;
+    }
+  })
+  element.addEventListener('pause', () => {
+    debug('Paused source');
+    audioSrc.pause();
+    shouldUpdateTime = true;
+  })
+
+  updateAudioTime();
+  if(!element.paused) {
+    audioSrc.play();
+  }
 
   return [
     analyser,
-    gain,
     audio
   ];
 }
@@ -63,9 +92,11 @@ const prepareExtension = () => {
   // Get video or audio element from page
   let element;
   if (document.getElementsByTagName('video').length) {
+    isVideo = true;
     enableExtension();
     element = document.getElementsByTagName('video')[0];
   } else if (document.getElementsByTagName('audio').length) {
+    isVideo = false;
     enableExtension();
     element = document.getElementsByTagName('audio')[0];
   } else {
@@ -79,7 +110,7 @@ const prepareExtension = () => {
 
   // Information for speeding up and down the video
   let isAnalyserAttached = false; // Is the AudioContext and analyser currently attached to the source?
-  let analyser, gain, audio; // AudioContext elements
+  let analyser, audio; // AudioContext elements
   let freq_volume; // Current frequency volume information of source (Float32Array)
   let isSpedUp = false; // Is the source currently sped up?
   let samplesUnderThreshold = 0; // Number of samples we have been under threshold
@@ -89,7 +120,7 @@ const prepareExtension = () => {
 
     if (!isAnalyserAttached) {
       isAnalyserAttached = true;
-      [ analyser, gain, audio ] = attachAnalyser(element);
+      [ analyser, audio ] = attachAnalyser(element);
       freq_volume = new Float32Array(analyser.fftSize);
     }
 
@@ -116,12 +147,6 @@ const prepareExtension = () => {
       }
     } else {
       if (isSpedUp) {
-        // Slow video back down
-        // Mute source for short amount of time to improve clipping noises when slowing back down
-        // This won't solve the issue completely but seems to help a little
-        gain.gain.setValueAtTime(0, audio.currentTime);
-        gain.gain.setValueAtTime(1, audio.currentTime + 1.1 * AUDIO_DELAY);
-  
         element.playbackRate = PLAYBACK_SPEED;
         isSpedUp = false;
 
@@ -162,7 +187,6 @@ const prepareExtension = () => {
 
       THRESHOLD = msg.data.threshold;
       SAMPLES_THRESHOLD = msg.data.samples_threshold;
-      AUDIO_DELAY = msg.data.audio_delay;
       PLAYBACK_SPEED = msg.data.playback_speed;
       SILENCE_SPEED = msg.data.silence_speed;
       IS_ENABLED = msg.data.enabled;
@@ -171,7 +195,6 @@ const prepareExtension = () => {
       sendResponse({
         threshold: THRESHOLD,
         samples_threshold: SAMPLES_THRESHOLD,
-        audio_delay: AUDIO_DELAY,
         playback_speed: PLAYBACK_SPEED,
         silence_speed: SILENCE_SPEED,
         enabled: IS_ENABLED,
