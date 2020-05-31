@@ -13,9 +13,16 @@
   <h1 class="title">Skip Silence</h1>
 
   <!-- NO MEDIA ELEMENT INFO -->
-  <!-- <div class="no-media">
-    This extension is currently not connected to any media elements 😬
-  </div> -->
+  <div id="no-media" class="warning">
+    This extension is currently not connected to any media elements 😬<br />
+    Please try reloading your current page to detect media elements.
+  </div>
+
+  <!-- NO SLOW DOWN INFO -->
+  <div id="no-slowdown" class="warning">
+    The current website doesn't support this extension's "Slow Down Time"-Feature.<br />
+    The extension will still work but you may experience words being cut off after silent parts.
+  </div>
 
   <!-- VU METER -->
   <canvas id="vu_meter"></canvas>

@@ -77,6 +77,9 @@ const updatePageInputs = () => {
   document.getElementById('slowdown').value = config.slowdown;
   document.getElementById('playback').value = config.playback_speed;
   document.getElementById('silence').value = config.silence_speed;
+
+  document.getElementById('no-slowdown').style.display = config.supportsSlowDownTime ? '' : 'none';
+  document.getElementById('no-media').style.display = config.hasVideoElement ? '' : 'none';
 }
 
 // Listen for messages from the page to update our config

@@ -22,6 +22,7 @@ let config = {
   silence_speed: 3,
   enabled: false,
   hasVideoElement: false,
+  supportsSlowDownTime: true,
 };
 
 let mediaElements = [];
@@ -36,7 +37,7 @@ const disableExtension = () => {
 
 // Create audio context for media element
 // This way we can inspect the volume
-const attachAnalyser = element => {
+const attachAnalyser = async element => {
   debug('Attaching analyser');
   const audio = new AudioContext()
 
@@ -47,47 +48,54 @@ const attachAnalyser = element => {
   } else if (element.tagName === 'AUDIO') {
     audioSrc = new Audio(element.src);
   }
-  
-  console.log('Audio Source:', audioSrc);
+
+  // Check if we can use our cloned element
+  let canUseClonedElement = true;
+  try {
+    await fetch(element.src, { method: 'HEAD' });
+  } catch(e) {
+    canUseClonedElement = false;
+    config.supportsSlowDownTime = false;
+    chrome.runtime.sendMessage({ command: 'update' });
+    audioSrc = null;
+  }
   
   // Create Context components
   const analyser = audio.createAnalyser();
-  const source = audio.createMediaElementSource(audioSrc);
+  const source = audio.createMediaElementSource(audioSrc || element);
   
   // Connect components
   source.connect(analyser);
-  // analyser.connect(audio.destination);
-
-  // TODO: Check if cloned element works
-
-  const updateAudioTime = () => {
-    debug('Update audio timing', element.currentTime);
-    audioSrc.currentTime = element.currentTime + (config.slowdown / 1000);
+  if (!canUseClonedElement) {
+    analyser.connect(audio.destination);
   }
 
-  let shouldUpdateTime = false;
-  element.addEventListener('play', () => {
-    debug('Started playing');
-    audioSrc.play();
-    if (shouldUpdateTime) {
-      updateAudioTime();
-      shouldUpdateTime = false;
+  if (canUseClonedElement) {
+    const updateAudioTime = () => {
+      debug('Update audio timing', element.currentTime);
+      audioSrc.currentTime = element.currentTime + (config.slowdown / 1000);
     }
-  })
-  element.addEventListener('pause', () => {
-    debug('Paused source');
-    audioSrc.pause();
-    shouldUpdateTime = true;
-  })
-
-  updateAudioTime();
-  if(!element.paused) {
-    audioSrc.play();
+  
+    let shouldUpdateTime = false;
+    element.addEventListener('play', () => {
+      debug('Started playing');
+      audioSrc.play();
+      if (shouldUpdateTime) {
+        updateAudioTime();
+        shouldUpdateTime = false;
+      }
+    })
+    element.addEventListener('pause', () => {
+      debug('Paused source');
+      audioSrc.pause();
+      shouldUpdateTime = true;
+    })
+  
+    updateAudioTime();
+    if(!element.paused) {
+      audioSrc.play();
+    }
   }
-
-  mediaElements.push(element);
-  config.hasVideoElement = true;
-  chrome.runtime.sendMessage({ command: 'update' });
 
   return [
     analyser,
@@ -99,8 +107,13 @@ const attachAnalyser = element => {
 debug('Hello');
 
 // Prepare extension on current page to listen for messages from popup and control the source element
-const inspectElement = (element) => {
+const inspectElement = async (element) => {
   debug('Inspecting ' + element.tagName + ' source');
+
+  // Inform popup that we have a media element
+  mediaElements.push(element);
+  config.hasVideoElement = true;
+  chrome.runtime.sendMessage({ command: 'update' });
 
   // Information for speeding up and down the video
   let isAnalyserAttached = false; // Is the AudioContext and analyser currently attached to the source?
@@ -117,16 +130,13 @@ const inspectElement = (element) => {
     }
   }
 
-  const run = () => {
+  const run = async () => {
     if (!config.enabled) return;
 
     if (!isAnalyserAttached) {
       isAnalyserAttached = true;
-      [ analyser, audio, audioSrc ] = attachAnalyser(element);
+      [ analyser, audio, audioSrc ] = await attachAnalyser(element);
       freq_volume = new Float32Array(analyser.fftSize);
-      setInterval(() => {
-        console.log(audioSrc.currentTime, element.currentTime);
-      }, 1000);
     }
 
     analyser.getFloatTimeDomainData(freq_volume);
@@ -150,24 +160,31 @@ const inspectElement = (element) => {
         const currentPhase = speedUpPhase;
         chrome.runtime.sendMessage({ command: 'speedStatus', data: 1 });
 
-        // Speed up the media after the slowdown time is over
-        // Otherwise we will speed up the media before it has reached the silent point
-        setTimeout(() => {
-          // We may run into the problem that the silence is over before the slowdown time runs out.
-          // e.g. with only a very short silence.
-          // In that case, we would speed up the video after having already slowing it back down,
-          // making the whole video play in the silence speed.
-          // To fix this, this extension counts "speed up phases". Every time we slow the video back down,
-          // the "speed up phase" increases by 1. We then test if we are still in the current speed up phase
-          // and haven't yet moved on.
-          if (speedUpPhase === currentPhase) {
-            debug('Speeding video up now');
-            setSpeed(config.silence_speed);
-            chrome.runtime.sendMessage({ command: 'speedStatus', data: 2 });
-          } else {
-            debug('Can\'t speed up: Phase already over');
-          }
-        }, config.slowdown);
+        if (config.supportsSlowDownTime) {
+          // Speed up the media after the slowdown time is over
+          // Otherwise we will speed up the media before it has reached the silent point
+          setTimeout(() => {
+            // We may run into the problem that the silence is over before the slowdown time runs out.
+            // e.g. with only a very short silence.
+            // In that case, we would speed up the video after having already slowing it back down,
+            // making the whole video play in the silence speed.
+            // To fix this, this extension counts "speed up phases". Every time we slow the video back down,
+            // the "speed up phase" increases by 1. We then test if we are still in the current speed up phase
+            // and haven't yet moved on.
+            if (speedUpPhase === currentPhase) {
+              debug('Speeding video up now');
+              setSpeed(config.silence_speed);
+              chrome.runtime.sendMessage({ command: 'speedStatus', data: 2 });
+            } else {
+              debug('Can\'t speed up: Phase already over');
+            }
+          }, config.slowdown);
+        } else {
+          debug('Speeding video up now');
+          setSpeed(config.silence_speed);
+          chrome.runtime.sendMessage({ command: 'speedStatus', data: 2 });
+        }
+
 
       }
     } else {

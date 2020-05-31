@@ -10,7 +10,7 @@ body {
   text-align: center;
 }
 
-.no-media {
+.warning {
   width: calc(100% - 4em);
   background-color: #EF8D9C;
   border-radius: 1em;
