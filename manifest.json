@@ -28,7 +28,7 @@
 
   "page_action": {
     "default_icon": {
-      "32": "icons/icon-32.png"
+      "32": "icons/disabled.png"
     },
     "default_title": "Skip Silence",
     "default_popup": "popup/index.html"
