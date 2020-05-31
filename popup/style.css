@@ -38,6 +38,7 @@ body {
   border-radius: 1em;
   padding: 1em;
   margin-bottom: 3em;
+  display: none;
 }
 
 #vu_meter {
