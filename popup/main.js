@@ -16,6 +16,8 @@ let config = {
   playback_speed: 1,
   silence_speed: 3,
   enabled: false,
+  hasVideoElement: true,
+  supportsSlowDownTime: true,
 };
 let volume = 0;
 // Current status of the extension:
@@ -78,8 +80,8 @@ const updatePageInputs = () => {
   document.getElementById('playback').value = config.playback_speed;
   document.getElementById('silence').value = config.silence_speed;
 
-  document.getElementById('no-slowdown').style.display = config.supportsSlowDownTime ? '' : 'none';
-  document.getElementById('no-media').style.display = config.hasVideoElement ? '' : 'none';
+  document.getElementById('no-slowdown').style.display = config.supportsSlowDownTime ? 'none' : 'block';
+  document.getElementById('no-media').style.display = config.hasVideoElement ? 'none' : 'block';
 }
 
 // Listen for messages from the page to update our config
