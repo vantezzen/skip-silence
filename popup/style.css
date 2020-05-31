@@ -10,6 +10,14 @@ body {
   text-align: center;
 }
 
+.no-media {
+  width: calc(100% - 4em);
+  background-color: #EF8D9C;
+  border-radius: 1em;
+  padding: 2em;
+  margin-bottom: 3em;
+}
+
 #vu_meter {
   width: 500px;
   height: 30px;

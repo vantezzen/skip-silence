@@ -13,13 +13,18 @@ const debug = (log) => {
 }
 
 // Configuration
-let THRESHOLD = 30;
-let SAMPLES_THRESHOLD = 10;
-let PLAYBACK_SPEED = 1;
-let SILENCE_SPEED = 3;
-let IS_ENABLED = false;
+let config = {
+  threshold: 30,
+  samples_threshold: 10,
+  slowdown: 100,
+  audio_delay: 0.08,
+  playback_speed: 1,
+  silence_speed: 3,
+  enabled: false,
+  hasVideoElement: false,
+};
 
-let isVideo = false;
+let mediaElements = [];
 
 // Enable or disable browser action for current tab using background script
 const enableExtension = () => {
@@ -29,20 +34,21 @@ const disableExtension = () => {
   chrome.runtime.sendMessage({ command: 'disable' });  
 }
 
-// Create audio context to source element
+// Create audio context for media element
+// This way we can inspect the volume
 const attachAnalyser = element => {
   debug('Attaching analyser');
   const audio = new AudioContext()
 
   let audioSrc = element.cloneNode();
-  // if (isVideo) {
-  //   audioSrc = document.createElement('video');
-  //   audioSrc.src = element.src;
-  // } else {
-  //   audioSrc = new Audio(element.src);
-  // }
+  if (element.tagName === 'VIDEO') {
+    audioSrc = document.createElement('video');
+    audioSrc.src = element.src;
+  } else if (element.tagName === 'AUDIO') {
+    audioSrc = new Audio(element.src);
+  }
   
-  console.log(audioSrc);
+  console.log('Audio Source:', audioSrc);
   
   // Create Context components
   const analyser = audio.createAnalyser();
@@ -52,9 +58,11 @@ const attachAnalyser = element => {
   source.connect(analyser);
   // analyser.connect(audio.destination);
 
+  // TODO: Check if cloned element works
+
   const updateAudioTime = () => {
     debug('Update audio timing', element.currentTime);
-    audioSrc.currentTime = element.currentTime + 0.2;
+    audioSrc.currentTime = element.currentTime + (config.slowdown / 1000);
   }
 
   let shouldUpdateTime = false;
@@ -77,51 +85,48 @@ const attachAnalyser = element => {
     audioSrc.play();
   }
 
+  mediaElements.push(element);
+  config.hasVideoElement = true;
+  chrome.runtime.sendMessage({ command: 'update' });
+
   return [
     analyser,
-    audio
+    audio,
+    audioSrc
   ];
 }
 
 debug('Hello');
 
 // Prepare extension on current page to listen for messages from popup and control the source element
-const prepareExtension = () => {
-  debug('Preparing extension');
-
-  // Get video or audio element from page
-  let element;
-  if (document.getElementsByTagName('video').length) {
-    isVideo = true;
-    enableExtension();
-    element = document.getElementsByTagName('video')[0];
-  } else if (document.getElementsByTagName('audio').length) {
-    isVideo = false;
-    enableExtension();
-    element = document.getElementsByTagName('audio')[0];
-  } else {
-    // No audio or video existent on page - disable extension
-    debug('No source found');
-    disableExtension();
-    return;
-  }
-
-  debug('Found video or audio source');
+const inspectElement = (element) => {
+  debug('Inspecting ' + element.tagName + ' source');
 
   // Information for speeding up and down the video
   let isAnalyserAttached = false; // Is the AudioContext and analyser currently attached to the source?
-  let analyser, audio; // AudioContext elements
+  let analyser, audio, audioSrc; // AudioContext elements
   let freq_volume; // Current frequency volume information of source (Float32Array)
   let isSpedUp = false; // Is the source currently sped up?
   let samplesUnderThreshold = 0; // Number of samples we have been under threshold
+  let speedUpPhase = 0; // Phase number of the current speed-up
+
+  const setSpeed = (speed) => {
+    element.playbackRate = speed;
+    if (audioSrc) {
+      audioSrc.playbackRate = speed;
+    }
+  }
 
   const run = () => {
-    if (!IS_ENABLED) return;
+    if (!config.enabled) return;
 
     if (!isAnalyserAttached) {
       isAnalyserAttached = true;
-      [ analyser, audio ] = attachAnalyser(element);
+      [ analyser, audio, audioSrc ] = attachAnalyser(element);
       freq_volume = new Float32Array(analyser.fftSize);
+      setInterval(() => {
+        console.log(audioSrc.currentTime, element.currentTime);
+      }, 1000);
     }
 
     analyser.getFloatTimeDomainData(freq_volume);
@@ -135,22 +140,45 @@ const prepareExtension = () => {
     const volume = (500 * peakInstantaneousPower);
   
     // Check volume
-    if (volume < THRESHOLD && !element.paused) {
+    if (volume < config.threshold && !element.paused) {
       samplesUnderThreshold++;
   
-      if (!isSpedUp && samplesUnderThreshold >= SAMPLES_THRESHOLD) {
+      if (!isSpedUp && samplesUnderThreshold >= config.samples_threshold) {
         // Speed up video
-        element.playbackRate = SILENCE_SPEED;
+        debug('Speeding up video after slowdown time');
         isSpedUp = true;
+        const currentPhase = speedUpPhase;
+        chrome.runtime.sendMessage({ command: 'speedStatus', data: 1 });
 
-        chrome.runtime.sendMessage({ command: 'speed up' }); 
+        // Speed up the media after the slowdown time is over
+        // Otherwise we will speed up the media before it has reached the silent point
+        setTimeout(() => {
+          // We may run into the problem that the silence is over before the slowdown time runs out.
+          // e.g. with only a very short silence.
+          // In that case, we would speed up the video after having already slowing it back down,
+          // making the whole video play in the silence speed.
+          // To fix this, this extension counts "speed up phases". Every time we slow the video back down,
+          // the "speed up phase" increases by 1. We then test if we are still in the current speed up phase
+          // and haven't yet moved on.
+          if (speedUpPhase === currentPhase) {
+            debug('Speeding video up now');
+            setSpeed(config.silence_speed);
+            chrome.runtime.sendMessage({ command: 'speedStatus', data: 2 });
+          } else {
+            debug('Can\'t speed up: Phase already over');
+          }
+        }, config.slowdown);
+
       }
     } else {
       if (isSpedUp) {
-        element.playbackRate = PLAYBACK_SPEED;
+        setSpeed(config.playback_speed);
         isSpedUp = false;
+        speedUpPhase++;
 
-        chrome.runtime.sendMessage({ command: 'slow down' }); 
+        debug('Slowing video back down');
+
+        chrome.runtime.sendMessage({ command: 'speedStatus', data: 0 });
       }
       samplesUnderThreshold = 0;
     }
@@ -158,7 +186,7 @@ const prepareExtension = () => {
     // Report current volume to popup for VU Meter
     chrome.runtime.sendMessage({ command: 'volume', data: volume }); 
   
-    if (IS_ENABLED) {
+    if (config.enabled) {
       requestAnimationFrame(run);
     }
   }
@@ -169,39 +197,71 @@ const prepareExtension = () => {
   
     if (msg.command === 'config') {
       // Update source speed based on new config
-      if (!msg.data.enabled && IS_ENABLED) {
+      if (!msg.data.enabled && config.enabled) {
         // Extension has just been disabled - set playback speed back to 1x
-        element.playbackRate = 1;
+        setSpeed(1);
         debug('Disabled');
-      } else if (msg.data.enabled && !IS_ENABLED) {
+      } else if (msg.data.enabled && !config.enabled) {
         // Extension has just been enabled - start extension
-        element.playbackRate = msg.data.playback_speed;
-        IS_ENABLED = true;
+        setSpeed(msg.data.playback_speed);
+        config.enabled = true;
         run();
         debug('Enabled');
       } else if (isSpedUp) {
-        element.playbackRate = msg.data.silence_speed;
+        setSpeed(msg.data.silence_speed);
       } else {
-        element.playbackRate = msg.data.playback_speed;
+        setSpeed(msg.data.playback_speed);
       }
 
-      THRESHOLD = msg.data.threshold;
-      SAMPLES_THRESHOLD = msg.data.samples_threshold;
-      PLAYBACK_SPEED = msg.data.playback_speed;
-      SILENCE_SPEED = msg.data.silence_speed;
-      IS_ENABLED = msg.data.enabled;
+      if (audioSrc) {
+        audioSrc.currentTime = element.currentTime + (msg.data.slowdown / 1000);
+      }
+
+      config = msg.data;
     } else if (msg.command === 'requestConfig') {
       // Send our current config back to popup
-      sendResponse({
-        threshold: THRESHOLD,
-        samples_threshold: SAMPLES_THRESHOLD,
-        playback_speed: PLAYBACK_SPEED,
-        silence_speed: SILENCE_SPEED,
-        enabled: IS_ENABLED,
-      });
+      sendResponse(config);
     }
   })
 }
+
+const inspectAllMediaElements = () => {
+  const elements = [
+    ...document.getElementsByTagName('video'),
+    ...document.getElementsByTagName('audio'),
+  ];
+
+  if (elements.length === 0) {
+    debug('No source found');
+    config.hasVideoElement = false;
+    chrome.runtime.sendMessage({ command: 'update' });
+
+    disableExtension();
+    return;
+  }
+  enableExtension();
+
+  for(const element of elements) {
+    // Check if element is already being inspected
+    if (!mediaElements.includes(element)) {
+      inspectElement(element);
+    }
+  }
+}
+
+const prepareExtension = () => {
+  debug('Preparing extension');
+
+  // Detect DOM changes
+  const config = { attributes: true, childList: true, subtree: true };
+
+  const observer = new MutationObserver(() => inspectAllMediaElements());
+
+  // Start observing the target node for configured mutations
+  observer.observe(document.body, config);
+
+  inspectAllMediaElements();
+};
 
 // Prepare extension after DOM is ready to make sure source elements are loaded
 if (document.readyState === "complete" || document.readyState === "interactive") {

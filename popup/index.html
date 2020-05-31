@@ -12,6 +12,11 @@
 <body>
   <h1 class="title">Skip Silence</h1>
 
+  <!-- NO MEDIA ELEMENT INFO -->
+  <!-- <div class="no-media">
+    This extension is currently not connected to any media elements 😬
+  </div> -->
+
   <!-- VU METER -->
   <canvas id="vu_meter"></canvas>
 
@@ -29,11 +34,19 @@
   <p class="small">
     If the volume is under the red line, the video will be sped up.
   </p><br />
+
   
   <label for="samples">Sample Threshold</label>
   <input type="range" min="1" max="50" value="10" class="samples" id="samples">
   <p class="small">
     Number of samples of slience needed before speeding up.
+  </p><br />
+
+  <label for="slider">Slow down time</label>
+  <input type="range" min="1" max="200" value="100" class="slider" id="slowdown">
+  <p class="small">
+    Skip Silence will "look into the future" of how the volume will change. This way, this extension can already slow the video back down before the sound starts again.<br />
+    This feature is not supported on all pages. You can try changing this setting to see how it affects speeding up and down the video.
   </p><br />
 
   <label for="playback">Playback Speed</label>

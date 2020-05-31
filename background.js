@@ -22,7 +22,7 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
     }, () => {})
   } else if (msg.command === 'disable') {
     console.log('Disable extension for tab', sender.tab.id);
-    chrome.pageAction.hide(sender.tab.id);
+    // chrome.pageAction.hide(sender.tab.id);
 
     // Set icon to black/white version as chrome may not do this itself
     chrome.pageAction.setIcon({
