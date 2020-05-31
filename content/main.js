@@ -22,6 +22,7 @@ let config = {
   silence_speed: 3,
   enabled: false,
   hasVideoElement: false,
+  isConnectedToVideoElement: false,
   supportsSlowDownTime: true,
 };
 
@@ -56,7 +57,6 @@ const attachAnalyser = async element => {
   } catch(e) {
     canUseClonedElement = false;
     config.supportsSlowDownTime = false;
-    chrome.runtime.sendMessage({ command: 'update' });
     audioSrc = null;
   }
   
@@ -96,6 +96,9 @@ const attachAnalyser = async element => {
       audioSrc.play();
     }
   }
+
+  config.isConnectedToVideoElement = true;
+  chrome.runtime.sendMessage({ command: 'update' });
 
   return [
     analyser,

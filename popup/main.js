@@ -18,6 +18,7 @@ let config = {
   enabled: false,
   hasVideoElement: true,
   supportsSlowDownTime: true,
+  isConnectedToVideoElement: false,
 };
 let volume = 0;
 // Current status of the extension:
@@ -82,6 +83,7 @@ const updatePageInputs = () => {
 
   document.getElementById('no-slowdown').style.display = config.supportsSlowDownTime ? 'none' : 'block';
   document.getElementById('no-media').style.display = config.hasVideoElement ? 'none' : 'block';
+  document.getElementById('not-connected').style.display = config.isConnectedToVideoElement ? 'none' : 'block';
 }
 
 // Listen for messages from the page to update our config

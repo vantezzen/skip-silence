@@ -251,7 +251,6 @@ button:active,
 input[type=button]:active,
 input[type=checkbox]:active,
 input[type=radio]:active,
-input[type=range]:active,
 input[type=submit]:active {
   transform: translateY(2px)
 }
