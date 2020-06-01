@@ -36,17 +36,20 @@ You can now:
 - Change "Skip Silence"'s settings
 - View the current volume using the VU meter
   - The VU Meter will be blue when on normal speed and green when currently in a silent part
+  - Additionally, on supported websites, the VU Meter can be yellow. This indicated that a silent part is comming up but hasn't been reached yet
   - The red line represents your current volume threshold
 
 ![Settings popup when in use](images/popup.gif)
 
 ## Limitations
-- Will only work when the tab is in focus. It will not work if the tab is in the background
-- The first few samples after a silent part may be skipped or will clip
-- Won't work on sites that use other methods to play video or audio (e.g. Spotify Web Player)
+- Will only work when the tab is in focus. It will not work if the tab is in the background as it needs to do quick calculations which the browser will suspend for background tabs
+- On websites that don't support the "pre-buffering" feature, the first few samples after a silent part may be skipped or will clip
+- Won't work on sites that use other methods to play video or audio (e.g. Spotify Web Player uses a special method to prevent songs from being downloaded)
 
 ## How does it work?
-The extension attaches a JavaScript audio analyser to the current video or audio source and will speed up or slow down the video using the current volume of the audio. This unfortunately results in the first few samples of audio after a period of silence will still be sped up.
+The extension attaches a JavaScript audio analyser to the current video or audio source and will speed up or slow down the video using the current volume of the audio.
+If the media source supports it, the extension will clone the element and play it a fraction of a second further than the current progress (the "pre-buffer" feature). This way, the extension can already detect what is going to happen then and can act accordingly, e.g. slow down the video before the silent part ends as to not skip the first few words after.
+On some websites (e.g. YouTube) this "pre-buffering" is not possible though, as their media elements can not be cloned. This unfortunately results in the first few samples of audio after a period of silence will still be sped up, making words hard to understand.
 
 ## Contributing
 Please fork this repository and create a new pull request to contribute to it.

@@ -10,7 +10,27 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1 class="title">Skip Silence</h1>
+  <h1 class="title">
+    <img src="../icons/icon-128.png" />
+    Skip Silence 2
+  </h1>
+
+  <!-- NO MEDIA ELEMENT INFO -->
+  <div id="no-media" class="warning" style="display:block;">
+    We couldn't find any media elements on the page.<br />
+    Please try reloading your current page if you think that Skip Silence should have detected an element.
+  </div>
+
+  <!-- NO SLOW DOWN INFO -->
+  <div id="no-slowdown" class="warning">
+    The current website doesn't support this extension's "Pre-buffering"-Feature.<br />
+    The extension will still work but you may experience words being cut off after silent parts.
+  </div>
+
+  <!-- NO SLOW DOWN INFO -->
+  <div id="not-connected" class="info">
+    🎉 We have found a media element on your current page. Press the big red button below to start skipping silent parts.
+  </div>
 
   <!-- VU METER -->
   <canvas id="vu_meter"></canvas>
@@ -21,65 +41,92 @@
       <input type="checkbox" id="enable" name="enable" />
       <label for="enable"></label>
     </div>
-  </div><br />
+  </div>
 
   <!-- SETTINGS -->
-  <label for="slider">Volume Threshold</label>
-  <input type="range" min="1" max="200" value="30" class="slider" id="slider">
-  <p class="small">
-    If the volume is under the red line, the video will be sped up.
-  </p><br />
-  
-  <label for="samples">Sample Threshold</label>
-  <input type="range" min="1" max="50" value="10" class="samples" id="samples">
-  <p class="small">
-    Number of samples of slience needed before speeding up.
-  </p><br />
+  <h2 class="sub-title">Settings</h2>
 
-  <label for="playback">Playback Speed</label>
-  <select name="playback" id="playback">
-    <option value="0.5">0.5x</option>
-    <option value="0.75">0.75x</option>
-    <option value="1" selected>1x</option>
-    <option value="1.25">1.25x</option>
-    <option value="1.5">1.5x</option>
-    <option value="1.75">1.75x</option>
-    <option value="2">2x</option>
-    <option value="2.25">2.25x</option>
-    <option value="2.5">2.5x</option>
-    <option value="2.75">2.75x</option>
-    <option value="3">3x</option>
-    <option value="3.5">3.5x</option>
-    <option value="4">4x</option>
-    <option value="4.5">4.5x</option>
-    <option value="5">5x</option>
-  </select>
-  <p class="small">
-    Speed the normal video will be played at.
-  </p><br />
+  <div class="setting">
+    <label for="slider">Volume Threshold</label>
+    <input type="range" min="1" max="200" value="30" class="slider" id="slider">
+    <p class="small">
+      If the volume is under the red line, the video will be sped up.
+    </p>
+  </div>
 
+  <div class="setting">
+    <label for="samples">Duration Threshold</label>
+    <input type="range" min="1" max="50" value="10" class="samples" id="samples">
+    <p class="small">
+      Length of silence needed before speeding up.<br />
+      This is to ensure we are not speeding up due to the short silence between words and sentences.
+    </p>
+  </div>
 
-  <label for="silence">Silence Speed</label>
-  <select name="silence" id="silence">
-    <option value="0.5">0.5x</option>
-    <option value="0.75">0.75x</option>
-    <option value="1">1x</option>
-    <option value="1.25">1.25x</option>
-    <option value="1.5">1.5x</option>
-    <option value="1.75">1.75x</option>
-    <option value="2">2x</option>
-    <option value="2.25">2.25x</option>
-    <option value="2.5">2.5x</option>
-    <option value="2.75">2.75x</option>
-    <option value="3" selected>3x</option>
-    <option value="3.5">3.5x</option>
-    <option value="4">4x</option>
-    <option value="4.5">4.5x</option>
-    <option value="5">5x</option>
-  </select>
-  <p class="small">
-    Speed for silent parts.
-  </p>
+  <div class="setting">
+    <label for="playback">Playback Speed</label>
+    <select name="playback" id="playback">
+      <option value="0.5">0.5x</option>
+      <option value="0.75">0.75x</option>
+      <option value="1" selected>1x</option>
+      <option value="1.25">1.25x</option>
+      <option value="1.5">1.5x</option>
+      <option value="1.75">1.75x</option>
+      <option value="2">2x</option>
+      <option value="2.25">2.25x</option>
+      <option value="2.5">2.5x</option>
+      <option value="2.75">2.75x</option>
+      <option value="3">3x</option>
+      <option value="3.5">3.5x</option>
+      <option value="4">4x</option>
+      <option value="4.5">4.5x</option>
+      <option value="5">5x</option>
+    </select>
+    <p class="small">
+      Speed the normal video (i.e. non-silent parts) will be played at.
+    </p>
+  </div>
+
+  <div class="setting">
+    <label for="silence">Silence Speed</label>
+    <select name="silence" id="silence">
+      <option value="0.5">0.5x</option>
+      <option value="0.75">0.75x</option>
+      <option value="1">1x</option>
+      <option value="1.25">1.25x</option>
+      <option value="1.5">1.5x</option>
+      <option value="1.75">1.75x</option>
+      <option value="2">2x</option>
+      <option value="2.25">2.25x</option>
+      <option value="2.5">2.5x</option>
+      <option value="2.75">2.75x</option>
+      <option value="3" selected>3x</option>
+      <option value="3.5">3.5x</option>
+      <option value="4">4x</option>
+      <option value="4.5">4.5x</option>
+      <option value="5">5x</option>
+    </select>
+    <p class="small">
+      Speed silent parts will be played at.
+    </p>
+  </div>
+
+  <div class="setting">
+    <label for="slowdown">Pre-Buffer time</label>
+    <input type="range" min="1" max="200" value="100" class="slider" id="slowdown">
+    <p class="small">
+      On supported websites, this extension can pre-buffer your current video or audio in order to detect silent parts before they happen.<br />
+      Using this method, the slowing up and down will happen more smoothly to give you a better experience.<br />
+      This value will make the extension slow the video down before the silent part is over to avoid skipping the first few words.<br />
+      Unfortunately, some websites (e.g. YouTube) use methods for displaying video that don't allow pre-buffering the video.
+    </p>
+  </div>
+
+  <div class="plugin-info">
+    Developed by <a href="https://github.com/vantezzen" target="_blank">Bennett</a>.<br />
+    This extension is fully open-source. The code can be viewed at <a href="https://github.com/vantezzen/skip-silence">https://github.com/vantezzen/skip-silence</a>.<br />
+    If you find any bugs or experience problems using the extension with a specific website, please feel free to report it at <a href="https://github.com/vantezzen/skip-silence/issues">https://github.com/vantezzen/skip-silence/issues</a>.
+  </div>
 
   <script src="main.js"></script>
 </body>

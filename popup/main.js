@@ -16,9 +16,16 @@ let config = {
   playback_speed: 1,
   silence_speed: 3,
   enabled: false,
+  hasVideoElement: true,
+  supportsSlowDownTime: true,
+  isConnectedToVideoElement: false,
 };
 let volume = 0;
-let isSpedUp = false;
+// Current status of the extension:
+// 0 => Not sped up
+// 1 => Waiting for slowdown time to pass to speed up
+// 2 => Sped up
+let speedStatus = 0;
 
 // Render VU Meter to canvas element
 const renderVUMeter = () => {
@@ -26,8 +33,10 @@ const renderVUMeter = () => {
   canvas.clearRect(0, 0, canvas_element.width, canvas_element.height);
 
   // VU Meter color changes based on if the video is currently sped up
-  if (isSpedUp) {
+  if (speedStatus === 2) {
     canvas.fillStyle = '#00CC00';
+  } else if (speedStatus === 1) {
+    canvas.fillStyle = '#ffff00';
   } else {
     canvas.fillStyle = '#00CCFF';
   }
@@ -68,8 +77,13 @@ const updatePageInputs = () => {
   document.getElementById('enable').checked = config.enabled;
   document.getElementById('slider').value = config.threshold;
   document.getElementById('samples').value = config.samples_threshold;
+  document.getElementById('slowdown').value = config.slowdown;
   document.getElementById('playback').value = config.playback_speed;
   document.getElementById('silence').value = config.silence_speed;
+
+  document.getElementById('no-slowdown').style.display = config.supportsSlowDownTime ? 'none' : 'block';
+  document.getElementById('no-media').style.display = config.hasVideoElement ? 'none' : 'block';
+  document.getElementById('not-connected').style.display = config.isConnectedToVideoElement ? 'none' : 'block';
 }
 
 // Listen for messages from the page to update our config
@@ -78,10 +92,10 @@ chrome.runtime.onMessage.addListener(msg => {
 
   if (msg.command === 'volume') {
     volume = msg.data;
-  } else if (msg.command === 'speed up') {
-    isSpedUp = true;
-  } else if (msg.command === 'slow down') {
-    isSpedUp = false;
+  } else if (msg.command === 'speedStatus') {
+    speedStatus = msg.data;
+  } else if (msg.command === 'update') {
+    requestConfig();
   }
 });
 
@@ -102,6 +116,10 @@ document.getElementById('slider').addEventListener('input', event => {
 })
 document.getElementById('samples').addEventListener('input', event => {
   config.samples_threshold = Number(event.target.value);
+  sendConfig();
+})
+document.getElementById('slowdown').addEventListener('input', event => {
+  config.slowdown = Number(event.target.value);
   sendConfig();
 })
 document.getElementById('playback').addEventListener('input', event => {
