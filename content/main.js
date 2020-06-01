@@ -8,8 +8,11 @@
  * @license MIT License
  */
 // Currently disabled: Log info to page console
+const isDebugging = true;
 const debug = (log) => {
-  console.log('[Skip Silence] ' + log);
+  if (isDebugging) {
+    console.log('[Skip Silence] ' + log);
+  }
 }
 
 // Configuration
@@ -30,10 +33,14 @@ let mediaElements = [];
 
 // Enable or disable browser action for current tab using background script
 const enableExtension = () => {
-  chrome.runtime.sendMessage({ command: 'enable' });  
+  chrome.runtime.sendMessage({
+    command: 'enable'
+  });
 }
 const disableExtension = () => {
-  chrome.runtime.sendMessage({ command: 'disable' });  
+  chrome.runtime.sendMessage({
+    command: 'disable'
+  });
 }
 
 // Create audio context for media element
@@ -53,17 +60,19 @@ const attachAnalyser = async element => {
   // Check if we can use our cloned element
   let canUseClonedElement = true;
   try {
-    await fetch(element.src, { method: 'HEAD' });
-  } catch(e) {
+    await fetch(element.src, {
+      method: 'HEAD'
+    });
+  } catch (e) {
     canUseClonedElement = false;
     config.supportsSlowDownTime = false;
     audioSrc = null;
   }
-  
+
   // Create Context components
   const analyser = audio.createAnalyser();
   const source = audio.createMediaElementSource(audioSrc || element);
-  
+
   // Connect components
   source.connect(analyser);
   if (!canUseClonedElement) {
@@ -75,30 +84,116 @@ const attachAnalyser = async element => {
       debug('Update audio timing', element.currentTime);
       audioSrc.currentTime = element.currentTime + (config.slowdown / 1000);
     }
-  
+
+    // Is there a potential that the two sources are out of sync?
     let shouldUpdateTime = false;
+
+    // The extension automatically stops and starts the main media element if the cloned
+    // element is buffering. This way, both elements will stay in sync.
+    // In order to not get into an infinite event-triggering loop, we keep track of if the
+    // main media element has been stopped programmatically
+    let hasStoppedMedia = false;
+
+    // Keep track of if the original media element was playing before we stopped it programmatically
+    // (see comment above for explanation of why we do that).
+    let shouldStartAfterSeeking = !element.paused;
+
+    // Playing the original media element should also start the cloned element and update its time
     element.addEventListener('play', () => {
       debug('Started playing');
-      audioSrc.play();
-      if (shouldUpdateTime) {
-        updateAudioTime();
-        shouldUpdateTime = false;
+      if (!hasStoppedMedia) {
+        audioSrc.play();
+        shouldStartAfterSeeking = true;
+        if (shouldUpdateTime) {
+          updateAudioTime();
+          shouldUpdateTime = false;
+        }
+      } else {
+        debug('Extension has started media');
       }
     })
+    // Pausing the original media element should also pause the cloned element
     element.addEventListener('pause', () => {
       debug('Paused source');
-      audioSrc.pause();
-      shouldUpdateTime = true;
+      if (!hasStoppedMedia) {
+        audioSrc.pause();
+        shouldStartAfterSeeking = false;
+        shouldUpdateTime = true;
+      } else {
+        debug("Extension has stopped media");
+      }
     })
-  
+
+    // When changing the pre-buffer duration, the audio source will need to re-buffer
+    // again. As the normal source would continue playing tough, the two sources would
+    // get out of sync.
+    // The following events will make sure we keep the two elements in sync
+    let updateCooldown = false;
+    audioSrc.addEventListener('seeking', () => {
+      debug('Seeking cloned element');
+      hasStoppedMedia = true;
+      element.pause();
+
+      // We need a cooldown, otherwise we will get stuck in a seeking loop
+      // seeking -> updating time -> thus again seeking -> thus again updating time -> ...
+      if (!updateCooldown) {
+        updateCooldown = true;
+        updateAudioTime();
+        setTimeout(() => {
+          updateCooldown = false;
+        }, 100);
+      }
+    });
+    audioSrc.addEventListener('canplay', () => {
+      debug('Cloned element can play');
+      if (shouldStartAfterSeeking) {
+        element.play();
+      }
+
+      // Only reset variable after short timeout, otherwise the element.'play' event listener will not see it
+      setTimeout(() => {
+        hasStoppedMedia = false;
+      }, 10);
+    });
+
+    // Periodically check if both elements are in sync
+    setInterval(() => {
+      const timeDiff = (audioSrc.currentTime * 1000) - (element.currentTime * 1000);
+      // Milliseconds between the desired time difference and the actual time difference
+      const msOutOfSync = Math.round(Math.abs(config.slowdown - timeDiff));
+      
+      // Difference should never be greater than the total slowdown time
+      // Smaller differences often resolve themselves
+      const needsToCorrect = msOutOfSync > config.slowdown;
+      if (needsToCorrect) {
+        updateAudioTime();
+      }
+
+      if (isDebugging) {
+        const diffStyle = msOutOfSync > (config.slowdown / 3) ? 'color: #ff0505;' : 'color: #0fff43;'
+        console.log(`[Skip Silence] MEDIA STATUS:
+  Original element time: ${element.currentTime}
+  Cloned element time:   ${audioSrc.currentTime}
+  Time difference: ${Math.round(timeDiff)}ms
+  Desired time diff: ${config.slowdown}ms
+  => Cloned element is %c${msOutOfSync}ms%c out of sync
+  ${needsToCorrect ? '⚠️ Re-syncing elements' : ''}`,
+          diffStyle,
+          'color: inherit;'
+        );
+      }
+    }, 2000);
+
     updateAudioTime();
-    if(!element.paused) {
+    if (!element.paused) {
       audioSrc.play();
     }
   }
 
   config.isConnectedToVideoElement = true;
-  chrome.runtime.sendMessage({ command: 'update' });
+  chrome.runtime.sendMessage({
+    command: 'update'
+  });
 
   return [
     analyser,
@@ -116,7 +211,9 @@ const inspectElement = async (element) => {
   // Inform popup that we have a media element
   mediaElements.push(element);
   config.hasVideoElement = true;
-  chrome.runtime.sendMessage({ command: 'update' });
+  chrome.runtime.sendMessage({
+    command: 'update'
+  });
 
   // Information for speeding up and down the video
   let isAnalyserAttached = false; // Is the AudioContext and analyser currently attached to the source?
@@ -138,12 +235,12 @@ const inspectElement = async (element) => {
 
     if (!isAnalyserAttached) {
       isAnalyserAttached = true;
-      [ analyser, audio, audioSrc ] = await attachAnalyser(element);
+      [analyser, audio, audioSrc] = await attachAnalyser(element);
       freq_volume = new Float32Array(analyser.fftSize);
     }
 
     analyser.getFloatTimeDomainData(freq_volume);
-  
+
     // Compute volume via peak instantaneous power over the interval
     let peakInstantaneousPower = 0;
     for (let i = 0; i < freq_volume.length; i++) {
@@ -151,17 +248,20 @@ const inspectElement = async (element) => {
       peakInstantaneousPower = Math.max(power, peakInstantaneousPower);
     }
     const volume = (500 * peakInstantaneousPower);
-  
+
     // Check volume
     if (volume < config.threshold && !element.paused) {
       samplesUnderThreshold++;
-  
+
       if (!isSpedUp && samplesUnderThreshold >= config.samples_threshold) {
         // Speed up video
         debug('Speeding up video after slowdown time');
         isSpedUp = true;
         const currentPhase = speedUpPhase;
-        chrome.runtime.sendMessage({ command: 'speedStatus', data: 1 });
+        chrome.runtime.sendMessage({
+          command: 'speedStatus',
+          data: 1
+        });
 
         if (config.supportsSlowDownTime) {
           // Speed up the media after the slowdown time is over
@@ -177,7 +277,10 @@ const inspectElement = async (element) => {
             if (speedUpPhase === currentPhase) {
               debug('Speeding video up now');
               setSpeed(config.silence_speed);
-              chrome.runtime.sendMessage({ command: 'speedStatus', data: 2 });
+              chrome.runtime.sendMessage({
+                command: 'speedStatus',
+                data: 2
+              });
             } else {
               debug('Can\'t speed up: Phase already over');
             }
@@ -185,7 +288,10 @@ const inspectElement = async (element) => {
         } else {
           debug('Speeding video up now');
           setSpeed(config.silence_speed);
-          chrome.runtime.sendMessage({ command: 'speedStatus', data: 2 });
+          chrome.runtime.sendMessage({
+            command: 'speedStatus',
+            data: 2
+          });
         }
 
 
@@ -198,14 +304,20 @@ const inspectElement = async (element) => {
 
         debug('Slowing video back down');
 
-        chrome.runtime.sendMessage({ command: 'speedStatus', data: 0 });
+        chrome.runtime.sendMessage({
+          command: 'speedStatus',
+          data: 0
+        });
       }
       samplesUnderThreshold = 0;
     }
 
     // Report current volume to popup for VU Meter
-    chrome.runtime.sendMessage({ command: 'volume', data: volume }); 
-  
+    chrome.runtime.sendMessage({
+      command: 'volume',
+      data: volume
+    });
+
     if (config.enabled) {
       requestAnimationFrame(run);
     }
@@ -214,7 +326,7 @@ const inspectElement = async (element) => {
   // Listen for messages from popup
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (!msg.command) return;
-  
+
     if (msg.command === 'config') {
       // Update source speed based on new config
       if (!msg.data.enabled && config.enabled) {
@@ -254,14 +366,16 @@ const inspectAllMediaElements = () => {
   if (elements.length === 0) {
     debug('No source found');
     config.hasVideoElement = false;
-    chrome.runtime.sendMessage({ command: 'update' });
+    chrome.runtime.sendMessage({
+      command: 'update'
+    });
 
     disableExtension();
     return;
   }
   enableExtension();
 
-  for(const element of elements) {
+  for (const element of elements) {
     // Check if element is already being inspected
     if (!mediaElements.includes(element)) {
       inspectElement(element);
@@ -273,7 +387,11 @@ const prepareExtension = () => {
   debug('Preparing extension');
 
   // Detect DOM changes
-  const config = { attributes: true, childList: true, subtree: true };
+  const config = {
+    attributes: true,
+    childList: true,
+    subtree: true
+  };
 
   const observer = new MutationObserver(() => inspectAllMediaElements());
 
