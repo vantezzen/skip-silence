@@ -91,8 +91,27 @@ const updatePageInputs = () => {
   updateTimeSaved();
 }
 
+const twoDigit = (number) => {
+  if (number < 10) {
+    return `0${number}`;
+  }
+  return number;
+}
+const formatTime = (exactTime) => {
+  let time = Math.round(exactTime);
+  if (time < 60) {
+    return `${time}s`;
+  } else if (time < 3600) {
+    return `${Math.floor(time / 60)}:${twoDigit(time % 60)}min`;
+  }
+  const hours = Math.floor(time / 3600);
+  time = time - (hours * 3600);
+  const minutes = Math.floor(time / 60);
+  time = time - (minutes * 60);
+  return `${hours}:${twoDigit(minutes)}:${twoDigit(time)}h`;
+}
 const updateTimeSaved = () => {
-  document.getElementById('time-saved').innerText = Math.round(config.timeSaved);
+  document.getElementById('time-saved').innerText = formatTime(config.timeSaved);
 }
 
 // Listen for messages from the page to update our config
@@ -134,6 +153,7 @@ document.getElementById('enable').addEventListener('click', event => {
   if (!config.enabled) {
     volume = 0;
     isSpedUp = false;
+    clearInterval(timeSavedEstimateInterval);
   }
 })
 document.getElementById('slider').addEventListener('input', event => {
