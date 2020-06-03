@@ -2,8 +2,8 @@ body {
   background: #1B1B1B;
   color: #FFFFFF;
 
-  min-width: 300px;
-  min-height: 300px;
+  width: 350px;
+  min-height: 500px;
 }
 
 
@@ -42,11 +42,11 @@ body {
 }
 
 #vu_meter {
-  width: 500px;
+  width: 300px;
   height: 30px;
   background: #1B1B1B;
   float: left;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 }
 
 input {
@@ -64,7 +64,7 @@ input[type=range]::-webkit-slider-runnable-track {
   background: #ebebeb !important;
 }
 .setting {
-  margin-top: 4em;
+  margin-top: 2em;
 }
 select {
   width: 100%;
@@ -82,7 +82,13 @@ select {
   margin-top: 4em;
 }
 
-/* On/Off Toggle (https://codepen.io/agoodwin/pen/JBvBPr) */
+.two-column {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2em;
+}
+
+/* On/Off Toggle (https://codepen.io/mburnette/pen/LxNxNg) */
 .toggle-container {
   width: 100%;
   display: flex;
@@ -133,4 +139,8 @@ select {
 .on-help {
   text-align: center;
   margin-top: 0.5em;
+}
+
+.saved-info {
+  text-align: center;
 }
