@@ -19,7 +19,11 @@ let config = {
   hasVideoElement: true,
   supportsSlowDownTime: true,
   isConnectedToVideoElement: false,
+  timeSaved: 0,
 };
+// Interval used to estimate the time saved
+let timeSavedEstimateInterval = null;
+// Current volume of the media
 let volume = 0;
 // Current status of the extension:
 // 0 => Not sped up
@@ -46,7 +50,7 @@ const renderVUMeter = () => {
 
   // Render Threshold bar
   canvas.fillStyle = '#FF0000';
-  canvas.fillRect(30 + config.threshold, 0, 1, canvas_element.height);
+  canvas.fillRect(30 + config.threshold, 0, 2, canvas_element.height);
 
   // Loop render via animation frames
   requestAnimationFrame(renderVUMeter);
@@ -84,6 +88,11 @@ const updatePageInputs = () => {
   document.getElementById('no-slowdown').style.display = config.supportsSlowDownTime ? 'none' : 'block';
   document.getElementById('no-media').style.display = config.hasVideoElement ? 'none' : 'block';
   document.getElementById('not-connected').style.display = config.isConnectedToVideoElement ? 'none' : 'block';
+  updateTimeSaved();
+}
+
+const updateTimeSaved = () => {
+  document.getElementById('time-saved').innerText = Math.round(config.timeSaved);
 }
 
 // Listen for messages from the page to update our config
@@ -94,6 +103,23 @@ chrome.runtime.onMessage.addListener(msg => {
     volume = msg.data;
   } else if (msg.command === 'speedStatus') {
     speedStatus = msg.data;
+
+    if (speedStatus === 2) {
+      // Start estimating the time saved
+      let baseTimeSaved = config.timeSaved;
+      let speedUpStart = (+new Date());
+      let speedDifference = 1 / config.playback_speed - 1 / config.silence_speed;
+
+      timeSavedEstimateInterval = setInterval(() => {
+        let totalTime = ((+new Date()) - speedUpStart) / 1000;
+        let timeSaved = totalTime * speedDifference;
+
+        config.timeSaved = baseTimeSaved + timeSaved;
+        updateTimeSaved();
+      }, 250);
+    } else if (speedStatus === 0 && timeSavedEstimateInterval) {
+      clearInterval(timeSavedEstimateInterval);
+    }
   } else if (msg.command === 'update') {
     requestConfig();
   }

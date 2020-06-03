@@ -13,7 +13,7 @@
   "permissions": [],
 
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["background/main.js"]
   },
 
   "content_scripts": [

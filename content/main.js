@@ -27,6 +27,7 @@ let config = {
   hasVideoElement: false,
   isConnectedToVideoElement: false,
   supportsSlowDownTime: true,
+  timeSaved: 0,
 };
 
 let mediaElements = [];
@@ -40,6 +41,13 @@ const enableExtension = () => {
 const disableExtension = () => {
   chrome.runtime.sendMessage({
     command: 'disable'
+  });
+}
+
+// Helper: Trigger an update to the config in the popup
+const triggerUpdate = () => {
+  chrome.runtime.sendMessage({
+    command: 'update'
   });
 }
 
@@ -191,9 +199,7 @@ const attachAnalyser = async element => {
   }
 
   config.isConnectedToVideoElement = true;
-  chrome.runtime.sendMessage({
-    command: 'update'
-  });
+  triggerUpdate();
 
   return [
     analyser,
@@ -211,9 +217,7 @@ const inspectElement = async (element) => {
   // Inform popup that we have a media element
   mediaElements.push(element);
   config.hasVideoElement = true;
-  chrome.runtime.sendMessage({
-    command: 'update'
-  });
+  triggerUpdate();
 
   // Information for speeding up and down the video
   let isAnalyserAttached = false; // Is the AudioContext and analyser currently attached to the source?
@@ -222,6 +226,7 @@ const inspectElement = async (element) => {
   let isSpedUp = false; // Is the source currently sped up?
   let samplesUnderThreshold = 0; // Number of samples we have been under threshold
   let speedUpPhase = 0; // Phase number of the current speed-up
+  let speedUpStart = -1; // Timestamp, when we started speeding up, -1 for not started
 
   const setSpeed = (speed) => {
     element.playbackRate = speed;
@@ -263,6 +268,19 @@ const inspectElement = async (element) => {
           data: 1
         });
 
+        // Helper function: Speed up media
+        const speedUp = () => {
+          debug('Speeding video up now');
+
+          setSpeed(config.silence_speed);
+          speedUpStart = element.currentTime;
+
+          chrome.runtime.sendMessage({
+            command: 'speedStatus',
+            data: 2
+          });
+        }
+
         if (config.supportsSlowDownTime) {
           // Speed up the media after the slowdown time is over
           // Otherwise we will speed up the media before it has reached the silent point
@@ -275,32 +293,35 @@ const inspectElement = async (element) => {
             // the "speed up phase" increases by 1. We then test if we are still in the current speed up phase
             // and haven't yet moved on.
             if (speedUpPhase === currentPhase) {
-              debug('Speeding video up now');
-              setSpeed(config.silence_speed);
-              chrome.runtime.sendMessage({
-                command: 'speedStatus',
-                data: 2
-              });
+              speedUp();
             } else {
               debug('Can\'t speed up: Phase already over');
             }
           }, config.slowdown);
         } else {
-          debug('Speeding video up now');
-          setSpeed(config.silence_speed);
-          chrome.runtime.sendMessage({
-            command: 'speedStatus',
-            data: 2
-          });
+          speedUp();
         }
 
 
       }
     } else {
       if (isSpedUp) {
+        // Slow down media
         setSpeed(config.playback_speed);
         isSpedUp = false;
         speedUpPhase++;
+
+        if (speedUpStart !== -1) {
+          // Calculate time saved
+          // Source: https://github.com/exradr/skip-silence/blob/master/content/main.js#L133
+          let totalTime = element.currentTime - speedUpStart;
+          let speedDifference = 1 / config.playback_speed - 1 / config.silence_speed;
+          let timeSaved = totalTime * speedDifference;
+
+          config.timeSaved += timeSaved;
+
+          speedUpStart = -1;
+        }
 
         debug('Slowing video back down');
 
@@ -308,6 +329,7 @@ const inspectElement = async (element) => {
           command: 'speedStatus',
           data: 0
         });
+        triggerUpdate();
       }
       samplesUnderThreshold = 0;
     }
@@ -366,9 +388,7 @@ const inspectAllMediaElements = () => {
   if (elements.length === 0) {
     debug('No source found');
     config.hasVideoElement = false;
-    chrome.runtime.sendMessage({
-      command: 'update'
-    });
+    triggerUpdate();
 
     disableExtension();
     return;

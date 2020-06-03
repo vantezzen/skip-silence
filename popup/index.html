@@ -42,9 +42,59 @@
       <label for="enable"></label>
     </div>
   </div>
+  <p class="saved-info">Saved <b id="time-saved">0</b>s</p>
 
   <!-- SETTINGS -->
   <h2 class="sub-title">Settings</h2>
+  
+  <div class="two-column">
+    <div class="setting">
+      <label for="playback">Playback Speed</label>
+      <select name="playback" id="playback">
+        <option value="0.5">0.5x</option>
+        <option value="0.75">0.75x</option>
+        <option value="1" selected>1x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.5">1.5x</option>
+        <option value="1.75">1.75x</option>
+        <option value="2">2x</option>
+        <option value="2.25">2.25x</option>
+        <option value="2.5">2.5x</option>
+        <option value="2.75">2.75x</option>
+        <option value="3">3x</option>
+        <option value="3.5">3.5x</option>
+        <option value="4">4x</option>
+        <option value="4.5">4.5x</option>
+        <option value="5">5x</option>
+      </select>
+      <p class="small">
+        Speed the normal video (i.e. non-silent parts) will be played at.
+      </p>
+    </div>
+    <div class="setting">
+      <label for="silence">Silence Speed</label>
+      <select name="silence" id="silence">
+        <option value="0.5">0.5x</option>
+        <option value="0.75">0.75x</option>
+        <option value="1">1x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.5">1.5x</option>
+        <option value="1.75">1.75x</option>
+        <option value="2">2x</option>
+        <option value="2.25">2.25x</option>
+        <option value="2.5">2.5x</option>
+        <option value="2.75">2.75x</option>
+        <option value="3" selected>3x</option>
+        <option value="3.5">3.5x</option>
+        <option value="4">4x</option>
+        <option value="4.5">4.5x</option>
+        <option value="5">5x</option>
+      </select>
+      <p class="small">
+        Speed silent parts will be played at.
+      </p>
+    </div>
+  </div>
 
   <div class="setting">
     <label for="slider">Volume Threshold</label>
@@ -60,54 +110,6 @@
     <p class="small">
       Length of silence needed before speeding up.<br />
       This is to ensure we are not speeding up due to the short silence between words and sentences.
-    </p>
-  </div>
-
-  <div class="setting">
-    <label for="playback">Playback Speed</label>
-    <select name="playback" id="playback">
-      <option value="0.5">0.5x</option>
-      <option value="0.75">0.75x</option>
-      <option value="1" selected>1x</option>
-      <option value="1.25">1.25x</option>
-      <option value="1.5">1.5x</option>
-      <option value="1.75">1.75x</option>
-      <option value="2">2x</option>
-      <option value="2.25">2.25x</option>
-      <option value="2.5">2.5x</option>
-      <option value="2.75">2.75x</option>
-      <option value="3">3x</option>
-      <option value="3.5">3.5x</option>
-      <option value="4">4x</option>
-      <option value="4.5">4.5x</option>
-      <option value="5">5x</option>
-    </select>
-    <p class="small">
-      Speed the normal video (i.e. non-silent parts) will be played at.
-    </p>
-  </div>
-
-  <div class="setting">
-    <label for="silence">Silence Speed</label>
-    <select name="silence" id="silence">
-      <option value="0.5">0.5x</option>
-      <option value="0.75">0.75x</option>
-      <option value="1">1x</option>
-      <option value="1.25">1.25x</option>
-      <option value="1.5">1.5x</option>
-      <option value="1.75">1.75x</option>
-      <option value="2">2x</option>
-      <option value="2.25">2.25x</option>
-      <option value="2.5">2.5x</option>
-      <option value="2.75">2.75x</option>
-      <option value="3" selected>3x</option>
-      <option value="3.5">3.5x</option>
-      <option value="4">4x</option>
-      <option value="4.5">4.5x</option>
-      <option value="5">5x</option>
-    </select>
-    <p class="small">
-      Speed silent parts will be played at.
     </p>
   </div>
 
