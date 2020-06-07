@@ -66,6 +66,14 @@ input[type=range]::-webkit-slider-runnable-track {
 .setting {
   margin-top: 2em;
 }
+.setting label {
+  font-size: 1.1em;
+}
+.setting-info .value {
+  float: right;
+  color: #4AC298;
+  font-size: 1.1em;
+}
 select {
   width: 100%;
   background-color: #4AC298;

@@ -97,7 +97,10 @@
   </div>
 
   <div class="setting">
-    <label for="slider">Volume Threshold</label>
+    <div class="setting-info">
+      <label for="slider">Volume Threshold</label>
+      <div id="slidervalue" class="value">30</div>
+    </div>
     <input type="range" min="1" max="200" value="30" class="slider" id="slider">
     <p class="small">
       If the volume is under the red line, the video will be sped up.
@@ -105,7 +108,10 @@
   </div>
 
   <div class="setting">
-    <label for="samples">Duration Threshold</label>
+    <div class="setting-info">
+      <label for="samples">Duration Threshold</label>
+      <div id="samplesvalue" class="value">10</div>
+    </div>
     <input type="range" min="1" max="50" value="10" class="samples" id="samples">
     <p class="small">
       Length of silence needed before speeding up.<br />
@@ -114,7 +120,11 @@
   </div>
 
   <div class="setting">
-    <label for="slowdown">Pre-Buffer time</label>
+    
+    <div class="setting-info">
+      <label for="slowdown">Pre-Buffer time</label>
+      <div id="slowdownvalue" class="value">100</div>
+    </div>
     <input type="range" min="1" max="200" value="100" class="slider" id="slowdown">
     <p class="small">
       On supported websites, this extension can pre-buffer your current video or audio in order to detect silent parts before they happen.<br />

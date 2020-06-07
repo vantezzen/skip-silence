@@ -76,6 +76,12 @@ const requestConfig = () => {
     });
   });
 }
+// Update the values shown on the page next to the sliders
+const updatePageValues = () => {
+  document.getElementById('slidervalue').innerText = Math.round(config.threshold / 2) + '%';
+  document.getElementById('samplesvalue').innerText = config.samples_threshold + ' samples';
+  document.getElementById('slowdownvalue').innerText = config.slowdown + 'ms';
+}
 // Update the page input elements to reflect the current config
 const updatePageInputs = () => {
   document.getElementById('enable').checked = config.enabled;
@@ -89,6 +95,7 @@ const updatePageInputs = () => {
   document.getElementById('no-media').style.display = config.hasVideoElement ? 'none' : 'block';
   document.getElementById('not-connected').style.display = config.isConnectedToVideoElement ? 'none' : 'block';
   updateTimeSaved();
+  updatePageValues();
 }
 
 const twoDigit = (number) => {
@@ -159,14 +166,17 @@ document.getElementById('enable').addEventListener('click', event => {
 document.getElementById('slider').addEventListener('input', event => {
   config.threshold = Number(event.target.value);
   sendConfig();
+  updatePageValues();
 })
 document.getElementById('samples').addEventListener('input', event => {
   config.samples_threshold = Number(event.target.value);
   sendConfig();
+  updatePageValues();
 })
 document.getElementById('slowdown').addEventListener('input', event => {
   config.slowdown = Number(event.target.value);
   sendConfig();
+  updatePageValues();
 })
 document.getElementById('playback').addEventListener('input', event => {
   config.playback_speed = Number(event.target.value);
