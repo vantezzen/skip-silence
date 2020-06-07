@@ -3,7 +3,7 @@
 - Fix pre-buffer video being audible on certain media types
 - Add basic value labling to the sliders
 
-## 2.2
+## 2.2 & 2.3
 - Remove excess "storage" and "activeTab" permissions as requested by the Google Chrome Webstore Team
 
 ## 2.0
