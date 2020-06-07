@@ -55,17 +55,9 @@ const triggerUpdate = () => {
 // This way we can inspect the volume
 const attachAnalyser = async element => {
   debug('Attaching analyser');
-  const audio = new AudioContext()
+  const audio = new AudioContext();
 
-  let audioSrc = element.cloneNode();
-  if (element.tagName === 'VIDEO') {
-    audioSrc = document.createElement('video');
-    audioSrc.src = element.src;
-  } else if (element.tagName === 'AUDIO') {
-    audioSrc = new Audio(element.src);
-  }
-
-  // Check if we can use our cloned element
+  // Check if we can use our the pre-buffer feature
   let canUseClonedElement = true;
   try {
     await fetch(element.src, {
@@ -74,7 +66,17 @@ const attachAnalyser = async element => {
   } catch (e) {
     canUseClonedElement = false;
     config.supportsSlowDownTime = false;
-    audioSrc = null;
+  }
+
+  let audioSrc;
+  if (canUseClonedElement) {
+    audioSrc = element.cloneNode();
+    if (element.tagName === 'VIDEO') {
+      audioSrc = document.createElement('video');
+      audioSrc.src = element.src;
+    } else if (element.tagName === 'AUDIO') {
+      audioSrc = new Audio(element.src);
+    }
   }
 
   // Create Context components
@@ -140,7 +142,7 @@ const attachAnalyser = async element => {
     audioSrc.addEventListener('seeking', () => {
       debug('Seeking cloned element');
       hasStoppedMedia = true;
-      element.pause();
+      // element.pause();
 
       // We need a cooldown, otherwise we will get stuck in a seeking loop
       // seeking -> updating time -> thus again seeking -> thus again updating time -> ...
@@ -154,9 +156,9 @@ const attachAnalyser = async element => {
     });
     audioSrc.addEventListener('canplay', () => {
       debug('Cloned element can play');
-      if (shouldStartAfterSeeking) {
-        element.play();
-      }
+      // if (shouldStartAfterSeeking) {
+      //   element.play();
+      // }
 
       // Only reset variable after short timeout, otherwise the element.'play' event listener will not see it
       setTimeout(() => {
