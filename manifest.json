@@ -18,6 +18,7 @@
 
   "content_scripts": [
     {
+      "all_frames": true,
       "matches": ["<all_urls>"],
       "js": ["content/main.js"]
     }
