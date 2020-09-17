@@ -20,6 +20,7 @@ let config = {
   supportsSlowDownTime: true,
   isConnectedToVideoElement: false,
   timeSaved: 0,
+  sessionId: 0,
 };
 // Interval used to estimate the time saved
 let timeSavedEstimateInterval = null;
@@ -30,6 +31,25 @@ let volume = 0;
 // 1 => Waiting for slowdown time to pass to speed up
 // 2 => Sped up
 let speedStatus = 0;
+
+// Time saved across all tabs
+let globalSavedTime = 0;
+
+const calculateGlobalSavedTime = () => {
+  // Calculate global time saved
+  globalSavedTime = 0;
+  chrome.storage.sync.get('stats', (data) => {
+    if (data.stats) {
+      for(let key in data.stats) {
+        if (key !== config.sessionId) {
+          globalSavedTime += data.stats[key];
+        }
+      }
+    }
+    updateTimeSaved();
+  })
+}
+calculateGlobalSavedTime();
 
 // Render VU Meter to canvas element
 const renderVUMeter = () => {
@@ -72,6 +92,9 @@ const requestConfig = () => {
       command: 'requestConfig',
     }, function(response) {
       config = response;
+
+      calculateGlobalSavedTime();
+
       updatePageInputs();
     });
   });
@@ -119,6 +142,7 @@ const formatTime = (exactTime) => {
 }
 const updateTimeSaved = () => {
   document.getElementById('time-saved').innerText = formatTime(config.timeSaved);
+  document.getElementById('global-time-saved').innerText = formatTime(globalSavedTime + config.timeSaved);
 }
 
 // Listen for messages from the page to update our config

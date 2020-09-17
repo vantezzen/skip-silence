@@ -15,6 +15,16 @@ const debug = (log) => {
   }
 }
 
+const randomString = (length) => {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 // Get a value from the browser storage
 const getStoreKey = (key, defaultValue = false) => {
   return new Promise((resolve) => {
@@ -51,6 +61,7 @@ let config = {
   isConnectedToVideoElement: false,
   supportsSlowDownTime: true,
   timeSaved: 0,
+  sessionId: randomString(40),
 };
 
 let mediaElements = [];
@@ -96,6 +107,14 @@ const loadDataFromStorage = () => {
 
 loadDataFromStorage();
 
+// Make sure the stats object exists
+getStoreKey('stats').then((data) => {
+  if (data === false) {
+    setStoreKey('stats', {});
+  }
+})
+
+// Update our config when the storage changes
 chrome.storage.sync.onChanged.addListener(loadDataFromStorage);
 
 // Create audio context for media element
@@ -368,6 +387,12 @@ const inspectElement = async (element) => {
           let timeSaved = totalTime * speedDifference;
 
           config.timeSaved += timeSaved;
+
+          // Update the storage
+          getStoreKey('stats').then((data) => {
+            data[config.sessionId] = config.timeSaved;
+            setStoreKey('stats', data);
+          })
 
           speedUpStart = -1;
         }
