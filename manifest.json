@@ -10,7 +10,9 @@
       "48": "icons/icon-48.png"
   },
 
-  "permissions": [],
+  "permissions": [
+    "storage"
+  ],
 
   "background": {
     "scripts": ["background/main.js"]

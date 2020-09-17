@@ -15,6 +15,29 @@ const debug = (log) => {
   }
 }
 
+// Get a value from the browser storage
+const getStoreKey = (key, defaultValue = false) => {
+  return new Promise((resolve) => {
+    try {
+      chrome.storage.sync.get(key, (data) => {
+        if (typeof key === "string") {
+          resolve(data[key] || defaultValue);
+        } else {
+          resolve(data);
+        }
+      });
+    } catch(e) {
+      resolve(defaultValue);
+    }
+  });
+}
+// Set a value of the browser storage
+const setStoreKey = (key, value) => {
+  return new Promise((resolve) => {
+    chrome.storage.sync.set({ [key]: value }, resolve);
+  });
+}
+
 // Configuration
 let config = {
   threshold: 30,
@@ -50,6 +73,30 @@ const triggerUpdate = () => {
     command: 'update'
   });
 }
+
+// Load config from the storage
+const loadDataFromStorage = () => {
+  getStoreKey(['threshold', 'samples_threshold', 'playback_speed', 'silence_speed']).then((data) => {
+    if (data.threshold) {
+      config.threshold = data.threshold;
+    }
+    if (data.samples_threshold) {
+      config.samples_threshold = data.samples_threshold;
+    }
+    if (data.playback_speed) {
+      config.playback_speed = data.playback_speed;
+    }
+    if (data.silence_speed) {
+      config.silence_speed = data.silence_speed;
+    }
+  
+    triggerUpdate();
+  });
+};
+
+loadDataFromStorage();
+
+chrome.storage.sync.onChanged.addListener(loadDataFromStorage);
 
 // Create audio context for media element
 // This way we can inspect the volume
@@ -374,6 +421,11 @@ const inspectElement = async (element) => {
       }
 
       config = msg.data;
+
+      setStoreKey('threshold', config.threshold);
+      setStoreKey('samples_threshold', config.samples_threshold);
+      setStoreKey('playback_speed', config.playback_speed);
+      setStoreKey('silence_speed', config.silence_speed);
     } else if (msg.command === 'requestConfig') {
       // Send our current config back to popup
       sendResponse(config);
