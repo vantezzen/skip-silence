@@ -125,23 +125,28 @@ const attachAnalyser = async element => {
 
   // Check if we can use our the pre-buffer feature
   let canUseClonedElement = true;
-  try {
-    await fetch(element.src, {
-      method: 'HEAD'
-    });
-  } catch (e) {
-    canUseClonedElement = false;
-    config.supportsSlowDownTime = false;
-  }
-
   let audioSrc;
-  if (canUseClonedElement) {
-    audioSrc = element.cloneNode();
-    if (element.tagName === 'VIDEO') {
-      audioSrc = document.createElement('video');
-      audioSrc.src = element.src;
-    } else if (element.tagName === 'AUDIO') {
-      audioSrc = new Audio(element.src);
+  
+  if (document.getElementById('SKIP_SILENCE_SHADOW_PLAYER')) {
+    audioSrc = document.getElementById('SKIP_SILENCE_SHADOW_PLAYER');
+  } else {
+    try {
+      await fetch(element.src, {
+        method: 'HEAD'
+      });
+    } catch (e) {
+      canUseClonedElement = false;
+      config.supportsSlowDownTime = false;
+    }
+  
+    if (canUseClonedElement) {
+      audioSrc = element.cloneNode();
+      if (element.tagName === 'VIDEO') {
+        audioSrc = document.createElement('video');
+        audioSrc.src = element.currentSrc;
+      } else if (element.tagName === 'AUDIO') {
+        audioSrc = new Audio(element.src);
+      }
     }
   }
 
