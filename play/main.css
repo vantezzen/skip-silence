@@ -1,0 +1,68 @@
+body {
+  background-color: #000000;
+  color: #EBEBEB;
+  text-align: center;
+  
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items:center;
+
+  font-family: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+a {
+  color: #d1d1d1;
+}
+
+.hidden {
+  display: none;
+}
+
+.activate-info {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  animation-name: fadeInOut;
+  animation-duration: 4s;
+  animation-fill-mode: forwards;
+
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 1em 6em;
+
+  opacity: 0;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; display: inline; }
+  50%  { opacity: 1; display: inline; }
+  99% { opacity: 0; display: inline; }
+  100% { display: none; }
+}
+
+#SKIP_SILENCE_SHADOW_PLAYER {
+  display: none;
+}
+
+.file {
+  margin-top: 2em;
+}
+
+.fileContainer {
+  overflow: hidden;
+  background: #EBEBEB;
+  border-radius: 2em;
+  padding: 1em 2em;
+  color: #212121;
+  cursor: pointer;
+}
+
+.fileContainer [type=file] {
+  display: none;
+}
+
