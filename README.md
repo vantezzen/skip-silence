@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="icons/icon-500.png" height="300"><br />
+    <img src="icons/title.png"><br />
     <a href="https://chrome.google.com/webstore/detail/skip-silence/fhdmkhbefcbhakffdihhceaklaigdllh">
         <img src="icons/chrome.png" alt="Availible on chrome web store" width="150">
     </a>
