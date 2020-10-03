@@ -142,7 +142,7 @@ const formatTime = (exactTime) => {
 }
 const updateTimeSaved = () => {
   document.getElementById('time-saved').innerText = formatTime(config.timeSaved);
-  document.getElementById('global-time-saved').innerText = formatTime(globalSavedTime + config.timeSaved);
+  // document.getElementById('global-time-saved').innerText = formatTime(globalSavedTime + config.timeSaved);
 }
 
 // Listen for messages from the page to update our config
