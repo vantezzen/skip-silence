@@ -465,6 +465,8 @@ const inspectElement = async (element) => {
 
 const inspectAllMediaElements = () => {
   function getElementsRecursive(rootEl) {
+    if (!rootEl) return [];
+    
     // Get all media elements within this root element context
     const elementsWithinRoot = [
       ...rootEl.getElementsByTagName('video'),
