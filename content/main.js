@@ -464,10 +464,23 @@ const inspectElement = async (element) => {
 }
 
 const inspectAllMediaElements = () => {
-  const elements = [
-    ...document.getElementsByTagName('video'),
-    ...document.getElementsByTagName('audio'),
-  ];
+  function getElementsRecursive(rootEl) {
+    if (!rootEl) return [];
+    
+    // Get all media elements within this root element context
+    const elementsWithinRoot = [
+      ...rootEl.getElementsByTagName('video'),
+      ...rootEl.getElementsByTagName('audio'),
+    ];
+    // Recursively locate media elements within iframes on the page
+    const elementsInNestedFrames = Array.from(rootEl.getElementsByTagName('iframe')).reduce((acc, frame) => {
+      return [...acc, ...getElementsRecursive(frame.contentDocument)]
+    }, []);
+    // Return all elements with duplicates removed
+    return [...new Set([...elementsWithinRoot, ...elementsInNestedFrames])];
+  }
+
+  const elements = getElementsRecursive(document);
 
   if (elements.length === 0) {
     debug('No source found');
