@@ -1,0 +1,24 @@
+$shade-10: #2c3e50 !default;
+$shade-1: #d7dcdf !default;
+$shade-0: #fff !default;
+$teal: #1abc9c !default;
+
+.speed-setting {
+  margin: 0 2rem;
+
+  select {
+    width: 100%;
+    margin-top: 0.5rem;
+    background-color: $shade-10;
+    color: $shade-1;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    border: 0;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 1px $shade-0,
+                0 0 0 2px $teal;
+    }
+  }
+}
