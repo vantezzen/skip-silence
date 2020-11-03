@@ -5,7 +5,15 @@
     </a>
 </p>
 
-# Skip Silence
+# Skip Silence 3 is out!
+
+You are looking at the code for Skip Silence 2. I've since published Skip Silence 3 which completely rewrote the way Skip Silence works.
+
+Skip Silence 1 and 2 were small, quick hobby projects that grew larger and larger and thus became more and more unmaintainable, chaotic and full of bugs. This is why I decided to dump Skip Silence 2's source code and rewrite the extension with React, Typescript, ES6 and Webpack, making it much more maintainable.
+
+If you want to go to Skip Silence 3, please visit https://github.com/vantezzen/skip-silence/.
+
+# Skip Silence 2
 "Skip Silence" is a browser extension that allows you to autmatically skip parts of a video that are silent.
 It is highly inspired by CaryKH's [automatic on-the-fly video editing tool](https://www.youtube.com/watch?v=DQ8orIurGxw).
 The extension works with most websites that use HTML5 `audio` and `video` elements (like YouTube).
