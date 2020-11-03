@@ -102,11 +102,11 @@ var options = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
-      }
+              outputPath: 'fonts/',
+            },
+          },
+        ],
+      },
     ],
   },
   resolve: {
@@ -174,7 +174,7 @@ var options = {
       filename: 'background.html',
       chunks: ['background'],
       cache: false,
-    })
+    }),
   ],
   infrastructureLogging: {
     level: 'info',
