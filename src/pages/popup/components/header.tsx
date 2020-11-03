@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <div className="header">
       <img src="/assets/img/icon-128.png" />
-      <h1>Skip Silence</h1>
+      <h1>Skip Silence 3</h1>
     </div>
   );
 };
