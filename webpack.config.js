@@ -37,7 +37,7 @@ var options = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
     popup: path.join(__dirname, 'src', 'pages', 'popup', 'index.jsx'),
-    background: path.join(__dirname, 'src', 'pages', 'background', 'index.js'),
+    background: path.join(__dirname, 'src', 'pages', 'background', 'index.ts'),
     contentScript: path.join(__dirname, 'src', 'pages', 'content', 'index.ts'),
   },
   chromeExtensionBoilerplate: {
