@@ -28,7 +28,7 @@ class Popup extends Component {
     },
     {
       element: '#vu_meter',
-      intro: 'This bar will show you the current volume of the media you are playing. If the volume is lower than the red line, Skip Silence will speed up the video',
+      intro: "This bar will show you the current volume of the media you are playing.<br />If the volume is lower than the red line, Skip Silence will speed up the video.<br />If the bar turns green, the video if currently sped up.",
     },
     {
       element: '.main-switch input',
