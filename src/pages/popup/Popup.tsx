@@ -1,5 +1,8 @@
 import React, { ChangeEvent, Component } from 'react';
 import './Popup.css';
+import 'intro.js/introjs.css';
+
+import { Steps } from 'intro.js-react';
 
 import ConfigProvider from '../shared/configProvider';
 
@@ -13,6 +16,33 @@ import debug from '../shared/debug';
 class Popup extends Component {
   config : ConfigProvider;
   isComponentMounted = false;
+
+  state = {
+    shouldShowIntro: localStorage.getItem('hasShownIntro') !== 'yes',
+  }
+
+  steps = [
+    {
+      element: '.header',
+      intro: 'Welcome to Skip Silence! I can show you around, if you want to - otherwise click "Skip" at any point',
+    },
+    {
+      element: '#vu_meter',
+      intro: 'This bar will show you the current volume of the media you are playing. If the volume is lower than the red line, Skip Silence will speed up the video',
+    },
+    {
+      element: '.main-switch input',
+      intro: 'Click this switch in order to enable or disable Skip Silence on the current page. If you disable Skip Silence you will not see the volume level above.',
+    },
+    {
+      element: '#speed-settings',
+      intro: 'You can choose what speed to play back normal parts ("Playback Speed") and silent parts ("Silence Speed") of the media.',
+    },
+    {
+      element: '#silence_threshold',
+      intro: 'Use this slider to choose your silence threshold. This will also be represented by the red line in the volume bar above.',
+    },
+  ];
 
   constructor(props : object) {
     super(props);
@@ -41,6 +71,18 @@ class Popup extends Component {
   render() {
     return (
       <div className="App">
+        {this.state.shouldShowIntro && (
+          <Steps
+            initialStep={0}
+            enabled={this.state.shouldShowIntro}
+            steps={this.steps}
+            onExit={() => {
+              this.setState({ shouldShowIntro: false });
+              localStorage.setItem('hasShownIntro', 'yes');
+            }}
+          />
+        )}
+
         <Header />
   
         <VUMeter config={this.config} />
@@ -53,7 +95,7 @@ class Popup extends Component {
         <div style={{
           display: 'flex',
           marginTop: '1.5rem'
-        }}>
+        }} id="speed-settings">
           <SpeedSetting
             label="Playback Speed"
             name="playback_speed"
