@@ -39,6 +39,8 @@ const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
         <option value="4">4x</option>
         <option value="4.5">4.5x</option>
         <option value="5">5x</option>
+        <option value="7.5">7.5x</option>
+        <option value="10">10x</option>
       </select>
     </div>
   );
