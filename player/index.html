@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skip Silence Local Video Player</title>
+
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <div class="activate-info hidden">
+    <img src="arrow.svg" alt="Arrow">
+    <p>
+      You can now activate "Skip Silence"
+    </p>
+  </div>
+
+  <div class="drag-info hidden">
+    <p>
+      Drop your video to play it
+    </p>
+  </div>
+
+  <div class="selection">
+    <h1>Skip Silence Video Player</h1>
+    <p>This player allows you to use the <a href="https://chrome.google.com/webstore/detail/skip-silence/fhdmkhbefcbhakffdihhceaklaigdllh">"Skip Silence" extension</a> in combination with local files.</p>
+    <p>Simply choose the video you want to watch, then activate "Skip Silence" as normal.</p>
+
+    <div class="file">
+      <label class="fileContainer">
+        Choose a video
+        <input type="file" accept="video/*" id="input" />
+      </label>
+    </div>
+  </div>
+  <div class="player hidden">
+    <video controls autoplay id="player"></video>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
