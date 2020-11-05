@@ -156,9 +156,7 @@ class Popup extends Component {
         )}
         
         <div className="plugin-info">
-          Developed by <a href="https://github.com/vantezzen" target="_blank">Bennett</a>.<br />
-          This extension is fully open-source. The code can be viewed at <a href="https://github.com/vantezzen/skip-silence">https://github.com/vantezzen/skip-silence</a>.<br />
-          If you find any bugs or experience problems using the extension with a specific website, please feel free to report it at <a href="https://github.com/vantezzen/skip-silence/issues">https://github.com/vantezzen/skip-silence/issues</a>.
+          Developed by <a href="https://github.com/vantezzen" target="_blank">Bennett</a>.
         </div>
       </div>
     );
