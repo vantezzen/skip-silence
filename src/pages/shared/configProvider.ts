@@ -2,8 +2,15 @@ import { browser } from "webextension-polyfill-ts";
 import { ExtMessage } from './types';
 import defaultConfig from './config';
 import debug from './debug';
+import { strict } from "assert";
 
 type Environment = "popup" | "content" | "background";
+
+// List of keys that should be saved to local storage
+const storedKeys : (keyof typeof defaultConfig)[] = [
+  "playback_speed",
+  "silence_speed"
+];
 
 /**
  * Config Provider: Provides the config data in a way that syncs all data with other components of the
@@ -26,6 +33,9 @@ export default class ConfigProvider {
 
     if (this.env === "popup") {
       this.fetch();
+    }
+    if (this.env === "content") {
+      this._getValuesFromStorage();
     }
 
     debug("ConfigProvider: Setup");
@@ -50,6 +60,23 @@ export default class ConfigProvider {
         
         return Promise.resolve(this.config);
       }
+    });
+  }
+
+  /**
+   * Restore values from the local browser storage
+   */
+  _getValuesFromStorage() {
+    browser.storage.local.get(storedKeys).then((data) => {
+      debug("ConfigProvider: Got data from localstorage", data);
+
+      for(const key of storedKeys) {
+        if (data[key]) {
+          this.set(key, data[key]);
+        }
+      }
+
+      debug("ConfigProvider: Config after loading local storage is", this.config);
     });
   }
 
@@ -104,6 +131,7 @@ export default class ConfigProvider {
    */
   async push() {
     if (this.env === "popup" || this.env === "background") {
+      // Push changes to Content script
       const tabs = await browser.tabs.query({active: true, currentWindow: true});
       if (!tabs[0] || !tabs[0].id) {
         // We can't connect to a page
@@ -116,6 +144,12 @@ export default class ConfigProvider {
       });
 
       debug("ConfigProvider: Pushed config to content script", this.config);
+    } else {
+      // Push to popup
+      browser.runtime.sendMessage({
+        command: 'config',
+        data: this.config,
+      });
     }
   }
 
@@ -138,6 +172,13 @@ export default class ConfigProvider {
   set(key : keyof typeof defaultConfig, value : any) : void {
     // @ts-ignore 2322
     this.config[key] = value;
+
+    if(storedKeys.includes(key)) {
+      // Save changes locally
+      browser.storage.local.set({
+        [key]: value,
+      });
+    }
 
     this.push();
     this._onUpdate();

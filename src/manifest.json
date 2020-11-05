@@ -13,7 +13,8 @@
     "128": "assets/img/icon-128.png"
   },
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*", "<all_urls>"],
