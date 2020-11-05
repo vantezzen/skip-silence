@@ -17,6 +17,7 @@ export default class SilenceSkipper {
   isSpedUp = false;
   samplesUnderThreshold = 0;
   isInspectionRunning = false;
+  samplesSinceLastVolumeMessage = 0;
 
   // Audio variables
   audioContext : AudioContext | undefined;
@@ -152,13 +153,17 @@ export default class SilenceSkipper {
     }
 
     // Send our volume information to the popup
-    this._sendCommand('volume', {
-      data: volume
-    });
+    this.samplesSinceLastVolumeMessage++;
+    if (this.samplesSinceLastVolumeMessage >= 2) {
+      this._sendCommand('volume', {
+        data: volume
+      });
+      this.samplesSinceLastVolumeMessage = 0;
+    }
 
     if (this.config.get('enabled')) {
       // Continue inspecting the next sample
-      setTimeout(() => this._inspectSample(), 50);
+      setTimeout(() => this._inspectSample(), 25);
     } else {
       // Stop inspecting
       this.isInspectionRunning = false;
