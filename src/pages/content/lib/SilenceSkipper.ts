@@ -167,10 +167,9 @@ export default class SilenceSkipper {
       if (this.isSpedUp) {
         this.isSpedUp = false;
         this.samplesUnderThreshold = 0;
-
-        this._sendCommand('slowDown');
-        this.element.playbackRate = 1;
       }
+      this._sendCommand('slowDown');
+      this.element.playbackRate = 1;
 
       this._sendCommand('volume', {
         data: 0
