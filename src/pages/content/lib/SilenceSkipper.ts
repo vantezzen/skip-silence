@@ -163,13 +163,13 @@ export default class SilenceSkipper {
       // Stop inspecting
       this.isInspectionRunning = false;
 
-      // Make sure the video is back to playback speed
+      // Make sure the video is back to normal speed
       if (this.isSpedUp) {
         this.isSpedUp = false;
         this.samplesUnderThreshold = 0;
 
         this._sendCommand('slowDown');
-        this.element.playbackRate = playbackSpeed;
+        this.element.playbackRate = 1;
       }
 
       this._sendCommand('volume', {
