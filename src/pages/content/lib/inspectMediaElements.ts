@@ -55,7 +55,7 @@ export default function inspectMediaElements(callback : Function) {
   // A list of all elements we have already discovered
   const inspectedElements : MediaElement[] = [];
 
-  if (document.readyState === "complete") {
+  if (document.readyState === "interactive" || document.readyState === "complete") {
     // Search current elements
     searchElements(inspectedElements, callback);
   } else {
