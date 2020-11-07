@@ -22,6 +22,7 @@ export default class SilenceSkipper {
   // Audio variables
   audioContext : AudioContext | undefined;
   analyser : AnalyserNode | undefined;
+  gain : GainNode | undefined;
   source: MediaElementAudioSourceNode | undefined;
   audioFrequencies : Float32Array | undefined;
 
@@ -52,11 +53,14 @@ export default class SilenceSkipper {
     // Create our audio components
     this.analyser = this.audioContext.createAnalyser();
     this.source = this.audioContext.createMediaElementSource(this.element);
+    this.gain = this.audioContext.createGain();
 
     // Connect our components
-    // Source -> Analyser -> Destination
-    this.source.connect(this.analyser);
-    this.analyser.connect(this.audioContext.destination);
+    // Source -> Analyser -> Gain -> Destination
+    this.source
+      .connect(this.analyser)
+      .connect(this.gain)
+      .connect(this.audioContext.destination);
 
     this.audioFrequencies = new Float32Array(this.analyser.fftSize);
 
@@ -82,6 +86,18 @@ export default class SilenceSkipper {
         this.element.playbackRate = silenceSpeed;
       } else {
         this.element.playbackRate = playbackSpeed;
+      }
+
+      // Update gain level
+      const muteSilence = this.config.get("mute_silence");
+      if(muteSilence && this.isSpedUp) {
+        if (this.gain) {
+          // Make sure our silence is muted 
+          this.gain.gain.value = 0;
+        }
+      } else if (this.gain) {
+        // Make sure we are not muted 
+        this.gain.gain.value = 1;
       }
     }
   }
@@ -118,6 +134,52 @@ export default class SilenceSkipper {
   }
 
   /**
+   * Slow the video down to playback speed
+   */
+  _slowDown() {
+    const playbackSpeed = this.config.get('playback_speed');
+
+    this.isSpedUp = false;
+    this.samplesUnderThreshold = 0;
+
+    this._sendCommand('slowDown');
+    this.element.playbackRate = playbackSpeed;
+    
+    if(this.config.get("mute_silence")) {
+      // Slowly remove our mute
+      // If we do this immediately, we may cause a "clicking" noise
+      // Source: http://alemangui.github.io/ramp-to-value
+      if (this.gain && this.audioContext) {
+        this.gain.gain.setTargetAtTime(1, this.audioContext.currentTime, 0.04);
+      }
+    }
+  }
+
+  /**
+   * Speed the video up to silence speed
+   */
+  _speedUp() {
+    const silenceSpeed = this.config.get('silence_speed');
+
+    this._sendCommand('speedUp');
+    this.isSpedUp = true;
+
+    if (this.config.get("mute_silence")) {
+      // Get the audio muted before we speed up the video
+      // This will help remove the "clicking" sound when speeding up with remaining audio
+      if (this.gain && this.audioContext) {
+        this.gain.gain.setTargetAtTime(0, this.audioContext.currentTime, 0.015);
+      }
+      
+      setTimeout(() => {
+        this.element.playbackRate = silenceSpeed;
+      }, 20);
+    } else {
+      this.element.playbackRate = silenceSpeed;
+    }
+  }
+
+  /**
    * Inspect the current sample of the media and speed up or down accordingly
    */
   _inspectSample() {
@@ -129,8 +191,6 @@ export default class SilenceSkipper {
     const volume = this._calculateVolume();
     const threshold = this.config.get('silence_threshold');
     const sampleThreshold = this.config.get('samples_threshold');
-    const playbackSpeed = this.config.get('playback_speed');
-    const silenceSpeed = this.config.get('silence_speed');
 
     if (volume < threshold && !this.element.paused && !this.isSpedUp) {
       // We are below our threshold and should possibly slow down
@@ -138,18 +198,11 @@ export default class SilenceSkipper {
 
       if (this.samplesUnderThreshold >= sampleThreshold) {
         // We are over our sample threshold and should speed up!
-        this._sendCommand('speedUp');
-
-        this.isSpedUp = true;
-        this.element.playbackRate = silenceSpeed;
+        this._speedUp();
       }
     } else if (volume > threshold && this.isSpedUp) {
       // Slow back down as we are now in a loud part again
-      this.isSpedUp = false;
-      this.samplesUnderThreshold = 0;
-
-      this._sendCommand('slowDown');
-      this.element.playbackRate = playbackSpeed;
+      this._slowDown();
     }
 
     // Send our volume information to the popup

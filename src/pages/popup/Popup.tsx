@@ -9,7 +9,7 @@ import ConfigProvider from '../shared/configProvider';
 
 import Header from './components/header';
 import VUMeter from './components/vuMeter';
-import MainSwitch from './components/mainSwitch';
+import Switch from './components/switch';
 import SliderSetting from './components/sliderSetting';
 import SpeedSetting from './components/speedSetting';
 import debug from '../shared/debug';
@@ -34,7 +34,7 @@ class Popup extends Component {
       intro: "This bar will show you the current volume of the media you are playing.<br />If the volume is lower than the red line, Skip Silence will speed up the video.<br />If the bar turns green, the video if currently sped up.",
     },
     {
-      element: '.main-switch input',
+      element: '#enabled',
       intro: 'Click this switch in order to enable or disable Skip Silence on the current page. If you disable Skip Silence you will not see the volume level above.',
     },
     {
@@ -45,12 +45,15 @@ class Popup extends Component {
       element: '#silence_threshold',
       intro: 'Use this slider to choose your silence threshold. This will also be represented by the red line in the volume bar above.',
     },
+    {
+      element: '#mute_silence',
+      intro: 'If you are having trouble with the audio "clicking" when speeding up or slowing down, try enabling this option.',
+    },
   ];
 
   constructor(props : object) {
     super(props);
 
-    this.onEnableDisable = this.onEnableDisable.bind(this);
     this.config = new ConfigProvider("popup");
     this.config.onUpdate(() => {
       if (this.isComponentMounted) {
@@ -80,10 +83,6 @@ class Popup extends Component {
     this.isComponentMounted = false;
   }
 
-  onEnableDisable(event : ChangeEvent<HTMLInputElement>) {
-    this.config.set('enabled', event.target.checked);
-  }
-
   render() {
     return (
       <div className="App">
@@ -107,9 +106,10 @@ class Popup extends Component {
       
             <VUMeter config={this.config} />
 
-            <MainSwitch
-              enabled={this.config.get('enabled')}
-              onSwitch={this.onEnableDisable}
+            <Switch
+              name="enabled"
+              label="Enable Skip Silence"
+              config={this.config}
             />
 
             <div style={{
@@ -151,6 +151,15 @@ class Popup extends Component {
             <p className="small">
               Length of silence needed before speeding up.<br />
               This is to ensure we are not speeding up due to the short silence between words and sentences.
+            </p>
+
+            <Switch
+              name="mute_silence"
+              label="Mute Silence"
+              config={this.config}
+            />
+            <p className="small">
+              If you are having problems with audio clicking or don't want to hear any audio when sped up, enable this option.
             </p>
           </>
         )}
