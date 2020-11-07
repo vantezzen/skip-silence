@@ -17,6 +17,7 @@
     "storage"
   ],
   "content_scripts": [{
+    "all_frames": true,
     "matches": ["http://*/*", "https://*/*", "<all_urls>"],
     "js": ["contentScript.bundle.js"],
     "css": ["content.styles.css"]
