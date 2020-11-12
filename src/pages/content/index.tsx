@@ -28,6 +28,27 @@ window.document.body.appendChild(containerElement);
 
 RenderReact(<Bar config={config} />, containerElement);
 
+// Listen for keyboard shortcuts
+browser.runtime.onMessage.addListener((msg) => {
+  if (msg.command && msg.command === 'shortcut') {
+    const { name } = msg;
+
+    if (name === 'toggle-enable') {
+      config.set('enabled', !config.get('enabled'));
+    } else if (name === 'increase-playback-speed' || name === 'decrease-playback-speed') {
+      // Find out index of the current speed setting
+      const currentSpeed = config.get('playback_speed');
+      const currentSpeedIndex = speedSettings.findIndex((speed) => currentSpeed === speed) || 2;
+
+      // Increase or decrease the speed
+      const newSpeedIndex = name === 'increase-playback-speed' ? currentSpeedIndex + 1 : currentSpeedIndex - 1;
+      const newSpeed = speedSettings[newSpeedIndex] || currentSpeed;
+
+      // Update our speed
+      config.set('playback_speed', newSpeed);
+    }
+  }
+});
 
 browser.runtime.sendMessage({ command: 'noElement' });
 

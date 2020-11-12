@@ -1,32 +1,63 @@
 {
   "name": "Skip Silence",
+
   "background": {
     "page": "background.html"
   },
+
   "page_action": {
     "default_icon": {
       "32": "assets/img/disabled.png"
     },
     "default_popup": "popup.html"
   },
+
   "icons": {
     "128": "assets/img/icon-128.png"
   },
+
   "permissions": [
     "activeTab",
     "storage"
   ],
+
   "content_scripts": [{
     "all_frames": true,
     "matches": ["http://*/*", "https://*/*", "<all_urls>"],
     "js": ["contentScript.bundle.js"],
     "css": ["content.styles.css"]
   }],
+
   "web_accessible_resources": [
     "content.styles.css",
     "assets/img/icon-128.png",
-    "assets/img/icon-34.png"
+    "assets/img/icon-34.png",
+    "assets/img/close.svg"
   ],
+
+  "commands": {
+    "toggle-enable": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S"
+      },
+      "description": "Enable/disable Skip Silence for the current tab"
+    },
+
+    
+    "increase-playback-speed": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Up"
+      },
+      "description": "Increase the Playback Speed of the video"
+    },
+    "decrease-playback-speed": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Down"
+      },
+      "description": "Decrease the Playback Speed of the video"
+    }
+  },
+
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
