@@ -11,6 +11,7 @@ import Switch from '../../shared/components/switch';
 import './Bar.scss';
 import Header from './components/header';
 import CollapseBtn from './components/collapse-btn';
+import CommandListener from './components/command-listener';
 
 interface BarProps {
   config: ConfigProvider
@@ -69,22 +70,7 @@ class Bar extends Component<BarProps> {
       <div className="skip-silence-bar">
         <Header />
 
-        <Switch
-          name="enabled"
-          label="Enable Skip Silence"
-          config={this.props.config}
-        />
-
-        <SpeedSetting
-          label="Playback Speed"
-          name="playback_speed"
-          config={this.props.config}
-        />
-        <SpeedSetting
-          label="Silence Speed"
-          name="silence_speed"
-          config={this.props.config}
-        />
+        <CommandListener config={this.props.config} />
 
         <CollapseBtn config={this.props.config} />
       </div>

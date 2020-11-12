@@ -26,7 +26,7 @@ const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
         value={value}
       >
         {speedSettings.map((val) => (
-          <option value={val}>{val}x</option>
+          <option value={val} key={val}>{val}x</option>
         ))}
       </select>
     </div>
