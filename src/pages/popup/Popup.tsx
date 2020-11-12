@@ -8,12 +8,12 @@ import { Steps } from 'intro.js-react';
 import ConfigProvider from '../shared/configProvider';
 
 import Header from './components/header';
-import VUMeter from './components/vuMeter';
-import Switch from './components/switch';
-import SliderSetting from './components/sliderSetting';
-import SpeedSetting from './components/speedSetting';
+import VUMeter from '../shared/components/vuMeter';
+import Switch from '../shared/components/switch';
+import SliderSetting from '../shared/components/sliderSetting';
+import SpeedSetting from '../shared/components/speedSetting';
 import debug from '../shared/debug';
-import LocalPlayerInfo from './components/localPlayerInfo';
+import LocalPlayerInfo from '../shared/components/localPlayerInfo';
 
 class Popup extends Component {
   config : ConfigProvider;

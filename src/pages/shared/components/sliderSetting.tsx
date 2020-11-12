@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import ConfigProvider from '../../shared/configProvider';
+import ConfigProvider from '../configProvider';
 
 import "./sliderSetting.scss";
 

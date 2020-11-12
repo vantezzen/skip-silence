@@ -38,7 +38,7 @@ var options = {
   entry: {
     popup: path.join(__dirname, 'src', 'pages', 'popup', 'index.jsx'),
     background: path.join(__dirname, 'src', 'pages', 'background', 'index.ts'),
-    contentScript: path.join(__dirname, 'src', 'pages', 'content', 'index.ts'),
+    contentScript: path.join(__dirname, 'src', 'pages', 'content', 'index.tsx'),
   },
   chromeExtensionBoilerplate: {
     notHotReload: ['contentScript'],

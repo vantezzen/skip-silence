@@ -1,0 +1,17 @@
+.skip-silence-bar {
+  .collapse-btn {
+    display: flex;
+    align-items: center;
+    
+    position: fixed;
+    right: 0;
+    
+    cursor: pointer;
+
+    img {
+      height: 30px;
+      width: 30px;
+      margin-right: 10px;
+    }
+  }
+}

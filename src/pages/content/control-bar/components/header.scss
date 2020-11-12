@@ -1,0 +1,16 @@
+.skip-silence-bar {
+  .header {
+    display: flex;
+    align-items: center;
+
+    font-weight: bold;
+
+    margin-right: 20px;
+
+    img {
+      height: 30px;
+      width: 30px;
+      margin-right: 10px;
+    }
+  }
+}

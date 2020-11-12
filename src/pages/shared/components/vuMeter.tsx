@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { browser } from "webextension-polyfill-ts";
-import ConfigProvider from '../../shared/configProvider';
-import { ExtMessage } from '../../shared/types';
+import ConfigProvider from '../configProvider';
+import { ExtMessage } from '../types';
 
 interface VUMeterProps {
   config: ConfigProvider

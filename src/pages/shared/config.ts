@@ -8,6 +8,8 @@ const defaultConfig = {
   silence_speed: 3,
 
   mute_silence: true,
+
+  is_bar_collapsed: true,
 };
 
 export default defaultConfig;
