@@ -7,7 +7,7 @@ const defaultConfig = {
   playback_speed: 1,
   silence_speed: 3,
 
-  mute_silence: false,
+  mute_silence: true,
 };
 
 export default defaultConfig;
