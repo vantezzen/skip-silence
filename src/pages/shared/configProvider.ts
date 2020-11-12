@@ -8,8 +8,12 @@ type Environment = "popup" | "content" | "background";
 
 // List of keys that should be saved to local storage
 const storedKeys : (keyof typeof defaultConfig)[] = [
+  "silence_threshold",
+  "samples_threshold",
+
   "playback_speed",
   "silence_speed",
+
   "mute_silence"
 ];
 

@@ -36,6 +36,16 @@ export default class SilenceSkipper {
     this.element = mediaElement;
     this.config = config;
 
+    // Enable Skip Silence if we should
+    const isEnabled = this.config.get('enabled');
+    if (isEnabled) {
+      if (!this.isInspectionRunning) {
+        // Start running the inspection
+        this._inspectSample();
+      }
+    }
+
+    // Attach our config listener
     this.config.onUpdate(() => this._onConfigUpdate());
   }
 
@@ -128,6 +138,7 @@ export default class SilenceSkipper {
    * Send a command to the popup
    * 
    * @param command Command to send
+   * @param data Additional data to send (optional)
    */
   _sendCommand(command : String, data : Object = {}) {
     browser.runtime.sendMessage({ command, ...data });
@@ -214,6 +225,7 @@ export default class SilenceSkipper {
       this.samplesSinceLastVolumeMessage = 0;
     }
 
+    // Check if we should continue inspecting
     if (this.config.get('enabled')) {
       // Continue inspecting the next sample
       setTimeout(() => this._inspectSample(), 25);
