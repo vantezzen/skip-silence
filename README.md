@@ -3,6 +3,9 @@
     <a href="https://chrome.google.com/webstore/detail/skip-silence/fhdmkhbefcbhakffdihhceaklaigdllh">
         <img src="img/chrome.png" alt="Availible on chrome web store" width="150">
     </a>
+    <a href="https://www.buymeacoffee.com/vantezzen" target="_blank">
+      <img src="img/bmc.png" alt="Buy Me A Coffee" width="150">
+    </a>
 </p>
 
 # Skip Silence
