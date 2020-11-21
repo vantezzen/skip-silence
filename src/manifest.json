@@ -43,19 +43,6 @@
       "description": "Enable/disable Skip Silence for the current tab"
     },
 
-    
-    "increase-playback-speed": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+Up"
-      },
-      "description": "Increase the Playback Speed of the video"
-    },
-    "decrease-playback-speed": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+Down"
-      },
-      "description": "Decrease the Playback Speed of the video"
-    },
 
     "toggle-command-bar": {
       "suggested_key": {
