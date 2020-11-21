@@ -6,7 +6,7 @@ import { browser } from "webextension-polyfill-ts";
 import React from 'react';
 import { render as RenderReact } from 'react-dom';
 
-import Bar from './control-bar/Bar';
+import Bar from './command-bar/Bar';
 import debug from '../shared/debug';
 import ConfigProvider from '../shared/configProvider';
 import { MediaElement } from '../shared/types';
@@ -46,6 +46,8 @@ browser.runtime.onMessage.addListener((msg) => {
 
       // Update our speed
       config.set('playback_speed', newSpeed);
+    } else if (name === 'toggle-command-bar') {
+      config.set('is_bar_collapsed', !config.get('is_bar_collapsed'));
     }
   }
 });

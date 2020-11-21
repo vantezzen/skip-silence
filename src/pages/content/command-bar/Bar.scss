@@ -1,0 +1,81 @@
+.skip-silence-bar {
+  all: initial;
+  
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background: #1B1B1B;
+  color: #FFFFFF;
+
+  font-family: "Poppins", sans-serif;
+
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-height: 25px;
+  padding: 10px;
+
+  display: flex;
+  align-items: center;
+
+  animation: animate-in-command-bar 0.2s;
+
+  .info {
+    color: rgb(86, 86, 86) !important;
+  }
+
+  .speed-setting {
+    display: flex;
+
+    label {
+      margin-right: 5px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .slider-setting {
+    .setting-info {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+    }
+    input {
+      display: none;
+    } 
+  }
+}
+
+@keyframes animate-in-command-bar {
+  from {
+    left: calc(100vw - 25px);
+    border-top-left-radius: 10px;
+  }
+}
+
+.skip-silence-bar-collapsed {
+  background: #1B1B1B;
+  color: #FFFFFF;
+
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 25px;
+  height: 25px;
+  padding: 10px;
+
+  border-top-left-radius: 10px;
+
+  cursor: pointer;
+
+  animation: animate-in-command-collapsed 0.2s;
+}
+
+@keyframes animate-in-command-collapsed {
+  from {
+    left: 100vw;
+    opacity: 0;
+  }
+}

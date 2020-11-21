@@ -55,6 +55,13 @@
         "default": "Ctrl+Shift+Down"
       },
       "description": "Decrease the Playback Speed of the video"
+    },
+
+    "toggle-command-bar": {
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      },
+      "description": "Show/hide the command bar"
     }
   },
 
