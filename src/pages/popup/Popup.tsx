@@ -165,7 +165,10 @@ class Popup extends Component {
         )}
         
         <div className="plugin-info">
-          Developed by <a href="https://github.com/vantezzen" target="_blank">Bennett</a>.
+          Developed by <a href="https://github.com/vantezzen" target="_blank">vantezzen</a>.<br />
+          <a href="https://www.buymeacoffee.com/vantezzen" target="_blank">
+            <img src="assets/img/bmc.png" alt="Buy Me A Coffee" width="150" />
+          </a>
         </div>
       </div>
     );
