@@ -161,6 +161,16 @@ class Popup extends Component {
             <p className="small">
               If you are having problems with audio clicking or don't want to hear any audio when sped up, enable this option.
             </p>
+
+            <Switch
+              name="is_bar_icon_enabled"
+              label="Enable Command Bar Icon"
+              config={this.config}
+            />
+            <p className="small">
+              If you don't like the small command bar logo in the bottom right, you can completely disable it.<br />
+              You can still open the command bar using the shortcut "ALT/Option + Shift + S".
+            </p>
           </>
         )}
         

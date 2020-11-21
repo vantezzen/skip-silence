@@ -11,7 +11,8 @@ const defaultConfig = {
 
   mute_silence: true,
 
-  // Control Bar
+  // Command Bar
+  is_bar_icon_enabled: true,
   is_bar_collapsed: true,
   highlighted_component: '',
 };

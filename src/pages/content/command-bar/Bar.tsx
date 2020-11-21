@@ -40,13 +40,14 @@ class Bar extends Component<BarProps> {
   
   render() {
     const isEnabled = this.props.config.get('enabled');
+    const iconEnabled = this.props.config.get('is_bar_icon_enabled');
+    const isCollapsed = this.props.config.get('is_bar_collapsed');
     
-    if (!isEnabled) return (
+    if (!isEnabled || ( isCollapsed && !iconEnabled )) return (
       <>
       </>
     );
     
-    const isCollapsed = this.props.config.get('is_bar_collapsed');
 
     if (isCollapsed) {
       // Show collapsed bar

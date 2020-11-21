@@ -14,7 +14,10 @@ const storedKeys : (keyof typeof defaultConfig)[] = [
   "playback_speed",
   "silence_speed",
 
-  "mute_silence"
+  "mute_silence",
+
+  "is_bar_icon_enabled",
+  "is_bar_collapsed"
 ];
 
 /**
@@ -76,7 +79,7 @@ export default class ConfigProvider {
       debug("ConfigProvider: Got data from localstorage", data);
 
       for(const key of storedKeys) {
-        if (data[key]) {
+        if (data.hasOwnProperty(key)) {
           this.set(key, data[key]);
         }
       }

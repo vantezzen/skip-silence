@@ -5,7 +5,7 @@ import "./switch.scss";
 
 interface SwitchProps {
   label: string,
-  name: "enabled" | "mute_silence",
+  name: "enabled" | "mute_silence" | "is_bar_icon_enabled",
   config: ConfigProvider
 }
 

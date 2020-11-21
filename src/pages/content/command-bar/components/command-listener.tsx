@@ -92,6 +92,8 @@ class CommandListener extends Component<CommandListenerProps> {
 
   // Handle global key pressing and releasing
   _onKeyDown(event : KeyboardEvent) {
+    event.preventDefault();
+    
     const { key } = event;
     const { config } = this.props;
 
