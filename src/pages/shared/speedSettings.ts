@@ -25,7 +25,13 @@ const speedSettings = [
 
   7.5,
 
-  10
+  10,
+  
+  15,
+  
+  20,
+  
+  25
 ];
 
 export default speedSettings;
