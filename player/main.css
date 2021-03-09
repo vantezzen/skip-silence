@@ -74,3 +74,8 @@ a {
 .fileContainer [type=file] {
   display: none;
 }
+
+.player, #player {
+  height: 100vh;
+  width: 100%;
+}
