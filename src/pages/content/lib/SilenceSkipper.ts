@@ -18,8 +18,10 @@ export default class SilenceSkipper {
   samplesUnderThreshold = 0;
   isInspectionRunning = false;
   samplesSinceLastVolumeMessage = 0;
+  _targetPlaybackRate = 0;
   _rateChangeListenerAdded = false;
   _blockRateChangeEvents = false;
+  _handlingRateChangeError = false;
 
   // Audio variables
   audioContext : AudioContext | undefined;
@@ -81,9 +83,9 @@ export default class SilenceSkipper {
 
   /**
    * Fixes issues changing the playback rate by temporarily blocking `ratechange` event listeners.
-   * @param newRate The rate that could not be changed to
    */
-  _handlePlaybackRateChangeError(newRate: number) {
+  _handlePlaybackRateChangeError() {
+    this._handlingRateChangeError = true;
     // If the playback rate was set to zero by the website, it's probably because the video is not 
     // loaded and can no longer be played, and so shouldn't be tampered with.
     if (this.element.playbackRate !== 0) {
@@ -96,6 +98,16 @@ export default class SilenceSkipper {
           if (this._blockRateChangeEvents) {
             // Ensure the event never reaches its listeners
             event.stopImmediatePropagation();
+          } else {
+            // If the playback rate changes from 0 back to the default rate (usually 1) and that's
+            // not what we want it to be, update it.
+            if (
+              this.element.playbackRate !== 0
+              && this.element.playbackRate === this.element.defaultPlaybackRate
+              && this.element.playbackRate !== this._targetPlaybackRate
+            ) {
+              this._setPlaybackRate(this._targetPlaybackRate);
+            }
           }
         }, true);
         this._rateChangeListenerAdded = true;
@@ -103,15 +115,18 @@ export default class SilenceSkipper {
 
       setTimeout(() => {
         // Now try setting the rate again
-        this.element.playbackRate = newRate;
+        this.element.playbackRate = this._targetPlaybackRate;
         // Wait for any ratechange events to fire and get blocked
         setTimeout(() => {
           // Once we have successfully changed the playback rate, allow rate change events again.
           // We don't just remove the event entirely as we might only want to override the event 
           // some of the time.
           this._blockRateChangeEvents = false;
+          this._handlingRateChangeError = false;
         }, 1);
       }, 1);
+    } else {
+      this._handlingRateChangeError = false;
     }
   }
 
@@ -119,15 +134,18 @@ export default class SilenceSkipper {
    * Attempts to change the video playback rate
    */
   _setPlaybackRate(rate: number) {
-    this.element.playbackRate = rate;
-    // Make sure that the playback rate actually changed
-    setTimeout(() => {
-      const failedToChangeRate = this.element.playbackRate !== rate;
-      if (failedToChangeRate) {
-        // If it didn't, try to forcibly change it
-        this._handlePlaybackRateChangeError(rate);
-      }
-    }, 1);
+    this._targetPlaybackRate = rate
+    this.element.playbackRate = this._targetPlaybackRate;
+    if (!this._handlingRateChangeError) {
+      // Make sure that the playback rate actually changed
+      setTimeout(() => {
+        const failedToChangeRate = this.element.playbackRate !== this._targetPlaybackRate;
+        if (failedToChangeRate) {
+          // If it didn't, try to forcibly change it
+          this._handlePlaybackRateChangeError();
+        }
+      }, 1);
+    }
   }
 
   /**
@@ -208,7 +226,7 @@ export default class SilenceSkipper {
 
     this._sendCommand('slowDown');
     this._setPlaybackRate(playbackSpeed);
-    
+
     if(this.config.get("mute_silence")) {
       // Slowly remove our mute
       // If we do this immediately, we may cause a "clicking" noise
@@ -234,7 +252,7 @@ export default class SilenceSkipper {
       if (this.gain && this.audioContext) {
         this.gain.gain.setTargetAtTime(0, this.audioContext.currentTime, 0.015);
       }
-      
+
       setTimeout(() => {
         this._setPlaybackRate(silenceSpeed);
       }, 20);
