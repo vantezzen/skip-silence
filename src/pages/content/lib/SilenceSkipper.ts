@@ -18,8 +18,8 @@ export default class SilenceSkipper {
   samplesUnderThreshold = 0;
   isInspectionRunning = false;
   samplesSinceLastVolumeMessage = 0;
-  rateChangeListenerAdded = false;
-  blockRateChangeEvents = false;
+  _rateChangeListenerAdded = false;
+  _blockRateChangeEvents = false;
 
   // Audio variables
   audioContext : AudioContext | undefined;
@@ -88,26 +88,29 @@ export default class SilenceSkipper {
     // loaded and can no longer be played, and so shouldn't be tampered with.
     if (this.element.playbackRate !== 0) {
       // Prevent ratechange event listeners from running while we forcibly change playback rate
-      this.blockRateChangeEvents = true;
+      this._blockRateChangeEvents = true;
 
-      if (!this.rateChangeListenerAdded) {
+      if (!this._rateChangeListenerAdded) {
         // Passing in `true` for the third parameter causes the event to be captured on the way down.
         this.element.addEventListener('ratechange', (event: Event) => {
-          if (this.blockRateChangeEvents) {
+          if (this._blockRateChangeEvents) {
             // Ensure the event never reaches its listeners
             event.stopImmediatePropagation();
           }
         }, true);
-        this.rateChangeListenerAdded = true;
+        this._rateChangeListenerAdded = true;
       }
 
       setTimeout(() => {
         // Now try setting the rate again
         this.element.playbackRate = newRate;
-        // Once we have successfully changed the playback rate, allow rate change events again.
-        // We don't just remove the event entirely as we might only want to override the event 
-        // some of the time.
-        this.blockRateChangeEvents = false;
+        // Wait for any ratechange events to fire and get blocked
+        setTimeout(() => {
+          // Once we have successfully changed the playback rate, allow rate change events again.
+          // We don't just remove the event entirely as we might only want to override the event 
+          // some of the time.
+          this._blockRateChangeEvents = false;
+        }, 1);
       }, 1);
     }
   }
