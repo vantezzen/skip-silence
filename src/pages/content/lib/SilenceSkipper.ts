@@ -18,6 +18,8 @@ export default class SilenceSkipper {
   samplesUnderThreshold = 0;
   isInspectionRunning = false;
   samplesSinceLastVolumeMessage = 0;
+  rateChangeListenerAdded = false;
+  blockRateChangeEvents = false;
 
   // Audio variables
   audioContext : AudioContext | undefined;
@@ -86,20 +88,27 @@ export default class SilenceSkipper {
     // loaded and can no longer be played, and so shouldn't be tampered with.
     if (this.element.playbackRate !== 0) {
       // Prevent ratechange event listeners from running while we forcibly change playback rate
-      const listener = (event: Event) => {
-        // Ensure the event never reaches its listeners
-        event.stopImmediatePropagation();
-        setTimeout(() => {
-          // Now try setting the rate again
-          this.element.playbackRate = newRate;
-          // Once we have successfully changed the playback rate, allow rate change events again.
-          // We don't just remove the event entirely as we might only want to override the event 
-          // some of the time.
-          this.element.removeEventListener('ratechange', listener, false);
-        }, 1);
+      this.blockRateChangeEvents = true;
+
+      if (!this.rateChangeListenerAdded) {
+        // Passing in `true` for the third parameter causes the event to be captured on the way down.
+        this.element.addEventListener('ratechange', (event: Event) => {
+          if (this.blockRateChangeEvents) {
+            // Ensure the event never reaches its listeners
+            event.stopImmediatePropagation();
+          }
+        }, true);
+        this.rateChangeListenerAdded = true;
       }
-      // Passing in `true` for the third parameter causes the event to be captured on the way down.
-      this.element.addEventListener('ratechange', listener, true);
+
+      setTimeout(() => {
+        // Now try setting the rate again
+        this.element.playbackRate = newRate;
+        // Once we have successfully changed the playback rate, allow rate change events again.
+        // We don't just remove the event entirely as we might only want to override the event 
+        // some of the time.
+        this.blockRateChangeEvents = false;
+      }, 1);
     }
   }
 
