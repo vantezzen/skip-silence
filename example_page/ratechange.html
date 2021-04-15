@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Skip Silence Sample With Buffering</title>
+
+    <style>
+      canvas {
+        width: 500px;
+        height: 100px;
+        background: #002d3c;
+        float: left;
+      }
+    </style>
+  </head>
+  <body>
+    <video src="./test.mp4" controls></video>
+    <p>This is an example webpage to develop and test Skip Silence with a video that blocks changes to the playback rate while its buffering.</p>
+    <p>Video used: https://www.youtube.com/watch?v=xWsD6a3KsAI</p>
+
+    <script>
+      /** 
+       * Simulate a video buffering every 4 seconds and blocking changes to the playback rate while doing so.
+       * This kind of behavior can be observed on websites like Microsoft SharePoint.
+       */
+      const bufferInterval = 4000;
+      const video = document.querySelector('video');
+      let canPlay = false;
+      function onVideoRateChange() {
+        // Don't allow playing the video while buffering
+        const rate = canPlay ? 1 : 0;
+        video.playbackRate !== rate && (video.playbackRate = video.defaultPlaybackRate = rate);
+      }
+      video.onratechange = () => { onVideoRateChange() }
+      // Simulate the video buffering every once in a while
+      setInterval(() => {
+        canPlay = !canPlay;
+        onVideoRateChange();
+      }, bufferInterval);
+    </script>
+  </body>
+</html>

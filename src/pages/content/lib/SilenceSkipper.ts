@@ -78,6 +78,47 @@ export default class SilenceSkipper {
   }
 
   /**
+   * Fixes issues changing the playback rate by temporarily blocking `ratechange` event listeners.
+   * @param newRate The rate that could not be changed to
+   */
+  _handlePlaybackRateChangeError(newRate: number) {
+    // If the playback rate was set to zero by the website, it's probably because the video is not 
+    // loaded and can no longer be played, and so shouldn't be tampered with.
+    if (this.element.playbackRate !== 0) {
+      // Prevent ratechange event listeners from running while we forcibly change playback rate
+      const listener = (event: Event) => {
+        // Ensure the event never reaches its listeners
+        event.stopImmediatePropagation();
+        setTimeout(() => {
+          // Now try setting the rate again
+          this.element.playbackRate = newRate;
+          // Once we have successfully changed the playback rate, allow rate change events again.
+          // We don't just remove the event entirely as we might only want to override the event 
+          // some of the time.
+          this.element.removeEventListener('ratechange', listener, false);
+        }, 1);
+      }
+      // Passing in `true` for the third parameter causes the event to be captured on the way down.
+      this.element.addEventListener('ratechange', listener, true);
+    }
+  }
+
+  /**
+   * Attempts to change the video playback rate
+   */
+  _setPlaybackRate(rate: number) {
+    this.element.playbackRate = rate;
+    // Make sure that the playback rate actually changed
+    setTimeout(() => {
+      const failedToChangeRate = this.element.playbackRate !== rate;
+      if (failedToChangeRate) {
+        // If it didn't, try to forcibly change it
+        this._handlePlaybackRateChangeError(rate);
+      }
+    }, 1);
+  }
+
+  /**
    * Listener for config changes to update the settings
    */
   _onConfigUpdate() {
@@ -93,9 +134,9 @@ export default class SilenceSkipper {
       const playbackSpeed = this.config.get('playback_speed');
       const silenceSpeed = this.config.get('silence_speed');
       if (this.isSpedUp) {
-        this.element.playbackRate = silenceSpeed;
+        this._setPlaybackRate(silenceSpeed);
       } else {
-        this.element.playbackRate = playbackSpeed;
+        this._setPlaybackRate(playbackSpeed);
       }
 
       // Update gain level
@@ -154,7 +195,7 @@ export default class SilenceSkipper {
     this.samplesUnderThreshold = 0;
 
     this._sendCommand('slowDown');
-    this.element.playbackRate = playbackSpeed;
+    this._setPlaybackRate(playbackSpeed);
     
     if(this.config.get("mute_silence")) {
       // Slowly remove our mute
@@ -183,10 +224,10 @@ export default class SilenceSkipper {
       }
       
       setTimeout(() => {
-        this.element.playbackRate = silenceSpeed;
+        this._setPlaybackRate(silenceSpeed);
       }, 20);
     } else {
-      this.element.playbackRate = silenceSpeed;
+      this._setPlaybackRate(silenceSpeed);
     }
   }
 
@@ -239,7 +280,7 @@ export default class SilenceSkipper {
         this.samplesUnderThreshold = 0;
       }
       this._sendCommand('slowDown');
-      this.element.playbackRate = 1;
+      this._setPlaybackRate(1);
 
       this._sendCommand('volume', {
         data: 0
