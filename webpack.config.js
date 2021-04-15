@@ -151,14 +151,14 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'src/pages/Content/content.styles.css',
+          from: 'src/pages/content/content.styles.css',
           to: path.join(__dirname, 'build'),
           force: true,
         },
       ],
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'pages', 'Popup', 'index.html'),
+      template: path.join(__dirname, 'src', 'pages', 'popup', 'index.html'),
       filename: 'popup.html',
       chunks: ['popup'],
       cache: false,
@@ -168,7 +168,7 @@ var options = {
         __dirname,
         'src',
         'pages',
-        'Background',
+        'background',
         'index.html'
       ),
       filename: 'background.html',
