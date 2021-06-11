@@ -7,6 +7,7 @@ const speedSettings = [
   
   1,
   1.25,
+  1.3,
   1.35,
   1.4,
   1.5,
