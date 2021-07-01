@@ -179,6 +179,11 @@ class Popup extends Component {
           <a href="https://www.buymeacoffee.com/vantezzen" target="_blank">
             <img src="assets/img/bmc.png" alt="Buy Me A Coffee" width="150" />
           </a>
+          <br />
+
+          <a href="#" onClick={() => this.setState({ shouldShowIntro: true })}>
+            Show the training screen again
+          </a>
         </div>
       </div>
     );
