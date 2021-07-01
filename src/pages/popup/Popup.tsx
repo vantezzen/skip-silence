@@ -54,10 +54,25 @@ class Popup extends Component {
   constructor(props : object) {
     super(props);
 
+    let initialUpdate = true;
     this.config = new ConfigProvider("popup");
     this.config.onUpdate(() => {
       if (this.isComponentMounted) {
         this.forceUpdate();
+      }
+      if (initialUpdate) {
+        initialUpdate = false;
+
+        if (this.config.get('allow_analytics') && !document.getElementById('simpleanalytics')) {
+          const sa = document.createElement('script');
+          sa.src = "https://scripts.simpleanalyticscdn.com/latest.dev.js";
+          sa.id = "simpleanalytics";
+          sa.async = true;
+          sa.defer = true;
+          sa.setAttribute('data-collect-dnt', 'true');
+          sa.setAttribute('data-hostname', 'skipsilence.analytics.vantezzen.io');
+          document.body.appendChild(sa);
+        }
       }
     });
 
@@ -71,6 +86,7 @@ class Popup extends Component {
             isLocalPlayer: true,
           });
         }
+        window.sa_event(`open_${url.host}`);
       }
     });
   }
@@ -171,17 +187,29 @@ class Popup extends Component {
               If you don't like the small command bar logo in the bottom right, you can completely disable it.<br />
               You can still open the command bar using the shortcut "ALT/Option + Shift + S".
             </p>
+
+            <Switch
+              name="allow_analytics"
+              label="Allow anonymous analytics"
+              config={this.config}
+            />
+            <p className="small">
+              "Skip Silence" uses <a href="https://simpleanalytics.com/">Simple Analytics</a> to collect some anonymized analytics.<br />
+              Simple Analytics allows collecting some really basic data about usage of the extension without reducing your privacy.
+              If you do not want that, you can completely opt-out of this.<br />
+              You will need to close and re-open this popup after changing this setting in order for it to take effect.
+            </p>
           </>
         )}
         
         <div className="plugin-info">
           Developed by <a href="https://github.com/vantezzen" target="_blank">vantezzen</a>.<br />
-          <a href="https://www.buymeacoffee.com/vantezzen" target="_blank">
+          <a href="https://www.buymeacoffee.com/vantezzen" target="_blank" onClick={() => window.sa_event('coffee')}>
             <img src="assets/img/bmc.png" alt="Buy Me A Coffee" width="150" />
           </a>
           <br />
 
-          <a href="#" onClick={() => this.setState({ shouldShowIntro: true })}>
+          <a href="#" onClick={() => {window.sa_event('reshow_training');this.setState({ shouldShowIntro: true })}}>
             Show the training screen again
           </a>
         </div>

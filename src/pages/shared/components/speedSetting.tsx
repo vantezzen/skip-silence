@@ -10,9 +10,11 @@ interface SpeedSettingProps {
   config: ConfigProvider
 }
 
+type IsCustomKeys = "silence_speed_is_custom" | "playback_speed_is_custom";
+
 const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
   const value = config.get(name);
-  const isCustomValue = config.get(`${name}_is_custom`);
+  const isCustomValue = config.get(`${name}_is_custom` as IsCustomKeys);
 
   return (
     <div className="speed-setting">
@@ -25,11 +27,19 @@ const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
             value={value}
             onChange={(evt) => {
               config.set(name, Number(evt.target.value));
+
+              if (config.env === "popup") {
+                window.sa_event(`speed_${name}_custom_${evt.target.value}`);
+              }
             }}
             step={0.1}
           />
           <button onClick={() => {
-            config.set(`${name}_is_custom`, false);
+            config.set(`${name}_is_custom` as IsCustomKeys, false);
+
+            if (config.env === "popup") {
+              window.sa_event(`speed_${name}_dropdown`);
+            }
 
             // Find nearest speed setting to the current one
             let nearestSetting = 1;
@@ -49,9 +59,12 @@ const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
           id={name}
           onChange={(evt) => {
             if (evt.target.value === "custom") {
-              config.set(`${name}_is_custom`, true);
+              config.set(`${name}_is_custom` as IsCustomKeys, true);
             } else {
               config.set(name, Number(evt.target.value));
+            }
+            if (config.env === "popup") {
+              window.sa_event(`speed_${name}_dropdown_${evt.target.value}`);
             }
           }}
           value={value}

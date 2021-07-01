@@ -17,6 +17,9 @@ const defaultConfig = {
   is_bar_icon_enabled: true,
   is_bar_collapsed: true,
   highlighted_component: '',
+
+  // Analytics
+  allow_analytics: true,
 };
 
 export default defaultConfig;

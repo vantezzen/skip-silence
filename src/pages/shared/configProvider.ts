@@ -19,7 +19,9 @@ const storedKeys : (keyof typeof defaultConfig)[] = [
   "mute_silence",
 
   "is_bar_icon_enabled",
-  "is_bar_collapsed"
+  "is_bar_collapsed",
+
+  "allow_analytics",
 ];
 
 /**
