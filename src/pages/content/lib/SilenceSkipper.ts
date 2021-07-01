@@ -2,6 +2,7 @@ import { browser } from "webextension-polyfill-ts";
 import { MediaElement } from '../../shared/types';
 import debug from '../../shared/debug';
 import ConfigProvider from '../../shared/configProvider';
+import DynamicThresholdCalculator from "./DynamicThresholdCalculator";
 
 /**
  * Silence Skipper: This class is doing the job of actually inspecting media elements and
@@ -22,6 +23,7 @@ export default class SilenceSkipper {
   _rateChangeListenerAdded = false;
   _blockRateChangeEvents = false;
   _handlingRateChangeError = false;
+  _samplePosition = 0; // This will count up to 50, then and reset to 0
 
   // Audio variables
   audioContext : AudioContext | undefined;
@@ -29,6 +31,9 @@ export default class SilenceSkipper {
   gain : GainNode | undefined;
   source: MediaElementAudioSourceNode | undefined;
   audioFrequencies : Float32Array | undefined;
+
+  // Dependencies
+  dynamicThresholdCalculator : DynamicThresholdCalculator;
 
   /**
    * Add silence skipper to element
@@ -48,6 +53,7 @@ export default class SilenceSkipper {
         this._inspectSample();
       }
     }
+    this.dynamicThresholdCalculator = new DynamicThresholdCalculator(config);
 
     // Attach our config listener
     this.config.onUpdate(() => this._onConfigUpdate());
@@ -278,8 +284,22 @@ export default class SilenceSkipper {
     // Make sure we are attached
     if (!this.isAttached) this._attachToElement();
 
+    this._samplePosition = (this._samplePosition + 1) % 50;
+
     const volume = this._calculateVolume();
-    const threshold = this.config.get('silence_threshold');
+    const useDynamicThreshold = this.config.get('dynamic_silence_threshold');
+
+    if (useDynamicThreshold && volume > 0) {
+      this.dynamicThresholdCalculator.previousSamples.push(volume);
+
+      if (this._samplePosition === 0) {
+        // Let the dynamic threshold calculator re-calculate the threshold
+        // This is only done every 50 samples to reduce load
+        this.dynamicThresholdCalculator.calculate();
+      }
+    }
+
+    const threshold = useDynamicThreshold ? this.dynamicThresholdCalculator.threshold : this.config.get('silence_threshold');
     const sampleThreshold = this.config.get('samples_threshold');
 
     if (volume < threshold && !this.element.paused && !this.isSpedUp) {

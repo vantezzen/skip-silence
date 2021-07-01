@@ -144,17 +144,30 @@ class Popup extends Component {
               />
             </div>
 
-            <SliderSetting
-              label="Volume Threshold"
-              max={200}
-              name="silence_threshold"
+            <Switch
+              name="dynamic_silence_threshold"
+              label="Use dynamic threshold"
               config={this.config}
-              unit="%"
-              half
             />
             <p className="small">
-              If the volume is under the red line, the video will be sped up.
+              Dynamic threshold will try to dynamically calculate the volume of the silence in your media
             </p>
+
+            {!this.config.get('dynamic_silence_threshold') && (
+              <>
+                <SliderSetting
+                  label="Volume Threshold"
+                  max={200}
+                  name="silence_threshold"
+                  config={this.config}
+                  unit="%"
+                  half
+                />
+                <p className="small">
+                  If the volume is under the red line, the video will be sped up.
+                </p>
+              </>
+            )}
 
             <SliderSetting
               label="Sample Threshold"

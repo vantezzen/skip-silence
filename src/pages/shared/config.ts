@@ -3,6 +3,7 @@ const defaultConfig = {
 
   // Thresholds
   silence_threshold: 30,
+  dynamic_silence_threshold: false,
   samples_threshold: 10,
   
   // Speeds

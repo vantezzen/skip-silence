@@ -9,10 +9,11 @@ interface SliderSettingProps {
   name: "silence_threshold" | "samples_threshold",
   config: ConfigProvider,
   unit: String,
-  half: boolean
+  half: boolean,
+  disabled?: boolean
 }
 
-const SliderSetting = ({ label, max, name, config, unit, half } : SliderSettingProps) => {
+const SliderSetting = ({ label, max, name, config, unit, half, disabled } : SliderSettingProps) => {
   const value = config.get(name);
 
   return (
@@ -31,6 +32,7 @@ const SliderSetting = ({ label, max, name, config, unit, half } : SliderSettingP
         onChange={(evt) => {
           config.set(name, Number(evt.target.value));
         }}
+        disabled={disabled}
       />
     </div>
   );
