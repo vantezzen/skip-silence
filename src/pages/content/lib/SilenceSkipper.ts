@@ -134,7 +134,15 @@ export default class SilenceSkipper {
    * Attempts to change the video playback rate
    */
   _setPlaybackRate(rate: number) {
-    this._targetPlaybackRate = rate
+    this._targetPlaybackRate = rate;
+
+    if (rate === 1) {
+      // Setting the speed to exactly 1 will cause audio clicking
+      // Setting the speed to slightly greater than 1 will prevent this from happening
+      // Related: https://github.com/vantezzen/skip-silence/issues/52
+      this._targetPlaybackRate = 1.01;
+    }
+
     this.element.playbackRate = this._targetPlaybackRate;
     if (!this._handlingRateChangeError) {
       // Make sure that the playback rate actually changed
