@@ -4,9 +4,9 @@ $shade-0: #fff !default;
 $teal: #1abc9c !default;
 
 .speed-setting {
-  margin: 0 2rem;
+  margin: 0 1rem;
 
-  select {
+  select, input, button {
     width: 100%;
     margin-top: 0.5rem;
     background-color: $shade-10;
@@ -19,6 +19,15 @@ $teal: #1abc9c !default;
       outline: none;
       box-shadow: 0 0 0 1px $shade-0,
                 0 0 0 2px $teal;
+    }
+  }
+
+  .custom-value-container {
+    display: flex;
+    width: 100%;
+
+    input {
+      margin-right: 0.5rem;
     }
   }
 }

@@ -12,7 +12,9 @@ const storedKeys : (keyof typeof defaultConfig)[] = [
   "samples_threshold",
 
   "playback_speed",
+  "playback_speed_is_custom",
   "silence_speed",
+  "silence_speed_is_custom",
 
   "mute_silence",
 

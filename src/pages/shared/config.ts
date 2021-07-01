@@ -7,7 +7,9 @@ const defaultConfig = {
   
   // Speeds
   playback_speed: 1,
+  playback_speed_is_custom: false, // True if the user wants to type in their own speed
   silence_speed: 3,
+  silence_speed_is_custom: false,
 
   mute_silence: true,
 
