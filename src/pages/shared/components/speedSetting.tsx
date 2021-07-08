@@ -33,6 +33,8 @@ const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
               }
             }}
             step={0.1}
+            min={0.0625}
+            max={16}
           />
           <button onClick={() => {
             config.set(`${name}_is_custom` as IsCustomKeys, false);
