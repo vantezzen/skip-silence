@@ -72,6 +72,13 @@ class Popup extends Component {
           sa.setAttribute('data-collect-dnt', 'true');
           sa.setAttribute('data-hostname', 'skipsilence.analytics.vantezzen.io');
           document.body.appendChild(sa);
+
+          const plausible = document.createElement('script');
+          plausible.setAttribute('data-domain', 'skipsilence.a.vantezzen.io');
+          plausible.async = true;
+          plausible.defer = true;
+          plausible.src = "https://a.vantezzen.io/js/plausible.js";
+          document.body.appendChild(plausible);
         }
       }
     });
@@ -87,6 +94,7 @@ class Popup extends Component {
           });
         }
         window.sa_event(`open_${url.host}`);
+        window.plausible('open', { props: { site: url.host } });
       }
     });
   }
@@ -194,9 +202,9 @@ class Popup extends Component {
               config={this.config}
             />
             <p className="small">
-              "Skip Silence" uses <a href="https://simpleanalytics.com/">Simple Analytics</a> to collect some anonymized analytics.<br />
-              Simple Analytics allows collecting some really basic data about usage of the extension without reducing your privacy.
-              If you do not want that, you can completely opt-out of this.<br />
+              "Skip Silence" uses <a href="https://simpleanalytics.com/">Simple Analytics</a> and Plausible to collect a few anonymized analytics without reducing your privacy.<br />
+              This data allows us to better understand how users use our extension and how we can improve it.<br />
+              We understand that some people do not like sending anonymized analytics, so you can completely opt-out of this!<br />
               You will need to close and re-open this popup after changing this setting in order for it to take effect.
             </p>
           </>
@@ -204,12 +212,12 @@ class Popup extends Component {
         
         <div className="plugin-info">
           Developed by <a href="https://github.com/vantezzen" target="_blank">vantezzen</a>.<br />
-          <a href="https://www.buymeacoffee.com/vantezzen" target="_blank" onClick={() => window.sa_event('coffee')}>
+          <a href="https://www.buymeacoffee.com/vantezzen" target="_blank" onClick={() => {window.sa_event('coffee');window.plausible('coffee')}}>
             <img src="assets/img/bmc.png" alt="Buy Me A Coffee" width="150" />
           </a>
           <br />
 
-          <a href="#" onClick={() => {window.sa_event('reshow_training');this.setState({ shouldShowIntro: true })}}>
+          <a href="#" onClick={() => {window.sa_event('reshow_training');window.plausible('reshow_training');this.setState({ shouldShowIntro: true })}}>
             Show the training screen again
           </a>
         </div>

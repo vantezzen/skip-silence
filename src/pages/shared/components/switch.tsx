@@ -17,6 +17,7 @@ const Switch = ({ label, name, config } : SwitchProps) => {
 
         if (config.env === "popup") {
           window.sa_event(`setting_${name}_${evt.target.checked ? 'enable' : 'disable'}`);
+          window.plausible('setting_change', { props: { type: `${name}:${evt.target.checked ? 'enable' : 'disable'}` } });
         }
       }} />
       <label htmlFor={name}>{label}</label>

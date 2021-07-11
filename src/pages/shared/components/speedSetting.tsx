@@ -30,6 +30,7 @@ const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
 
               if (config.env === "popup") {
                 window.sa_event(`speed_${name}_custom_${evt.target.value}`);
+                window.plausible('speed_custom', { props: { name, speed: evt.target.value } });
               }
             }}
             step={0.1}
@@ -41,6 +42,7 @@ const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
 
             if (config.env === "popup") {
               window.sa_event(`speed_${name}_dropdown`);
+              window.plausible('speed_use_dropdown');
             }
 
             // Find nearest speed setting to the current one
@@ -67,6 +69,7 @@ const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
             }
             if (config.env === "popup") {
               window.sa_event(`speed_${name}_dropdown_${evt.target.value}`);
+              window.plausible('speed_dropdown', { props: { name, speed: evt.target.value } });
             }
           }}
           value={value}
