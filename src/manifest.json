@@ -21,6 +21,12 @@
     "storage"
   ],
 
+  "browser_specific_settings": {
+    "gecko": {
+      "strict_min_version": "91.0"
+    }
+  },
+
   "content_scripts": [{
     "all_frames": true,
     "matches": ["http://*/*", "https://*/*", "<all_urls>"],
