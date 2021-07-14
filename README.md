@@ -3,6 +3,9 @@
     <a href="https://chrome.google.com/webstore/detail/skip-silence/fhdmkhbefcbhakffdihhceaklaigdllh">
         <img src="img/chrome.png" alt="Availible on chrome web store" width="150">
     </a>
+    <a href="https://addons.mozilla.org/de/firefox/addon/skip-silence/">
+        <img src="img/firefox.png" alt="Availible on Firefox Addons" width="150">
+    </a>
     <a href="https://microsoftedge.microsoft.com/addons/detail/skip-silence/njflliajflcedhfmpmhdekhmejekonmc">
         <img src="img/edge.png" alt="Availible on Edge Add-ons" width="150">
     </a>
@@ -25,8 +28,8 @@ The extension works with most websites that use HTML5 `audio` and `video` elemen
 "Skip Silence" is availible through the [chrome web store](https://chrome.google.com/webstore/detail/skip-silence/fhdmkhbefcbhakffdihhceaklaigdllh).
 You can also install this extension on Chrome by downloading the source from GitHub and loading the unpacked, built extension through "chrome://extensions" as a "Temporary Add-On".
 
-## Why is Firefox unsupported?
-"Skip Silence" uses JavaScript's video.playbackRate and MediaSourceElement simultaneously to achieve its effect. Unfortunately, Firefox currently [has a bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1517199) that stops video.playbackRate from working when already using MediaSourceElement - making this extension useless.
+## Firefox
+"Skip Silence" will only work on Firefox Beta 91+ due to [a bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1517199) that has been fixed in that version.
 
 ## Usage
 When "Skip Silence" detects a compatible element on the current page, its icon in the menubar will be colored.
