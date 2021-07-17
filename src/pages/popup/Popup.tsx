@@ -25,7 +25,7 @@ class Popup extends Component {
     shouldShowIntro: localStorage.getItem('hasShownIntro') !== 'yes',
     isLocalPlayer: false,
     isPlus: false,
-    showPlusPopup: true,
+    showPlusPopup: false,
   }
 
   steps = [
