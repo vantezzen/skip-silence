@@ -14,6 +14,8 @@ import SliderSetting from '../shared/components/sliderSetting';
 import SpeedSetting from '../shared/components/speedSetting';
 import debug from '../shared/debug';
 import LocalPlayerInfo from '../shared/components/localPlayerInfo';
+import verifyLicense from '../shared/license';
+import PlusInfo from './components/plusInfo';
 
 class Popup extends Component {
   config : ConfigProvider;
@@ -22,6 +24,8 @@ class Popup extends Component {
   state = {
     shouldShowIntro: localStorage.getItem('hasShownIntro') !== 'yes',
     isLocalPlayer: false,
+    isPlus: false,
+    showPlusPopup: true,
   }
 
   steps = [
@@ -99,8 +103,35 @@ class Popup extends Component {
     });
   }
 
+  async checkPlusStatus() {
+    const licenseKey = (await browser.storage.local.get('license'))?.license;
+    if (!licenseKey) return;
+
+    const isValid = await verifyLicense(licenseKey);
+    this.setState({
+      isPlus: isValid,
+    });
+  }
+
+  showPlusPopup() {
+    window.sa_event('show_plus_popup');
+    window.plausible('show_plus_popup');
+
+    this.setState({
+      showPlusPopup: true,
+    });
+  }
+
+  closePlusPopup() {
+    window.sa_event('close_plus_popup');
+    window.plausible('close_plus_popup');
+
+    this.setState({ showPlusPopup: false });
+  }
+
   componentDidMount() {
     this.isComponentMounted = true;
+    this.checkPlusStatus();
   }
 
   componentWillUnmount() {
@@ -110,6 +141,9 @@ class Popup extends Component {
   render() {
     return (
       <div className="App">
+        {(this.state.showPlusPopup) && (
+          <PlusInfo onClose={() => this.closePlusPopup()} triggerValidation={() => this.checkPlusStatus()} />
+        )}
         {this.state.isLocalPlayer ? (
           <LocalPlayerInfo />
         ) : (
@@ -144,11 +178,15 @@ class Popup extends Component {
                 label="Playback Speed"
                 name="playback_speed"
                 config={this.config}
+                isPlus={this.state.isPlus}
+                showPlusPopup={() => this.showPlusPopup()}
               />
               <SpeedSetting
                 label="Silence Speed"
                 name="silence_speed"
                 config={this.config}
+                isPlus={this.state.isPlus}
+                showPlusPopup={() => this.showPlusPopup()}
               />
             </div>
 
@@ -179,8 +217,10 @@ class Popup extends Component {
 
             <Switch
               name="mute_silence"
-              label="Mute Silence"
+              label={`Mute Silence${!this.state.isPlus ? ' ★' : ''}`}
               config={this.config}
+              plusDisabled={!this.state.isPlus}
+              openPlusPopup={() => this.showPlusPopup()}
             />
             <p className="small">
               If you are having problems with audio clicking or don't want to hear any audio when sped up, enable this option.

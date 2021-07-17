@@ -7,12 +7,14 @@ import "./speedSetting.scss";
 interface SpeedSettingProps {
   label: String,
   name: "playback_speed" | "silence_speed",
-  config: ConfigProvider
+  config: ConfigProvider,
+  isPlus: boolean,
+  showPlusPopup: () => void,
 }
 
 type IsCustomKeys = "silence_speed_is_custom" | "playback_speed_is_custom";
 
-const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
+const SpeedSetting = ({ label, name, config, isPlus, showPlusPopup } : SpeedSettingProps) => {
   const value = config.get(name);
   const isCustomValue = config.get(`${name}_is_custom` as IsCustomKeys);
 
@@ -63,7 +65,11 @@ const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
           id={name}
           onChange={(evt) => {
             if (evt.target.value === "custom") {
-              config.set(`${name}_is_custom` as IsCustomKeys, true);
+              if (isPlus) {
+                config.set(`${name}_is_custom` as IsCustomKeys, true);
+              } else {
+                showPlusPopup();
+              }
             } else {
               config.set(name, Number(evt.target.value));
             }
@@ -77,7 +83,7 @@ const SpeedSetting = ({ label, name, config } : SpeedSettingProps) => {
           {speedSettings.map((val) => (
             <option value={val} key={val}>{val}x</option>
           ))}
-          <option value="custom">Custom</option>
+          <option value="custom">Custom{!isPlus && ' ★'}</option>
         </select>
       )}
 

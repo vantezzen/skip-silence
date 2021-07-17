@@ -6,13 +6,22 @@ import "./switch.scss";
 interface SwitchProps {
   label: string,
   name: "enabled" | "mute_silence" | "is_bar_icon_enabled" | "allow_analytics",
-  config: ConfigProvider
+  config: ConfigProvider,
+  plusDisabled?: boolean,
+  openPlusPopup?: () => void,
 }
 
-const Switch = ({ label, name, config } : SwitchProps) => {
+const Switch = ({ label, name, config, plusDisabled, openPlusPopup } : SwitchProps) => {
   return (
     <div className="switch">
       <input id={name} type="checkbox" className="switch" checked={config.get(name)} onChange={(evt) => {
+        if (plusDisabled) {
+          if (openPlusPopup) {
+            openPlusPopup();
+          }
+          return;
+        }
+
         config.set(name, evt.target.checked);
 
         if (config.env === "popup") {
