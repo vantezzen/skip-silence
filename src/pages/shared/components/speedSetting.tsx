@@ -8,8 +8,8 @@ interface SpeedSettingProps {
   label: String,
   name: "playback_speed" | "silence_speed",
   config: ConfigProvider,
-  isPlus: boolean,
-  showPlusPopup: () => void,
+  isPlus?: boolean,
+  showPlusPopup?: () => void,
 }
 
 type IsCustomKeys = "silence_speed_is_custom" | "playback_speed_is_custom";
@@ -67,7 +67,7 @@ const SpeedSetting = ({ label, name, config, isPlus, showPlusPopup } : SpeedSett
             if (evt.target.value === "custom") {
               if (isPlus) {
                 config.set(`${name}_is_custom` as IsCustomKeys, true);
-              } else {
+              } else if (showPlusPopup) {
                 showPlusPopup();
               }
             } else {
