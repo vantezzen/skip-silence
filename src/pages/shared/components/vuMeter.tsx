@@ -83,11 +83,11 @@ export default class VUMeter extends Component<VUMeterProps> {
     }
 
     // Render VU Meter bar
-    this.canvasContext.fillRect(30, 0, Math.min(this.volume + 1, this.canvasElement.width - 60), this.canvasElement.height);
+    this.canvasContext.fillRect(0, 0, Math.min(this.volume + 1, this.canvasElement.width - 60), this.canvasElement.height);
 
     // Render Threshold bar
     this.canvasContext.fillStyle = '#EEA861';
-    this.canvasContext.fillRect(30 + this.props.config.get('silence_threshold'), 0, 2, this.canvasElement.height);
+    this.canvasContext.fillRect(0 + this.props.config.get('silence_threshold'), 0, 2, this.canvasElement.height);
   }
 
   render() {
