@@ -9,17 +9,22 @@ interface SliderSettingProps {
   name: "silence_threshold" | "samples_threshold",
   config: ConfigProvider,
   unit: String,
-  half: boolean
+  half: boolean,
+  orange?: boolean,
+  info?: React.ReactNode,
 }
 
-const SliderSetting = ({ label, max, name, config, unit, half } : SliderSettingProps) => {
+const SliderSetting = ({ label, max, name, config, unit, half, orange, info } : SliderSettingProps) => {
   const value = config.get(name);
 
   return (
-    <div className="slider-setting">
+    <div className={`slider-setting bottom-border ${orange ? 'orange' : ''}`}>
       <div className="setting-info">
         <label htmlFor={name}>{ label }</label>
-        <div id="slidervalue" className="value">{ half ? Math.floor(value / 2) : value }{ unit }</div>
+        <div style={{ float: 'right', display: 'flex', alignItems: 'center' }}>
+          <div id="slidervalue" className="value">{ half ? Math.floor(value / 2) : value }{ unit }</div>
+          {info || null}
+        </div>
       </div>
       <input
         type="range"

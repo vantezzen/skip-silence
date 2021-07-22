@@ -16,6 +16,7 @@ import debug from '../shared/debug';
 import LocalPlayerInfo from '../shared/components/localPlayerInfo';
 import verifyLicense from '../shared/license';
 import PlusInfo from './components/plusInfo';
+import HelpModal from './components/helpModal';
 
 class Popup extends Component {
   config : ConfigProvider;
@@ -137,122 +138,166 @@ class Popup extends Component {
 
   render() {
     return (
-      <div className="App">
-        {(this.state.showPlusPopup) && (
-          <PlusInfo onClose={() => this.closePlusPopup()} triggerValidation={() => this.checkPlusStatus()} />
-        )}
-        {this.state.isLocalPlayer ? (
-          <LocalPlayerInfo />
-        ) : (
-          <>
-            {this.state.shouldShowIntro && (
-              <Steps
-                initialStep={0}
-                enabled={this.state.shouldShowIntro}
-                steps={this.steps}
-                onExit={() => {
-                  this.setState({ shouldShowIntro: false });
-                  localStorage.setItem('hasShownIntro', 'yes');
-                }}
+      <div>
+        <div className="App">
+          {(this.state.showPlusPopup) && (
+            <PlusInfo onClose={() => this.closePlusPopup()} triggerValidation={() => this.checkPlusStatus()} />
+          )}
+          {this.state.isLocalPlayer ? (
+            <LocalPlayerInfo />
+          ) : (
+            <>
+              {this.state.shouldShowIntro && (
+                <Steps
+                  initialStep={0}
+                  enabled={this.state.shouldShowIntro}
+                  steps={this.steps}
+                  onExit={() => {
+                    this.setState({ shouldShowIntro: false });
+                    localStorage.setItem('hasShownIntro', 'yes');
+                  }}
+                />
+              )}
+
+              <Header />
+        
+              <VUMeter config={this.config} />
+
+              <Switch
+                name="enabled"
+                label="Enable Skip Silence"
+                config={this.config}
               />
-            )}
 
-            <Header />
-      
-            <VUMeter config={this.config} />
-
-            <Switch
-              name="enabled"
-              label="Enable Skip Silence"
-              config={this.config}
-            />
-
-            <div style={{
-              display: 'flex',
-              marginTop: '1.5rem'
-            }} id="speed-settings">
               <SpeedSetting
                 label="Playback Speed"
                 name="playback_speed"
                 config={this.config}
                 isPlus={this.state.isPlus}
                 showPlusPopup={() => this.showPlusPopup()}
+                info={(
+                  <HelpModal>
+                    <h2>Playback Speed</h2>
+                    <p>
+                      Speed at which normal, non-silent parts of the media are played.
+                    </p>
+                  </HelpModal>
+                )}
               />
+
               <SpeedSetting
                 label="Silence Speed"
                 name="silence_speed"
                 config={this.config}
                 isPlus={this.state.isPlus}
                 showPlusPopup={() => this.showPlusPopup()}
+                info={(
+                  <HelpModal>
+                    <h2>Silence Speed</h2>
+                    <p>
+                      Speed at which "silent" parts of the media are played.
+                    </p>
+                  </HelpModal>
+                )}
               />
-            </div>
 
-            <SliderSetting
-              label="Volume Threshold"
-              max={200}
-              name="silence_threshold"
-              config={this.config}
-              unit="%"
-              half
-            />
-            <p className="small">
-              If the volume is under the red line, the video will be sped up.
-            </p>
+              <SliderSetting
+                label="Volume Threshold"
+                max={200}
+                name="silence_threshold"
+                config={this.config}
+                unit="%"
+                half
+                orange
+                info={(
+                  <HelpModal>
+                    <h2>Volume Threshold</h2>
+                    <p>
+                      If the volume is below this threshold, the video will be sped up.<br />
+                      You can also see this threshold in the VU Meter above
+                    </p>
+                  </HelpModal>
+                )}
+              />
 
-            <SliderSetting
-              label="Sample Threshold"
-              max={50}
-              name="samples_threshold"
-              config={this.config}
-              unit=" samples"
-              half={false}
-            />
-            <p className="small">
-              Length of silence needed before speeding up.<br />
-              This is to ensure we are not speeding up due to the short silence between words and sentences.
-            </p>
+              <SliderSetting
+                label="Sample Threshold"
+                max={50}
+                name="samples_threshold"
+                config={this.config}
+                unit=" samples"
+                half={false}
+                info={(
+                  <HelpModal>
+                    <h2>Sample Threshold</h2>
+                    <p>
+                      Length of silence needed before speeding up.<br />
+                      This is to ensure we are not speeding up due to the short silence between words and sentences.
+                    </p>
+                  </HelpModal>
+                )}
+              />
 
-            <Switch
-              name="mute_silence"
-              label={`Mute Silence${!this.state.isPlus ? ' ★' : ''}`}
-              config={this.config}
-              plusDisabled={!this.state.isPlus}
-              openPlusPopup={() => this.showPlusPopup()}
-            />
-            <p className="small">
-              If you are having problems with audio clicking or don't want to hear any audio when sped up, enable this option.
-            </p>
+              <Switch
+                name="mute_silence"
+                label={`Mute Silence${!this.state.isPlus ? ' ★' : ''}`}
+                config={this.config}
+                plusDisabled={!this.state.isPlus}
+                openPlusPopup={() => this.showPlusPopup()}
+                info={(
+                  <HelpModal>
+                    <h2>Mute Silence</h2>
+                    <p>
+                      If you are having problems with audio clicking or don't want to hear any audio when sped up, enable this option.
+                    </p>
+                  </HelpModal>
+                )}
+              />
 
-            <Switch
-              name="is_bar_icon_enabled"
-              label="Enable Command Bar Icon"
-              config={this.config}
-            />
-            <p className="small">
-              If you don't like the small command bar logo in the bottom right, you can completely disable it.<br />
-              You can still open the command bar using the shortcut "ALT/Option + Shift + S".
-            </p>
+              <Switch
+                name="is_bar_icon_enabled"
+                label="Enable Command Bar Icon"
+                config={this.config}
+                info={(
+                  <HelpModal>
+                    <h2>Enable Command Bar Icon</h2>
+                    <p>
+                      If you don't like the small command bar logo in the bottom right, you can completely disable it.<br />
+                      You can still open the command bar using the shortcut "ALT/Option + Shift + S".
+                    </p>
+                  </HelpModal>
+                )}
+              />
 
-            <Switch
-              name="allow_analytics"
-              label="Allow anonymous analytics"
-              config={this.config}
-            />
-            <p className="small">
-              "Skip Silence" uses <a href="https://simpleanalytics.com/">Simple Analytics</a> and Plausible to collect a few anonymized analytics without reducing your privacy.<br />
-              This data allows us to better understand how users use our extension and how we can improve it.<br />
-              We understand that some people do not like sending anonymized analytics, so you can completely opt-out of this!<br />
-              You will need to close and re-open this popup after changing this setting in order for it to take effect.
-            </p>
-          </>
-        )}
-        
+              <Switch
+                name="allow_analytics"
+                label="Allow anonymous analytics"
+                config={this.config}
+                info={(
+                  <HelpModal>
+                    <h2>Allow anonymous analytics</h2>
+                    <p>
+                      "Skip Silence" uses <a href="https://simpleanalytics.com/">Simple Analytics</a> and Plausible to collect a few anonymized analytics without reducing your privacy.<br />
+                      This data allows us to better understand how users use our extension and how we can improve it.<br />
+                      We understand that some people do not like sending anonymized analytics, so you can completely opt-out of this!<br />
+                      You will need to close and re-open this popup after changing this setting in order for it to take effect.
+                    </p>
+                  </HelpModal>
+                )}
+              />
+            </>
+          )}
+          
+        </div>
+
         <div className="plugin-info">
-          Developed by <a href="https://github.com/vantezzen" target="_blank">vantezzen</a>.<br />
+          Developed by <a href="https://github.com/vantezzen" target="_blank" className="yellow">vantezzen</a>.
+
+          <div className="coffee">
           <a href="https://www.buymeacoffee.com/vantezzen" target="_blank" onClick={() => {window.sa_event('coffee');window.plausible('coffee')}}>
             <img src="assets/img/bmc.png" alt="Buy Me A Coffee" width="150" />
           </a>
-          <br />
+          </div>
 
           <a href="#" onClick={() => {window.sa_event('reshow_training');window.plausible('reshow_training');this.setState({ shouldShowIntro: true })}}>
             Show the training screen again

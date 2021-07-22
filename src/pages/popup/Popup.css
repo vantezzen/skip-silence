@@ -1,0 +1,28 @@
+.App {
+  padding: 1rem 2rem 0 2rem;
+}
+
+.plugin-info {
+  text-align: center;
+  font-size: 0.7rem;
+  margin-top: var(--element-margin);
+  margin-bottom: 1rem;
+  color: #A7A7A7;
+
+  a {
+    color: #A7A7A7;
+
+    &.yellow {
+      color: #FADC4B;
+    }
+  }
+
+  .coffee {
+    margin: 0.3rem 0;
+    background-color: #FCDC0F;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+  }
+}

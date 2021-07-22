@@ -77,16 +77,16 @@ export default class VUMeter extends Component<VUMeterProps> {
 
     // VU Meter color changes based on if the video is currently sped up
     if (this.isSpedUp) {
-      this.canvasContext.fillStyle = '#ffff00';
+      this.canvasContext.fillStyle = '#EEA861';
     } else {
-      this.canvasContext.fillStyle = '#00CCFF';
+      this.canvasContext.fillStyle = '#66CC99';
     }
 
     // Render VU Meter bar
     this.canvasContext.fillRect(30, 0, Math.min(this.volume + 1, this.canvasElement.width - 60), this.canvasElement.height);
 
     // Render Threshold bar
-    this.canvasContext.fillStyle = '#FF0000';
+    this.canvasContext.fillStyle = '#EEA861';
     this.canvasContext.fillRect(30 + this.props.config.get('silence_threshold'), 0, 2, this.canvasElement.height);
   }
 
@@ -95,7 +95,8 @@ export default class VUMeter extends Component<VUMeterProps> {
       <div style={{
         width: '100%',
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        margin: '1rem 0 1.5rem 0',
       }}>
         <canvas
           id="vu_meter"
@@ -111,9 +112,8 @@ export default class VUMeter extends Component<VUMeterProps> {
           style={{
             'width': 300,
             'height': 30,
-            'background': '#1B1B1B',
-            'float': 'left',
-            'margin': '1rem 0',
+            'background': '#3D474C',
+            borderRadius: 7,
           }}
         />
       </div>

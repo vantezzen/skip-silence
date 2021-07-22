@@ -1,3 +1,7 @@
+:root {
+  --element-margin: 0.85rem;
+}
+
 html {
   overflow-x: hidden;
 }
@@ -14,7 +18,7 @@ body {
 
   font-size: 14px;
 
-  background: #1B1B1B;
+  background: #293033;
   color: #FFFFFF;
 }
 
@@ -23,14 +27,19 @@ code {
     monospace;
 }
 
-.small, .plugin-info {
-  margin: 0.5rem 2rem 0.8rem 2rem;
+.small {
+  margin: 0.5rem 0 0.8rem 0;
   font-size: 0.7rem;
   color: #adadad;
 
   a {
     color: #bbbbbb;
   }
+}
+
+.bottom-border {
+  border-bottom: 2px solid #464748;
+  padding-bottom: var(--element-margin);
 }
 
 // IntroJS 

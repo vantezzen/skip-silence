@@ -9,11 +9,16 @@ interface SwitchProps {
   config: ConfigProvider,
   plusDisabled?: boolean,
   openPlusPopup?: () => void,
+  info?: React.ReactNode,
 }
 
-const Switch = ({ label, name, config, plusDisabled, openPlusPopup } : SwitchProps) => {
+const Switch = ({ label, name, config, plusDisabled, openPlusPopup, info } : SwitchProps) => {
   return (
-    <div className="switch">
+    <div className="switch bottom-border">
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <label htmlFor={name}>{label}</label>
+        {info || null}
+      </div>
       <input id={name} type="checkbox" className="switch" checked={config.get(name)} onChange={(evt) => {
         if (plusDisabled) {
           if (openPlusPopup) {
@@ -29,7 +34,6 @@ const Switch = ({ label, name, config, plusDisabled, openPlusPopup } : SwitchPro
           window.plausible('setting_change', { props: { type: `${name}:${evt.target.checked ? 'enable' : 'disable'}` } });
         }
       }} />
-      <label htmlFor={name}>{label}</label>
     </div>
   );
 };

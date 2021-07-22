@@ -1,86 +1,58 @@
 .slider-setting {
-  padding: 0 2rem;
-
   .setting-info {
-    margin-top: 1.5rem;
-  
+    margin-top: var(--element-margin);
+    margin-bottom: 0.3rem;
+
     .value {
-      float: right;
-      color: #4AC298;
-      font-size: 1.1em;
-    }
-  }
-}
-
-$shade-10: #2c3e50 !default;
-$shade-1: #d7dcdf !default;
-$shade-0: #fff !default;
-$teal: #1abc9c !default;
-
-$range-width: 100% !default;
-
-$range-handle-color: $shade-10 !default;
-$range-handle-color-hover: $teal !default;
-$range-handle-size: 20px !default;
-
-$range-track-color: $shade-1 !default;
-$range-track-height: 10px !default;
-
-.range-slider {
-  width: $range-width;
-}
-
-// Source: https://codepen.io/seanstopnik/pen/CeLqA
-.range-slider__range {
-  -webkit-appearance: none;
-  width: 100%;
-  height: $range-track-height;
-  border-radius: 5px;
-  background: $range-track-color;
-  outline: none;
-  padding: 0;
-  margin: 0;
-  margin-top: 0.5rem;
-
-  // Range Handle
-  &::-webkit-slider-thumb {
-    appearance: none;
-    width: $range-handle-size;
-    height: $range-handle-size;
-    border-radius: 50%;
-    background: $range-handle-color;
-    cursor: pointer;
-    transition: background .15s ease-in-out;
-
-    &:hover {
-      background: $range-handle-color-hover;
+      color: #66CC99;
+      font-size: 0.8em;
     }
   }
 
-  &:active::-webkit-slider-thumb {
-    background: $range-handle-color-hover;
+  --slider-color: #66CC99;
+  &.orange {
+    --slider-color: #EEA861;
   }
 
-  &::-moz-range-thumb {
-    width: $range-handle-size;
-    height: $range-handle-size;
-    border: 0;
-    border-radius: 50%;
-    background: $range-handle-color;
-    cursor: pointer;
-    transition: background .15s ease-in-out;
-
-    &:hover {
-      background: $range-handle-color-hover;
+  input[type='range'] {
+    &:focus {
+      outline: none;
     }
   }
 
-  &:active::-moz-range-thumb {
-    background: $range-handle-color-hover;
+  @media screen and (-webkit-min-device-pixel-ratio:0) {
+    input[type='range'] {
+      overflow: hidden;
+      width: 100%;
+      height: 30px;
+      -webkit-appearance: none;
+      background-color: #3D474C;
+      border-radius: 7px;
+
+      /*Chrome*/
+      &::-webkit-slider-runnable-track {
+        height: 10px;
+        -webkit-appearance: none;
+        color: var(--slider-color);
+        margin-top: -1px;
+      }
+
+      &::-webkit-slider-thumb {
+        width: 0px;
+        -webkit-appearance: none;
+        height: 0px;
+        cursor: ew-resize;
+        box-shadow: -200px 0 0 200px var(--slider-color);
+      }
+    }
   }
-  
-  &::-webkit-slider-thumb {
-    box-shadow: 0 0 0 1px $shade-0,
-                0 0 0 2px $teal;
+
+  /** FF*/
+  input[type="range"]::-moz-range-progress {
+    background-color: var(--slider-color);
+  }
+
+  input[type="range"]::-moz-range-track {
+    background-color: #3D474C;
   }
 }

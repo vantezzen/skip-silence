@@ -1,10 +1,59 @@
 $shade-10: #2c3e50 !default;
 $shade-1: #d7dcdf !default;
 $shade-0: #fff !default;
-$teal: #1abc9c !default;
+$teal: #66CC99 !default;
 
 .speed-setting {
-  margin: 0 1rem;
+  margin-top: var(--element-margin);
+
+  .current-speed {
+    background-color: #3D474C;
+    color: #A7A7A7;
+
+    width: 50px;
+    border-radius: 7px;
+    font-size: 0.7rem;
+    font-weight: bold;
+
+    margin: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items:center;
+
+    cursor: pointer;
+    
+    .chevron-icon {
+      width: 12px;
+      margin-left: 2px;
+
+      transition: all 0.5s;
+    }
+  }
+
+  .value-option {
+    border: none;
+    background-color: #141819;
+    color: #A7A7A7;
+
+    width: 100%;
+    border-radius: 9px;
+    font-size: 0.7rem;
+    font-weight: bold;
+
+    aspect-ratio: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items:center;
+
+    cursor: pointer;
+
+    &.active {
+      border: #EEA861 3px solid;
+      color: #EEA861;
+    }
+  }
 
   select, input, button {
     width: 100%;
@@ -17,8 +66,8 @@ $teal: #1abc9c !default;
 
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 1px $shade-0,
-                0 0 0 2px $teal;
+      // box-shadow: 0 0 0 1px $shade-0,
+      //           0 0 0 2px $teal;
     }
   }
 
@@ -30,4 +79,34 @@ $teal: #1abc9c !default;
       margin-right: 0.5rem;
     }
   }
+}
+
+@keyframes animateSetting {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.speed-transition {
+  display: none;
+}
+.speed-transition-enter-active {
+  display: block;
+  animation: animateSetting 200ms;
+}
+.speed-transition-enter-done {
+  display: block;
+}
+.speed-transition-exit {
+  display: block;
+}
+.speed-transition-exit-active {
+  display: block;
+  animation: animateSetting 200ms reverse;
+}
+.speed-transition-exit-done {
+  display: none;
 }

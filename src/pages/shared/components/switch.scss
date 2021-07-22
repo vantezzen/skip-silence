@@ -1,15 +1,15 @@
 .switch {
-  margin-top: 0.5rem;
+  margin-top: var(--element-margin);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items:center;
 
   input {
-    --active: #275EFE;
+    --active: #66CC99;
     --active-inner: #fff;
     --focus: 2px rgba(39, 94, 254, .3);
     --border: #BBC1E1;
-    --border-hover: #275EFE;
+    --border-hover: #66CC99;
     --background: #fff;
     --disabled: #F6F8FF;
     --disabled-inner: #E1E6F9;
