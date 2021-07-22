@@ -111,7 +111,7 @@ export default class VUMeter extends Component<VUMeterProps> {
           }}
           style={{
             'width': 300,
-            'height': 30,
+            'height': 35,
             'background': '#3D474C',
             borderRadius: 7,
           }}
