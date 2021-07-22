@@ -104,10 +104,7 @@ class Popup extends Component {
   }
 
   async checkPlusStatus() {
-    const licenseKey = (await browser.storage.local.get('license'))?.license;
-    if (!licenseKey) return;
-
-    const isValid = await verifyLicense(licenseKey);
+    const isValid = await verifyLicense();
     this.setState({
       isPlus: isValid,
     });
