@@ -26,3 +26,8 @@
     align-items:center;
   }
 }
+
+.beta {
+  font-size: 0.5rem;
+  margin-left: 3px;
+}

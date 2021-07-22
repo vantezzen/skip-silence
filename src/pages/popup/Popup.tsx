@@ -210,7 +210,7 @@ class Popup extends Component {
 
                 <Switch
                   name="dynamic_silence_threshold"
-                  label={(<><BarChart2 className="setting-icon" /> Use dynamic threshold{!this.state.isPlus ? ' ★' : ''}</>)}
+                  label={(<><BarChart2 className="setting-icon" /> Use dynamic threshold{!this.state.isPlus ? ' ★' : ''} <div className="beta">beta<br />&nbsp;</div></>)}
                   config={this.config}
                   plusDisabled={!this.state.isPlus}
                   openPlusPopup={() => this.showPlusPopup()}
@@ -218,7 +218,8 @@ class Popup extends Component {
                     <HelpModal>
                       <h2>Use dynamic threshold</h2>
                       <p>
-                        Dynamic threshold will try to automatically calculate the volume of the silence in your media
+                        Dynamic threshold will try to automatically calculate the volume of the silence in your media.<br />
+                        This way, you won't have to manually set the volume threshold for each video.
                       </p>
                     </HelpModal>
                   )}
