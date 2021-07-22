@@ -19,21 +19,26 @@ const Switch = ({ label, name, config, plusDisabled, openPlusPopup, info } : Swi
         <label htmlFor={name} style={{ display: 'flex', alignItems: 'center' }}>{label}</label>
         {info || null}
       </div>
-      <input id={name} type="checkbox" className="switch" checked={config.get(name)} onChange={(evt) => {
-        if (plusDisabled) {
-          if (openPlusPopup) {
-            openPlusPopup();
+
+      <div>
+        {(name === "enabled" && !config.get(name)) && (<div className="switch-ping" />)}
+
+        <input id={name} type="checkbox" className="switch" checked={config.get(name)} onChange={(evt) => {
+          if (plusDisabled) {
+            if (openPlusPopup) {
+              openPlusPopup();
+            }
+            return;
           }
-          return;
-        }
 
-        config.set(name, evt.target.checked);
+          config.set(name, evt.target.checked);
 
-        if (config.env === "popup") {
-          window.sa_event(`setting_${name}_${evt.target.checked ? 'enable' : 'disable'}`);
-          window.plausible('setting_change', { props: { type: `${name}:${evt.target.checked ? 'enable' : 'disable'}` } });
-        }
-      }} />
+          if (config.env === "popup") {
+            window.sa_event(`setting_${name}_${evt.target.checked ? 'enable' : 'disable'}`);
+            window.plausible('setting_change', { props: { type: `${name}:${evt.target.checked ? 'enable' : 'disable'}` } });
+          }
+        }} />
+      </div>
     </div>
   );
 };

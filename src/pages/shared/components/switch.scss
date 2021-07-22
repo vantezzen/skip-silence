@@ -128,8 +128,27 @@
     cursor: pointer;
   }
 
+  // Special Styles for the "Enable" switch
   label[for="enabled"] {
     font-size: 1.15rem;
     font-weight: bold;
+  }
+
+  // "Ping" switch to gain more attention
+  .switch-ping {
+    position: absolute;
+    display: inline-flex;
+    width: 38px;
+    height: 21px;
+    border-radius: 10px;
+    background-color: #66CC99;
+    animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
   }
 }
