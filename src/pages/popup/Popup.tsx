@@ -36,7 +36,7 @@ class Popup extends Component {
     },
     {
       element: '#vu_meter',
-      intro: "This bar will show you the current volume of the media you are playing.<br />If the volume is lower than the red line, Skip Silence will speed up the video.<br />If the bar turns green, the video if currently sped up.",
+      intro: "This bar will show you the current volume of the media you are playing.<br />If the volume is lower than the orange line, Skip Silence will speed up the video.<br />If the bar turns orange, the video is currently sped up.",
     },
     {
       element: '#enabled',
@@ -48,7 +48,7 @@ class Popup extends Component {
     },
     {
       element: '#silence_threshold',
-      intro: 'Use this slider to choose your silence threshold. This will also be represented by the red line in the volume bar above.',
+      intro: 'Use this slider to choose your silence threshold. This will also be represented by the orange line in the volume bar above.',
     },
     {
       element: '#mute_silence',
@@ -169,37 +169,39 @@ class Popup extends Component {
                 config={this.config}
               />
 
-              <SpeedSetting
-                label="Playback Speed"
-                name="playback_speed"
-                config={this.config}
-                isPlus={this.state.isPlus}
-                showPlusPopup={() => this.showPlusPopup()}
-                info={(
-                  <HelpModal>
-                    <h2>Playback Speed</h2>
-                    <p>
-                      Speed at which normal, non-silent parts of the media are played.
-                    </p>
-                  </HelpModal>
-                )}
-              />
+              <div id="speed-settings">
+                <SpeedSetting
+                  label="Playback Speed"
+                  name="playback_speed"
+                  config={this.config}
+                  isPlus={this.state.isPlus}
+                  showPlusPopup={() => this.showPlusPopup()}
+                  info={(
+                    <HelpModal>
+                      <h2>Playback Speed</h2>
+                      <p>
+                        Speed at which normal, non-silent parts of the media are played.
+                      </p>
+                    </HelpModal>
+                  )}
+                />
 
-              <SpeedSetting
-                label="Silence Speed"
-                name="silence_speed"
-                config={this.config}
-                isPlus={this.state.isPlus}
-                showPlusPopup={() => this.showPlusPopup()}
-                info={(
-                  <HelpModal>
-                    <h2>Silence Speed</h2>
-                    <p>
-                      Speed at which "silent" parts of the media are played.
-                    </p>
-                  </HelpModal>
-                )}
-              />
+                <SpeedSetting
+                  label="Silence Speed"
+                  name="silence_speed"
+                  config={this.config}
+                  isPlus={this.state.isPlus}
+                  showPlusPopup={() => this.showPlusPopup()}
+                  info={(
+                    <HelpModal>
+                      <h2>Silence Speed</h2>
+                      <p>
+                        Speed at which "silent" parts of the media are played.
+                      </p>
+                    </HelpModal>
+                  )}
+                />
+              </div>
 
               <SliderSetting
                 label="Volume Threshold"
