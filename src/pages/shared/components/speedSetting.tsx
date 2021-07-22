@@ -148,7 +148,7 @@ const SpeedSetting = ({ label, name, config, isPlus, showPlusPopup, info } : Spe
         </button>
       </div>
 
-      <CSSTransition in={isOpen} timeout={300} classNames="opacity-transition" className="speed-transition">
+      <CSSTransition in={isOpen} timeout={300} classNames="opacity-transition" className="opacity-transition selector">
         <div>
           {selector}
         </div>

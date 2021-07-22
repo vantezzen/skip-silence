@@ -14,6 +14,9 @@ $teal: #66CC99 !default;
     border-radius: 7px;
     font-size: 0.7rem;
     font-weight: bold;
+    
+    padding: 0.25rem;
+    border: 0;
 
     margin: 0;
 
@@ -22,6 +25,12 @@ $teal: #66CC99 !default;
     align-items:center;
 
     cursor: pointer;
+
+    overflow-x: hidden;
+
+    &:focus {
+      outline: none;
+    }
     
     .chevron-icon {
       width: 12px;
@@ -55,19 +64,25 @@ $teal: #66CC99 !default;
     }
   }
 
-  select, input, button {
-    width: 100%;
-    margin-top: 0.5rem;
-    background-color: $shade-10;
-    color: $shade-1;
-    padding: 0.25rem;
-    border-radius: 0.25rem;
-    border: 0;
-
-    &:focus {
-      outline: none;
-      // box-shadow: 0 0 0 1px $shade-0,
-      //           0 0 0 2px $teal;
+  .selector {
+    select, input, button {
+      width: 100%;
+      margin-top: 0.5rem;
+      background-color: #141819;
+      color: #FFFFFF;
+      border: 0;
+      padding: 0.6rem;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 9px;
+      font-size: 0.7rem;
+      font-weight: bold;
+  
+      &:focus {
+        outline: none;
+        // box-shadow: 0 0 0 1px $shade-0,
+        //           0 0 0 2px $teal;
+      }
     }
   }
 
@@ -79,34 +94,4 @@ $teal: #66CC99 !default;
       margin-right: 0.5rem;
     }
   }
-}
-
-@keyframes animateSetting {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.speed-transition {
-  display: none;
-}
-.speed-transition-enter-active {
-  display: block;
-  animation: animateSetting 200ms;
-}
-.speed-transition-enter-done {
-  display: block;
-}
-.speed-transition-exit {
-  display: block;
-}
-.speed-transition-exit-active {
-  display: block;
-  animation: animateSetting 200ms reverse;
-}
-.speed-transition-exit-done {
-  display: none;
 }
