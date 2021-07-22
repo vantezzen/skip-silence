@@ -129,7 +129,7 @@ const SpeedSetting = ({ label, name, config, isPlus, showPlusPopup, info } : Spe
         </div>
 
         <button className="current-speed" onClick={ () => setIsOpen(!isOpen) }>
-          { value }
+          { value }x
           <svg 
             xmlns="http://www.w3.org/2000/svg"
             width="24"
