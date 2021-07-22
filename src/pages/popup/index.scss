@@ -42,7 +42,44 @@ code {
   padding-bottom: var(--element-margin);
 }
 
+.setting-icon {
+  margin-right: 12px;
+  color: #a7a7a7;
+  width: 12px;
+}
+
 // IntroJS 
 .introjs-tooltiptext {
   color: #212121;
+}
+
+// Trasitions
+@keyframes animateSetting {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.opacity-transition {
+  display: none;
+}
+.opacity-transition-enter-active {
+  display: block;
+  animation: animateSetting 300ms;
+}
+.opacity-transition-enter-done {
+  display: block;
+}
+.opacity-transition-exit {
+  display: block;
+}
+.opacity-transition-exit-active {
+  display: block;
+  animation: animateSetting 300ms reverse;
+}
+.opacity-transition-exit-done {
+  display: none;
 }

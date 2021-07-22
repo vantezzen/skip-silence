@@ -6,7 +6,7 @@ import speedSettings from '../speedSettings';
 import "./speedSetting.scss";
 
 interface SpeedSettingProps {
-  label: String,
+  label: String | React.ReactNode,
   name: "playback_speed" | "silence_speed",
   config: ConfigProvider,
   isPlus?: boolean,
@@ -124,7 +124,7 @@ const SpeedSetting = ({ label, name, config, isPlus, showPlusPopup, info } : Spe
     <div className="speed-setting bottom-border">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <label htmlFor={name}>{label}</label>
+          <label htmlFor={name} style={{ display: 'flex', alignItems: 'center' }}>{label}</label>
           {info || null}
         </div>
 
@@ -148,7 +148,7 @@ const SpeedSetting = ({ label, name, config, isPlus, showPlusPopup, info } : Spe
         </button>
       </div>
 
-      <CSSTransition in={isOpen} timeout={200} classNames="speed-transition" className="speed-transition">
+      <CSSTransition in={isOpen} timeout={300} classNames="opacity-transition" className="speed-transition">
         <div>
           {selector}
         </div>

@@ -124,6 +124,10 @@
     }
   }
 
+  label {
+    cursor: pointer;
+  }
+
   label[for="enabled"] {
     font-size: 1.15rem;
     font-weight: bold;

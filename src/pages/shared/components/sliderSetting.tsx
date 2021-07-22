@@ -4,7 +4,7 @@ import ConfigProvider from '../configProvider';
 import "./sliderSetting.scss";
 
 interface SliderSettingProps {
-  label: String,
+  label: String | React.ReactNode,
   max: number,
   name: "silence_threshold" | "samples_threshold",
   config: ConfigProvider,
@@ -20,7 +20,7 @@ const SliderSetting = ({ label, max, name, config, unit, half, orange, info } : 
   return (
     <div className={`slider-setting bottom-border ${orange ? 'orange' : ''}`}>
       <div className="setting-info">
-        <label htmlFor={name}>{ label }</label>
+        <label htmlFor={name} style={{ display: 'inline-flex', alignItems: 'center' }}>{ label }</label>
         <div style={{ float: 'right', display: 'flex', alignItems: 'center' }}>
           <div id="slidervalue" className="value">{ half ? Math.floor(value / 2) : value }{ unit }</div>
           {info || null}

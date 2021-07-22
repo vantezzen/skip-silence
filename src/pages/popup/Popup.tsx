@@ -1,4 +1,6 @@
 import React, { ChangeEvent, Component } from 'react';
+import { Power, Play, FastForward, BarChart2, Volume2, Columns, Volume, Circle, PieChart } from 'react-feather';
+import { CSSTransition } from 'react-transition-group';
 import { browser } from 'webextension-polyfill-ts';
 import './Popup.css';
 import 'intro.js/introjs.css';
@@ -167,14 +169,14 @@ class Popup extends Component {
 
               <Switch
                 name="enabled"
-                label="Enable Skip Silence"
+                label={(<><Power strokeWidth={3} style={{ width: 15 }} className="setting-icon" /> Enable Skip Silence</>)}
                 config={this.config}
               />
 
               <div style={{ opacity: this.config.get('enabled') ? 1 : 0.3, transition: 'all 0.3s' }}>
                 <div id="speed-settings">
                   <SpeedSetting
-                    label="Playback Speed"
+                    label={(<><Play className="setting-icon" /> Playback Speed</>)}
                     name="playback_speed"
                     config={this.config}
                     isPlus={this.state.isPlus}
@@ -190,7 +192,7 @@ class Popup extends Component {
                   />
 
                   <SpeedSetting
-                    label="Silence Speed"
+                    label={(<><FastForward className="setting-icon" /> Silence Speed</>)}
                     name="silence_speed"
                     config={this.config}
                     isPlus={this.state.isPlus}
@@ -208,7 +210,7 @@ class Popup extends Component {
 
                 <Switch
                   name="dynamic_silence_threshold"
-                  label={`Use dynamic threshold${!this.state.isPlus ? ' ★' : ''}`}
+                  label={(<><BarChart2 className="setting-icon" /> Use dynamic threshold{!this.state.isPlus ? ' ★' : ''}</>)}
                   config={this.config}
                   plusDisabled={!this.state.isPlus}
                   openPlusPopup={() => this.showPlusPopup()}
@@ -222,9 +224,9 @@ class Popup extends Component {
                   )}
                 />
 
-                {!this.config.get('dynamic_silence_threshold') && (
+                <CSSTransition in={!this.config.get('dynamic_silence_threshold')} timeout={300} classNames="opacity-transition" className="speed-transition">
                   <SliderSetting
-                    label="Volume Threshold"
+                    label={(<><Volume2 className="setting-icon" /> Volume Threshold</>)}
                     max={200}
                     name="silence_threshold"
                     config={this.config}
@@ -241,10 +243,10 @@ class Popup extends Component {
                       </HelpModal>
                     )}
                   />
-                )}
+                </CSSTransition>
 
                 <SliderSetting
-                  label="Sample Threshold"
+                  label={(<><Columns className="setting-icon" /> Sample Threshold</>)}
                   max={50}
                   name="samples_threshold"
                   config={this.config}
@@ -263,7 +265,7 @@ class Popup extends Component {
 
                 <Switch
                   name="mute_silence"
-                  label={`Mute Silence${!this.state.isPlus ? ' ★' : ''}`}
+                  label={(<><Volume className="setting-icon" /> Mute Silence{!this.state.isPlus ? ' ★' : ''}</>)}
                   config={this.config}
                   plusDisabled={!this.state.isPlus}
                   openPlusPopup={() => this.showPlusPopup()}
@@ -279,7 +281,7 @@ class Popup extends Component {
 
                 <Switch
                   name="is_bar_icon_enabled"
-                  label="Enable Command Bar Icon"
+                  label={(<><Circle className="setting-icon" /> Enable Command Bar Icon</>)}
                   config={this.config}
                   info={(
                     <HelpModal>
@@ -294,7 +296,7 @@ class Popup extends Component {
 
                 <Switch
                   name="allow_analytics"
-                  label="Allow anonymous analytics"
+                  label={(<><PieChart className="setting-icon" /> Allow anonymous analytics</>)}
                   config={this.config}
                   info={(
                     <HelpModal>

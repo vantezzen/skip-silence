@@ -4,7 +4,7 @@ import ConfigProvider from '../configProvider';
 import "./switch.scss";
 
 interface SwitchProps {
-  label: string,
+  label: string | React.ReactNode,
   name: "enabled" | "mute_silence" | "is_bar_icon_enabled" | "allow_analytics" | "dynamic_silence_threshold",
   config: ConfigProvider,
   plusDisabled?: boolean,
@@ -16,7 +16,7 @@ const Switch = ({ label, name, config, plusDisabled, openPlusPopup, info } : Swi
   return (
     <div className="switch bottom-border">
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <label htmlFor={name}>{label}</label>
+        <label htmlFor={name} style={{ display: 'flex', alignItems: 'center' }}>{label}</label>
         {info || null}
       </div>
       <input id={name} type="checkbox" className="switch" checked={config.get(name)} onChange={(evt) => {
