@@ -208,12 +208,19 @@ class Popup extends Component {
 
                 <Switch
                   name="dynamic_silence_threshold"
-                  label="Use dynamic threshold"
+                  label={`Use dynamic threshold${!this.state.isPlus ? ' ★' : ''}`}
                   config={this.config}
+                  plusDisabled={!this.state.isPlus}
+                  openPlusPopup={() => this.showPlusPopup()}
+                  info={(
+                    <HelpModal>
+                      <h2>Use dynamic threshold</h2>
+                      <p>
+                        Dynamic threshold will try to automatically calculate the volume of the silence in your media
+                      </p>
+                    </HelpModal>
+                  )}
                 />
-                <p className="small">
-                  Dynamic threshold will try to dynamically calculate the volume of the silence in your media
-                </p>
 
                 {!this.config.get('dynamic_silence_threshold') && (
                   <SliderSetting
