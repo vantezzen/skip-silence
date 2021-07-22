@@ -5,7 +5,7 @@ import "./switch.scss";
 
 interface SwitchProps {
   label: string,
-  name: "enabled" | "mute_silence" | "is_bar_icon_enabled" | "allow_analytics",
+  name: "enabled" | "mute_silence" | "is_bar_icon_enabled" | "allow_analytics" | "dynamic_silence_threshold",
   config: ConfigProvider,
   plusDisabled?: boolean,
   openPlusPopup?: () => void,

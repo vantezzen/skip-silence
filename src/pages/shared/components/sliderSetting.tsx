@@ -36,6 +36,7 @@ const SliderSetting = ({ label, max, name, config, unit, half, orange, info } : 
         onChange={(evt) => {
           config.set(name, Number(evt.target.value));
         }}
+        disabled={disabled}
       />
     </div>
   );
