@@ -18,6 +18,12 @@ export const KEYS = {
   'SPACE': ' ',
 };
 
+const settingNames = {
+  playback_speed: 'Playback Speed',
+  silence_speed: 'Silence Speed',
+  silence_threshold: 'Volume Threshold',
+}
+
 const IDLE_TEXT = 'Listening for commands...';
 
 interface CommandListenerProps {
@@ -152,41 +158,15 @@ class CommandListener extends Component<CommandListenerProps> {
   }
 
   render() {
-    let highlightedComponent = <></>;
     const highlight = this.props.config.get('highlighted_component');
 
-    if (highlight === 'silence_speed') {
-      highlightedComponent = (
-        <SpeedSetting
-          label="Silence Speed"
-          name="silence_speed"
-          config={this.props.config}
-        />
-      );
-    } else if (highlight === 'playback_speed') {
-      highlightedComponent = (
-        <SpeedSetting
-          label="Playback Speed"
-          name="playback_speed"
-          config={this.props.config}
-        />
-      );
-    } else if (highlight === 'silence_threshold') {
-      highlightedComponent = (
-        <SliderSetting
-          label="Volume Threshold"
-          max={200}
-          name="silence_threshold"
-          config={this.props.config}
-          unit="%"
-          half
-        />
-      );
-    }
-
     return (
-      <>
-        {highlightedComponent}
+      <div className="bar-text">
+        {highlight && (
+          <div style={{ marginRight: 10 }}>
+            {settingNames[highlight as keyof typeof settingNames]}: {this.props.config.get(highlight)}
+          </div>
+        )}
         <p style={{ color: 'rgb(148 148 148)' }}>
           {this.state.text}
         </p>
@@ -195,7 +175,7 @@ class CommandListener extends Component<CommandListenerProps> {
             Are you new to commands? <a href="https://github.com/vantezzen/skip-silence/blob/master/Command-Bar.md" target="_blank" className="info">Learn about them</a>
           </p>
         )}
-      </>
+      </div>
     );
   }
 }

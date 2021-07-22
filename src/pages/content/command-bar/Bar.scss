@@ -21,8 +21,14 @@
 
   animation: animate-in-command-bar 0.2s;
 
+  .bar-text {
+    display: flex;
+    align-items:center;
+  }
+
   .info {
     color: rgb(86, 86, 86) !important;
+    text-decoration: underline;
   }
 
   .speed-setting {
@@ -62,8 +68,6 @@
   position: fixed;
   bottom: 0;
   right: 0;
-  width: 25px;
-  height: 25px;
   padding: 10px;
 
   border-top-left-radius: 10px;
