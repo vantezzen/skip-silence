@@ -92,7 +92,7 @@ const SpeedSetting = ({ label, name, config, isPlus, showPlusPopup, info } : Spe
     );
 
     selector = (
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: 10 }}>
+      <div className="selector-container">
         {speedSettings.map((val) => (
           <button className={`value-option ${val === value ? 'active' : ''}`} onClick={() => {
             config.set(name, Number(val));
@@ -113,7 +113,7 @@ const SpeedSetting = ({ label, name, config, isPlus, showPlusPopup, info } : Spe
 
           window.sa_event(`speed_${name}_dropdown_custom`);
           window.plausible('speed_dropdown', { props: { name, speed: 'custom' } });
-        }} style={{ gridColumn: 'span 4 / span 1', aspectRatio: 'auto' }}>
+        }}>
           Custom{!isPlus && ' ★'}
         </button>
       </div>
@@ -122,9 +122,9 @@ const SpeedSetting = ({ label, name, config, isPlus, showPlusPopup, info } : Spe
 
   return (
     <div className="speed-setting bottom-border">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <label htmlFor={name} style={{ display: 'flex', alignItems: 'center' }}>{label}</label>
+      <div className="info-container">
+        <div className="label-container">
+          <label htmlFor={name}>{label}</label>
           {info || null}
         </div>
 

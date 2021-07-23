@@ -4,6 +4,16 @@
   justify-content: space-between;
   align-items:center;
 
+  .label-container  {
+    display: flex;
+    align-items: center;
+
+    label {
+      display: flex;
+      align-items: center;
+    }
+  }
+
   input {
     --active: #66CC99;
     --active-inner: #fff;

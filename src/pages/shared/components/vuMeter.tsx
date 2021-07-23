@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { browser } from "webextension-polyfill-ts";
 import ConfigProvider from '../configProvider';
 import { ExtMessage } from '../types';
+import './vuMeter.scss';
 
 interface VUMeterProps {
   config: ConfigProvider
@@ -92,12 +93,7 @@ export default class VUMeter extends Component<VUMeterProps> {
 
   render() {
     return (
-      <div style={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        margin: '1rem 0 1.5rem 0',
-      }}>
+      <div className="vu-meter">
         <canvas
           id="vu_meter"
           ref={(el) => {
@@ -108,12 +104,6 @@ export default class VUMeter extends Component<VUMeterProps> {
             this.canvasContext = el.getContext('2d');
   
             this._requestRender();
-          }}
-          style={{
-            'width': 300,
-            'height': 35,
-            'background': '#3D474C',
-            borderRadius: 7,
           }}
         />
       </div>

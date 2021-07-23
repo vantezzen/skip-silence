@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { browser } from 'webextension-polyfill-ts';
+import trackEvent from '../../shared/analytics';
 import verifyLicense from '../../shared/license';
 
 import "./plusInfo.scss";
@@ -37,8 +38,7 @@ const PlusInfo = ({ onClose, triggerValidation } : { onClose : () => void, trigg
           </p>
 
           <button className="button-primary" onClick={() => {
-            window.sa_event('open_gumroad');
-            window.plausible('open_gumroad');
+            trackEvent('open_gumroad');
             window.open('https://vantezzen.gumroad.com/l/PkZjU');
           }}>
             Learn more and buy license

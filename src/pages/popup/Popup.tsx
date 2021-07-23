@@ -20,6 +20,9 @@ import verifyLicense from '../shared/license';
 import PlusInfo from './components/plusInfo';
 import HelpModal from './components/helpModal';
 
+import { formatTimelength } from '../shared/utils';
+import trackEvent, { setupAnalytics } from '../shared/analytics';
+
 const isChromium = navigator.userAgent.includes("Chrome");
 
 class Popup extends Component {
@@ -73,21 +76,7 @@ class Popup extends Component {
         initialUpdate = false;
 
         if (this.config.get('allow_analytics') && !document.getElementById('simpleanalytics')) {
-          const sa = document.createElement('script');
-          sa.src = "https://scripts.simpleanalyticscdn.com/latest.dev.js";
-          sa.id = "simpleanalytics";
-          sa.async = true;
-          sa.defer = true;
-          sa.setAttribute('data-collect-dnt', 'true');
-          sa.setAttribute('data-hostname', 'skipsilence.analytics.vantezzen.io');
-          document.body.appendChild(sa);
-
-          const plausible = document.createElement('script');
-          plausible.setAttribute('data-domain', 'skipsilence.a.vantezzen.io');
-          plausible.async = true;
-          plausible.defer = true;
-          plausible.src = "https://a.vantezzen.io/js/plausible.js";
-          document.body.appendChild(plausible);
+          setupAnalytics();
         }
       }
     });
@@ -116,8 +105,7 @@ class Popup extends Component {
   }
 
   showPlusPopup() {
-    window.sa_event('show_plus_popup');
-    window.plausible('show_plus_popup');
+    trackEvent('show_plus_popup');
 
     this.setState({
       showPlusPopup: true,
@@ -125,8 +113,7 @@ class Popup extends Component {
   }
 
   closePlusPopup() {
-    window.sa_event('close_plus_popup');
-    window.plausible('close_plus_popup');
+    trackEvent('close_plus_popup');
 
     this.setState({ showPlusPopup: false });
   }
@@ -138,24 +125,6 @@ class Popup extends Component {
 
   componentWillUnmount() {
     this.isComponentMounted = false;
-  }
-
-  private toTwoDigit(num : number) {
-    return (num < 10 ? '0' : '') + num;
-  }
-
-  private formatSavedTime(ms : number) {
-    let remainder = ms;
-
-    const ONE_MINUTE = 60 * 1000;
-    const minutes = Math.floor(remainder / ONE_MINUTE);
-    remainder -= minutes * ONE_MINUTE;
-
-    const ONE_SECOND = 1000;
-    const seconds = Math.floor(remainder / ONE_SECOND);
-    remainder -= seconds * ONE_SECOND;
-
-    return this.toTwoDigit(minutes) + ":" + this.toTwoDigit(seconds);
   }
 
   render() {
@@ -363,19 +332,19 @@ class Popup extends Component {
         </div>
 
         <div className="plugin-info">
-          Using this extension you saved <b>{this.formatSavedTime(this.config.get("saved_time"))}</b>
+          Using this extension you saved <b>{formatTimelength(this.config.get("saved_time"))}</b>
           <br />(MM:SS) of your time.<br />
           <br />
 
           Developed by <a href="https://github.com/vantezzen" target="_blank" className="yellow">vantezzen</a>.
 
           <div className="coffee">
-          <a href="https://www.buymeacoffee.com/vantezzen" target="_blank" onClick={() => {window.sa_event('coffee');window.plausible('coffee')}}>
+          <a href="https://www.buymeacoffee.com/vantezzen" target="_blank" onClick={() => {trackEvent('coffee')}}>
             <img src="assets/img/bmc.png" alt="Buy Me A Coffee" width="150" />
           </a>
           </div>
 
-          <a href="#" onClick={() => {window.sa_event('reshow_training');window.plausible('reshow_training');this.setState({ shouldShowIntro: true })}}>
+          <a href="#" onClick={() => {trackEvent('reshow_training');this.setState({ shouldShowIntro: true })}}>
             Show the training screen again
           </a>
         </div>

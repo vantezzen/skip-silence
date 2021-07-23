@@ -16,8 +16,8 @@ interface SwitchProps {
 const Switch = ({ label, name, config, plusDisabled, openPlusPopup, info } : SwitchProps) => {
   return (
     <div className="switch bottom-border">
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <label htmlFor={name} style={{ display: 'flex', alignItems: 'center' }}>{label}</label>
+      <div className="label-container">
+        <label htmlFor={name}>{label}</label>
         {info || null}
       </div>
 

@@ -20,8 +20,8 @@ const SliderSetting = ({ label, max, name, config, unit, half, orange, info } : 
   return (
     <div className={`slider-setting bottom-border ${orange ? 'orange' : ''}`}>
       <div className="setting-info">
-        <label htmlFor={name} style={{ display: 'inline-flex', alignItems: 'center' }}>{ label }</label>
-        <div style={{ float: 'right', display: 'flex', alignItems: 'center' }}>
+        <label htmlFor={name} className="slider-label">{ label }</label>
+        <div className="slider-info">
           <div id="slidervalue" className="value">{ half ? Math.floor(value / 2) : value }{ unit }</div>
           {info || null}
         </div>

@@ -6,6 +6,22 @@ $teal: #66CC99 !default;
 .speed-setting {
   margin-top: var(--element-margin);
 
+  .info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .label-container {
+      display: flex;
+      align-items: center;
+
+      label {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
   .current-speed {
     background-color: #141819;
     color: #A7A7A7;
@@ -58,10 +74,19 @@ $teal: #66CC99 !default;
 
     cursor: pointer;
 
+    grid-column: span 4 / span 1;
+    aspect-ratio: auto;
+
     &.active {
       border: #EEA861 3px solid;
       color: #EEA861;
     }
+  }
+
+  .selector-container {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-gap: 10px;
   }
 
   .selector {

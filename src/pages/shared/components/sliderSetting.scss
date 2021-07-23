@@ -3,6 +3,16 @@
     margin-top: var(--element-margin);
     margin-bottom: 0.3rem;
 
+    .slider-label {
+      display: inline-flex;
+      align-items: center;
+    }
+    .slider-info {
+      float: right;
+      display: flex;
+      align-items: center;
+    }
+
     .value {
       color: #66CC99;
       font-size: 0.8em;
