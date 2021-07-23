@@ -13,5 +13,5 @@ export function formatTimelength(ms : number) {
   const seconds = Math.floor(remainder / ONE_SECOND);
   remainder -= seconds * ONE_SECOND;
 
-  return this.toTwoDigit(minutes) + ":" + this.toTwoDigit(seconds);
+  return toTwoDigit(minutes) + ":" + toTwoDigit(seconds);
 }
