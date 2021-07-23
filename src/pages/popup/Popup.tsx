@@ -319,8 +319,7 @@ class Popup extends Component {
                       <p>
                         "Skip Silence" uses <a href="https://simpleanalytics.com/">Simple Analytics</a> and Plausible to collect a few anonymized analytics without reducing your privacy.<br />
                         This data allows us to better understand how users use our extension and how we can improve it.<br />
-                        We understand that some people do not like sending anonymized analytics, so you can completely opt-out of this!<br />
-                        You will need to close and re-open this popup after changing this setting in order for it to take effect.
+                        We understand that some people do not like sending anonymized analytics, so you can completely opt-out of this!
                       </p>
                     </HelpModal>
                   )}

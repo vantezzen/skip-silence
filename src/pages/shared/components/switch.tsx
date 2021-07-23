@@ -38,6 +38,12 @@ const Switch = ({ label, name, config, plusDisabled, openPlusPopup, info } : Swi
             window.sa_event(`setting_${name}_${evt.target.checked ? 'enable' : 'disable'}`);
             window.plausible('setting_change', { props: { type: `${name}:${evt.target.checked ? 'enable' : 'disable'}` } });
           }
+
+          if (name === "allow_analytics") {
+            setTimeout(() => {
+              window.location.reload();
+            }, 250);
+          }
         }} />
       </div>
     </div>
