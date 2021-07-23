@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Volume2 } from 'react-feather';
 import { browser } from "webextension-polyfill-ts";
 import ConfigProvider from '../configProvider';
 import { ExtMessage } from '../types';
@@ -94,6 +95,10 @@ export default class VUMeter extends Component<VUMeterProps> {
   render() {
     return (
       <div className="vu-meter">
+        <div className="icon">
+          <Volume2 className="setting-icon" />
+        </div>
+
         <canvas
           id="vu_meter"
           ref={(el) => {

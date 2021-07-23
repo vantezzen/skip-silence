@@ -74,8 +74,10 @@ $teal: #66CC99 !default;
 
     cursor: pointer;
 
-    grid-column: span 4 / span 1;
-    aspect-ratio: auto;
+    &.value-custom {
+      grid-column: span 4 / span 1;
+      aspect-ratio: auto;
+    }
 
     &.active {
       border: #EEA861 3px solid;

@@ -98,13 +98,13 @@ const SpeedSetting = ({ label, name, config, isPlus, showPlusPopup, info } : Spe
             config.set(name, Number(val));
             window.sa_event(`speed_${name}_dropdown_${val}`);
             window.plausible('speed_dropdown', { props: { name, speed: val } });
-          }}>
+          }} key={val}>
             { val }x
           </button>
         ))}
 
         {/* CUstom value option */}
-        <button className='value-option' onClick={() => {
+        <button className='value-option value-custom' onClick={() => {
           if (isPlus) {
             config.set(`${name}_is_custom` as IsCustomKeys, true);
           } else if (showPlusPopup) {
@@ -137,9 +137,9 @@ const SpeedSetting = ({ label, name, config, isPlus, showPlusPopup, info } : Spe
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="chevron-icon"
             style={{ transform: `rotate(${isOpen ? 180 : 0}deg)` }}
           >

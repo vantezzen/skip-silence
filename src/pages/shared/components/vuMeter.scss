@@ -4,6 +4,16 @@
   justify-content: center;
   margin: 1rem 0 1.5rem 0;
 
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items:center;
+
+    .setting-icon {
+      width: 15px;
+      height: 15px;
+    }
+  }
 
   canvas {
     width: 300px;

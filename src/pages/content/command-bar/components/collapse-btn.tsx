@@ -1,4 +1,5 @@
 import React from 'react';
+import { X } from 'react-feather';
 import { browser } from 'webextension-polyfill-ts';
 
 import ConfigProvider from '../../../shared/configProvider';
@@ -12,8 +13,7 @@ interface CollapseBtnProps {
 const CollapseBtn = ({ config } : CollapseBtnProps) => {
   return (
     <div className="collapse-btn">
-      <img 
-        src={browser.runtime.getURL('/assets/img/close.svg')}
+      <X 
         onClick={() => {
           config.set('is_bar_collapsed', !config.get('is_bar_collapsed'))
         }}

@@ -4,22 +4,25 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background: #1B1B1B;
+  background: #293033;
   color: #FFFFFF;
 
   font-family: "Poppins", sans-serif;
 
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  bottom: 1rem;
+  right: 1rem;
   max-height: 25px;
-  padding: 10px;
+
+  padding: 8px;
+  padding-left: 20px;
+
+  border-radius: 25px;
 
   display: flex;
   align-items: center;
 
-  animation: animate-in-command-bar 0.2s;
+  animation: animate-in-command-bar 0.5s;
 
   .bar-text {
     display: flex;
@@ -56,30 +59,33 @@
 
 @keyframes animate-in-command-bar {
   from {
-    left: calc(100vw - 25px);
-    border-top-left-radius: 10px;
+    opacity: 0;
   }
 }
 
 .skip-silence-bar-collapsed {
-  background: #1B1B1B;
+  background: #293033;
   color: #FFFFFF;
 
   position: fixed;
-  bottom: 0;
-  right: 0;
-  padding: 10px;
+  bottom: 1rem;
+  right: 1rem;
 
-  border-top-left-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items:center;
+
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
 
   cursor: pointer;
 
-  animation: animate-in-command-collapsed 0.2s;
+  animation: animate-in-command-collapsed 0.5s;
 }
 
 @keyframes animate-in-command-collapsed {
   from {
-    left: 100vw;
     opacity: 0;
   }
 }

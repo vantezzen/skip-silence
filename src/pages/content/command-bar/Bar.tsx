@@ -56,8 +56,8 @@ class Bar extends Component<BarProps> {
           <img 
             src={browser.runtime.getURL('/assets/img/icon-128.png')}
             style={{
-              width: 30,
-              height: 30
+              width: 25,
+              height: 25
             }}
             onClick={() => {
               this.props.config.set('is_bar_collapsed', false);
@@ -69,11 +69,11 @@ class Bar extends Component<BarProps> {
 
     return (
       <div className="skip-silence-bar">
-        <Header />
 
         <CommandListener config={this.props.config} />
 
-        <CollapseBtn config={this.props.config} />
+        <Header config={this.props.config} />
+        {/* <CollapseBtn config={this.props.config} /> */}
       </div>
     );
   }
