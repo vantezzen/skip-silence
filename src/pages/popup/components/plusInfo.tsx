@@ -13,7 +13,7 @@ const PlusInfo = ({ onClose, triggerValidation } : { onClose : () => void, trigg
 
   return (
     <div className="plus-info">
-      <button className="close-button" onClick={onClose}>
+      <button className="close-button" onClick={() => { trackEvent('plusinfo_close_top'); onClose(); }}>
         &times;
       </button>
 
@@ -38,12 +38,12 @@ const PlusInfo = ({ onClose, triggerValidation } : { onClose : () => void, trigg
           </p>
 
           <button className="button-primary" onClick={() => {
-            trackEvent('open_gumroad');
+            trackEvent('plusinfo_open_gumroad');
             window.open('https://vantezzen.gumroad.com/l/PkZjU');
           }}>
             Learn more and buy license
           </button>
-          <button onClick={() => setScreen('activate')} className="button-primary">
+          <button onClick={() => { trackEvent('plusinfo_click_activate'); setScreen('activate'); }} className="button-primary">
             Activate License
           </button>
         </>
@@ -66,6 +66,7 @@ const PlusInfo = ({ onClose, triggerValidation } : { onClose : () => void, trigg
 
             if (licenseKey.length === 0) {
               setActivateInfo('Please enter a license key');
+              trackEvent('empty_license');
               return;
             }
 
@@ -76,9 +77,10 @@ const PlusInfo = ({ onClose, triggerValidation } : { onClose : () => void, trigg
               await browser.storage.local.set({ license: licenseKey });
               await triggerValidation();
               setScreen('activated')
-              
+              trackEvent('activated');
             } else {
               setActivateInfo('This license key is not valid.');
+              trackEvent('invalid_license', { key: licenseKey });
             }
 
           }} className="button-primary">
@@ -109,7 +111,7 @@ const PlusInfo = ({ onClose, triggerValidation } : { onClose : () => void, trigg
         </>
       )}
 
-      <button onClick={onClose} className="close-link">
+      <button onClick={() => { trackEvent('plusinfo_close_bottom'); onClose(); }} className="close-link">
         Close
       </button>
     </div>

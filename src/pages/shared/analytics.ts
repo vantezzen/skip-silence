@@ -2,6 +2,8 @@
  * Skip Silence Analytics helpers
  */
 
+import debug from "./debug";
+
 /**
  * Setup Analytics Tags
  */
@@ -28,7 +30,13 @@ export function setupAnalytics() {
  * 
  * @param {string} name - The name of the event to track
  */
-export default function trackEvent(name : string) {
+export default function trackEvent(name : string, data ?: { [key: string]: any }) {
+  debug(`Analytics: New event "${name}"`, data);
+
   window.sa_event(name);
-  window.plausible(name);
+  if (data) {
+    window.plausible(name, { props: data });
+  } else {
+    window.plausible(name);
+  }
 }
