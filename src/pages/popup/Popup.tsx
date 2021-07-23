@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Component } from 'react';
-import { Power, Play, FastForward, BarChart2, Volume2, Columns, Volume, Circle, PieChart } from 'react-feather';
+import { Power, Play, FastForward, BarChart2, Volume2, Columns, Volume, Circle, PieChart, Speaker } from 'react-feather';
 import { CSSTransition } from 'react-transition-group';
 import { browser } from 'webextension-polyfill-ts';
 import './Popup.css';
@@ -19,6 +19,8 @@ import LocalPlayerInfo from '../shared/components/localPlayerInfo';
 import verifyLicense from '../shared/license';
 import PlusInfo from './components/plusInfo';
 import HelpModal from './components/helpModal';
+
+const isChromium = navigator.userAgent.includes("Chrome");
 
 class Popup extends Component {
   config : ConfigProvider;
@@ -279,6 +281,26 @@ class Popup extends Component {
                     </HelpModal>
                   )}
                 />
+
+                {isChromium && (
+                  <Switch
+                    name="keep_audio_sync"
+                    label={(<><Speaker className="setting-icon" /> Keep Audio in Sync{!this.state.isPlus ? ' ★' : ''}</>)}
+                    config={this.config}
+                    plusDisabled={!this.state.isPlus}
+                    openPlusPopup={() => this.showPlusPopup()}
+                    info={(
+                      <HelpModal>
+                        <h2>Keep Audio in Sync</h2>
+                        <p>
+                          Chrome and Browsers that base on Chromium (e.g. Edge) currently have a bug that will result in audio and video getting out of sync when changing the speed often.<br />
+                          As "Skip Silence" will change the video speed often, you might experience this issue.<br />
+                          When this setting is activated, Skip Silence will try to fix this issue by periodically putting them back into sync. 
+                        </p>
+                      </HelpModal>
+                    )}
+                  />
+                )}
 
                 <Switch
                   name="is_bar_icon_enabled"

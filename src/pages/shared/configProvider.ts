@@ -18,6 +18,7 @@ const storedKeys : (keyof typeof defaultConfig)[] = [
   "silence_speed_is_custom",
 
   "mute_silence",
+  "keep_audio_sync",
 
   "is_bar_icon_enabled",
   "is_bar_collapsed",

@@ -1,11 +1,12 @@
 import React, { ChangeEvent } from 'react';
+import defaultConfig from '../config';
 import ConfigProvider from '../configProvider';
 
 import "./switch.scss";
 
 interface SwitchProps {
   label: string | React.ReactNode,
-  name: "enabled" | "mute_silence" | "is_bar_icon_enabled" | "allow_analytics" | "dynamic_silence_threshold",
+  name: keyof typeof defaultConfig,
   config: ConfigProvider,
   plusDisabled?: boolean,
   openPlusPopup?: () => void,

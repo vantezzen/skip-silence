@@ -3,6 +3,7 @@ import { MediaElement } from '../../shared/types';
 import debug from '../../shared/debug';
 import ConfigProvider from '../../shared/configProvider';
 import DynamicThresholdCalculator from "./DynamicThresholdCalculator";
+import AudioSync from "./AudioSync";
 
 /**
  * Silence Skipper: This class is doing the job of actually inspecting media elements and
@@ -34,6 +35,7 @@ export default class SilenceSkipper {
 
   // Dependencies
   dynamicThresholdCalculator : DynamicThresholdCalculator;
+  audioSync : AudioSync;
 
   /**
    * Add silence skipper to element
@@ -54,6 +56,7 @@ export default class SilenceSkipper {
       }
     }
     this.dynamicThresholdCalculator = new DynamicThresholdCalculator(config);
+    this.audioSync = new AudioSync(this);
 
     // Attach our config listener
     this.config.onUpdate(() => this._onConfigUpdate());

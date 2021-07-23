@@ -12,7 +12,9 @@ const defaultConfig = {
   silence_speed: 3,
   silence_speed_is_custom: false,
 
+  // Other features
   mute_silence: false,
+  keep_audio_sync: false,
 
   // Command Bar
   is_bar_icon_enabled: true,

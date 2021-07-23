@@ -5,7 +5,7 @@
     "page": "background.html"
   },
 
-  "browser_action": {
+  "page_action": {
     "default_icon": {
       "32": "assets/img/disabled.png"
     },
