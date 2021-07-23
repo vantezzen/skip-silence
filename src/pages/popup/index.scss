@@ -4,6 +4,13 @@
 
 html {
   overflow-x: hidden;
+  background-color: #FFFFFF;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #35363A;
+  }
 }
 
 body {
@@ -20,6 +27,8 @@ body {
 
   background: #293033;
   color: #FFFFFF;
+
+  border-radius: 10px;
 }
 
 code {

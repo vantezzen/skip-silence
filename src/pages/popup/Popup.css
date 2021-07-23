@@ -6,7 +6,7 @@
   text-align: center;
   font-size: 0.7rem;
   margin-top: var(--element-margin);
-  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   color: #A7A7A7;
 
   a {
