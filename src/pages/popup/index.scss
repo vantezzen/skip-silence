@@ -83,3 +83,24 @@ code {
 .opacity-transition-exit-done {
   display: none;
 }
+
+// Scroll bar
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #0f1213;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #FFFFFF;
+  border-radius: 2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b9b9b9;
+}
