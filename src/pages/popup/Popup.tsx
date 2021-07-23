@@ -140,7 +140,30 @@ class Popup extends Component {
     this.isComponentMounted = false;
   }
 
+  private toTwoDigit(num : number) {
+    return (num < 10 ? '0' : '') + num;
+  }
+
+  private formatSavedTime(ms : number) {
+    let remainder = ms;
+
+    const ONE_MINUTE = 60 * 1000;
+    const minutes = Math.floor(remainder / ONE_MINUTE);
+    remainder -= minutes * ONE_MINUTE;
+
+    const ONE_SECOND = 1000;
+    const seconds = Math.floor(remainder / ONE_SECOND);
+    remainder -= seconds * ONE_SECOND;
+
+    return this.toTwoDigit(minutes) + ":" + this.toTwoDigit(seconds);
+  }
+
   render() {
+    const grayOutWhenDisabled = {
+      opacity: this.config.get('enabled') ? 1 : 0.3,
+      transition: 'all 0.3s',
+    };
+
     return (
       <div>
         <div className="App">
@@ -165,7 +188,7 @@ class Popup extends Component {
 
               <Header />
         
-              <div style={{ opacity: this.config.get('enabled') ? 1 : 0.3, transition: 'all 0.3s' }}>
+              <div style={grayOutWhenDisabled}>
                 <VUMeter config={this.config} />
               </div>
 
@@ -175,7 +198,7 @@ class Popup extends Component {
                 config={this.config}
               />
 
-              <div style={{ opacity: this.config.get('enabled') ? 1 : 0.3, transition: 'all 0.3s' }}>
+              <div style={grayOutWhenDisabled}>
                 <div id="speed-settings">
                   <SpeedSetting
                     label={(<><Play className="setting-icon" /> Playback Speed</>)}
@@ -340,6 +363,10 @@ class Popup extends Component {
         </div>
 
         <div className="plugin-info">
+          Using this extension you saved <b>{this.formatSavedTime(this.config.get("saved_time"))}</b>
+          <br />(MM:SS) of your time.<br />
+          <br />
+
           Developed by <a href="https://github.com/vantezzen" target="_blank" className="yellow">vantezzen</a>.
 
           <div className="coffee">

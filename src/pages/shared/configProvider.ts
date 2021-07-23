@@ -24,6 +24,7 @@ const storedKeys : (keyof typeof defaultConfig)[] = [
   "is_bar_collapsed",
 
   "allow_analytics",
+  "saved_time",
 ];
 
 /**

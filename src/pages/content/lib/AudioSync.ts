@@ -38,7 +38,7 @@ export default class AudioSync {
    * Synchronize the audio and video of the media element
    */
   private sync() {
-    if (this.skipper.config.get('keep_audio_sync')) {
+    if (this.skipper.config.get('keep_audio_sync') && this.skipper.config.get('enabled')) {
       this.isActive = true;
       this.skipper.element.currentTime = this.skipper.element.currentTime;
       debug("AudioSync: Synced audio");

@@ -23,6 +23,7 @@ const defaultConfig = {
 
   // Analytics
   allow_analytics: true,
+  saved_time: 0,
 };
 
 export default defaultConfig;
