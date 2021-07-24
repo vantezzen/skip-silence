@@ -43,7 +43,7 @@ export default class AudioSync {
       this.skipper.element.currentTime = this.skipper.element.currentTime;
       debug("AudioSync: Synced audio");
 
-      setTimeout(this.sync, 5000);
+      setTimeout(this.sync, 30000);
     } else {
       debug('AudioSync: Stopping because option was disabled');
 
