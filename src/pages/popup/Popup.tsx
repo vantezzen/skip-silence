@@ -2,7 +2,7 @@ import React, { ChangeEvent, Component } from 'react';
 import { Power, Play, FastForward, BarChart2, Volume2, Columns, Volume, Circle, PieChart, Speaker, Info } from 'react-feather';
 import { CSSTransition } from 'react-transition-group';
 import { browser } from 'webextension-polyfill-ts';
-import './Popup.css';
+import './Popup.scss';
 import 'intro.js/introjs.css';
 
 import { Steps } from 'intro.js-react';
@@ -22,6 +22,7 @@ import HelpModal from './components/helpModal';
 
 import { formatTimelength } from '../shared/utils';
 import trackEvent, { setupAnalytics } from '../shared/analytics';
+import V4Info from './components/v4info';
 
 const isChromium = navigator.userAgent.includes("Chrome");
 
@@ -156,6 +157,8 @@ class Popup extends Component {
               )}
 
               <Header />
+
+              <V4Info />
         
               <div style={grayOutWhenDisabled}>
                 <VUMeter config={this.config} />
