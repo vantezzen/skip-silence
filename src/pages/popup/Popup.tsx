@@ -290,7 +290,8 @@ class Popup extends Component {
                         <p>
                           Chrome and Browsers that base on Chromium (e.g. Edge) currently have a bug that will result in audio and video getting out of sync when changing the speed often.<br />
                           As "Skip Silence" will change the video speed often, you might experience this issue.<br />
-                          When this setting is activated, Skip Silence will try to fix this issue by periodically putting them back into sync. 
+                          When this setting is activated, Skip Silence will try to fix this issue by periodically putting them back into sync. <br />
+                          Please note that this setting may cause media to re-buffer every 30s on some websites.
                         </p>
                       </HelpModal>
                     )}
