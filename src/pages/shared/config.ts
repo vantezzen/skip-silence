@@ -21,6 +21,9 @@ const defaultConfig = {
   is_bar_collapsed: true,
   highlighted_component: '',
 
+  // Info bar
+  show_saved_time_info: true,
+
   // Analytics
   allow_analytics: true,
   saved_time: 0,

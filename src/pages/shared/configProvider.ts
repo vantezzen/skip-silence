@@ -23,6 +23,8 @@ const storedKeys : (keyof typeof defaultConfig)[] = [
   "is_bar_icon_enabled",
   "is_bar_collapsed",
 
+  "show_saved_time_info",
+
   "allow_analytics",
   "saved_time",
 ];

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Component } from 'react';
-import { Power, Play, FastForward, BarChart2, Volume2, Columns, Volume, Circle, PieChart, Speaker } from 'react-feather';
+import { Power, Play, FastForward, BarChart2, Volume2, Columns, Volume, Circle, PieChart, Speaker, Info } from 'react-feather';
 import { CSSTransition } from 'react-transition-group';
 import { browser } from 'webextension-polyfill-ts';
 import './Popup.css';
@@ -304,6 +304,21 @@ class Popup extends Component {
                       <p>
                         If you don't like the small command bar logo in the bottom right, you can completely disable it.<br />
                         You can still open the command bar using the shortcut "ALT/Option + Shift + S".
+                      </p>
+                    </HelpModal>
+                  )}
+                />
+
+                <Switch
+                  name="show_saved_time_info"
+                  label={(<><Info className="setting-icon" /> Show saved time info</>)}
+                  config={this.config}
+                  info={(
+                    <HelpModal>
+                      <h2>Show saved time info</h2>
+                      <p>
+                        After a video or audio ended, "Skip Silence" will show a small info message in the bottom left corner, informing you how much time you have saved in this media alone.<br />
+                        If you do not like this message, you can disable it.
                       </p>
                     </HelpModal>
                   )}

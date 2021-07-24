@@ -1,0 +1,54 @@
+.skip-silence-saved-info {
+  all: initial;
+  
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background: #293033;
+  color: #FFFFFF;
+
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  position: fixed;
+  bottom: 1rem;
+  left: -100%;
+  max-height: 25px;
+
+  padding: 8px;
+  padding-right: 20px;
+
+  border-radius: 25px;
+
+  display: flex;
+  align-items: center;
+
+  animation: animate-info-bar 6s;
+
+  .skip-silence-saved-info-text {
+    display: flex;
+    align-items:center;
+  }
+
+  .skip-silence-saved-info-logo {
+    display: flex;
+    justify-content: center;
+    align-items:center;
+
+    margin-right: 15px;
+  }
+}
+
+@keyframes animate-info-bar {
+  0% {
+    left: -100%;
+  }
+  15% {
+    left: 1rem;
+  }
+  85% {
+    left: 1rem;
+  }
+  100% {
+    left: -100%;
+  }
+}
