@@ -1,4 +1,5 @@
 import React, { ChangeEvent } from 'react';
+import defaultConfig from '../config';
 import ConfigProvider from '../configProvider';
 
 import "./sliderSetting.scss";
@@ -6,19 +7,22 @@ import "./sliderSetting.scss";
 interface SliderSettingProps {
   label: String | React.ReactNode,
   max: number,
-  name: "silence_threshold" | "samples_threshold",
+  min?: number,
+  step?: number,
+  name: keyof typeof defaultConfig,
   config: ConfigProvider,
   unit: String,
   half: boolean,
   orange?: boolean,
   info?: React.ReactNode,
+  className ?: string,
 }
 
-const SliderSetting = ({ label, max, name, config, unit, half, orange, info } : SliderSettingProps) => {
+const SliderSetting = ({ label, max, min, step, name, config, unit, half, orange, info, className } : SliderSettingProps) => {
   const value = config.get(name);
 
   return (
-    <div className={`slider-setting bottom-border ${orange ? 'orange' : ''}`}>
+    <div className={`slider-setting bottom-border ${orange ? 'orange' : ''} ${className ? className : ''}`}>
       <div className="setting-info">
         <label htmlFor={name} className="slider-label">{ label }</label>
         <div className="slider-info">
@@ -28,8 +32,9 @@ const SliderSetting = ({ label, max, name, config, unit, half, orange, info } : 
       </div>
       <input
         type="range"
-        min="1"
+        min={min || 1}
         max={max}
+        step={step || 1}
         value={value}
         className="range-slider__range"
         id={name}

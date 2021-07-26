@@ -35,8 +35,8 @@ const searchElements = (inspectedElements : HTMLElement[], callback : Function) 
   const elements = getElementsRecursive(document);
 
   for (const element of elements) {
-    // Check if element is already being inspected
-    if (!inspectedElements.includes(element)) {
+    // Check if element is already being inspected or should be ignored
+    if (!inspectedElements.includes(element) && !(element.getAttribute('data-skip-silence-ignore') === 'true')) {
       inspectedElements.push(element);
       callback(element);
     }

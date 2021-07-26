@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Component } from 'react';
-import { Power, Play, FastForward, BarChart2, Volume2, Columns, Volume, Circle, PieChart, Speaker, Info } from 'react-feather';
+import { Power, Play, FastForward, BarChart2, Volume2, Columns, Volume, Circle, PieChart, Speaker, Info, Loader, Clock } from 'react-feather';
 import { CSSTransition } from 'react-transition-group';
 import { browser } from 'webextension-polyfill-ts';
 import './Popup.scss';
@@ -16,6 +16,7 @@ import SliderSetting from '../shared/components/sliderSetting';
 import SpeedSetting from '../shared/components/speedSetting';
 import debug from '../shared/debug';
 import LocalPlayerInfo from '../shared/components/localPlayerInfo';
+import Alert from '../shared/components/alert';
 import verifyLicense from '../shared/license';
 import PlusInfo from './components/plusInfo';
 import HelpModal from './components/helpModal';
@@ -297,6 +298,71 @@ class Popup extends Component {
                     )}
                   />
                 )}
+
+                {(this.config.get('use_preload') && this.config.get('enabled') && !this.config.get('has_preloaded_current_page')) && (
+                  <Alert>
+                    <p>
+                      Preloader is not yet attached on this page. Please refresh the page to enable it! 
+                    </p>
+                  </Alert>
+                )}
+                {(!this.config.get('use_preload') && this.config.get('has_preloaded_current_page')) && (
+                  <Alert>
+                    <p>
+                      Preloader is still attached on this page. Please refresh the page to disable it!
+                    </p>
+                  </Alert>
+                )}
+                {(!this.config.get('can_use_preload')) && (
+                  <Alert>
+                    <p>
+                      Unfortunately, preloader does not work on this page. Please disable it or try again on antoher page.
+                    </p>
+                  </Alert>
+                )}
+
+                <Switch
+                  name="use_preload"
+                  label={(<><Loader className="setting-icon" /> Preload media{!this.state.isPlus ? ' ★' : ''}</>)}
+                  config={this.config}
+                  plusDisabled={!this.state.isPlus}
+                  openPlusPopup={() => this.showPlusPopup()}
+                  info={(
+                    <HelpModal>
+                      <h2>Preload media</h2>
+                      <p>
+                        Skip Silence can preload the media to improve speeding up and down.<br />
+                        Using the preloaded data, Skip Silence knows, how loud the media will be in 0.1-1s and better slow the media up and down.<br />
+                        <br />
+                        This features relies on the functionality of the site you are using and won't work on all pages!<br />
+                        <br />
+                        After changing this setting you will need to reload your current page, otherwise Skip Silence can't attach the preloader.
+                      </p>
+                    </HelpModal>
+                  )}
+                />
+
+                <CSSTransition in={this.config.get('use_preload')} timeout={300} classNames="opacity-transition" className="opacity-transition">
+                  <SliderSetting
+                    label={(<><Clock className="setting-icon" /> Preload length</>)}
+                    max={1}
+                    min={0.1}
+                    step={0.1}
+                    name="preload_length"
+                    config={this.config}
+                    unit="s"
+                    half={false}
+                    orange
+                    info={(
+                      <HelpModal>
+                        <h2>Preload length</h2>
+                        <p>
+                          Length of the preload time. For example, preload time of 0.5s results in the media being preloaded 0.5s into the future and the speed will be adjusted to the media 0.5s ahead of time.
+                        </p>
+                      </HelpModal>
+                    )}
+                  />
+                </CSSTransition>
 
                 <Switch
                   name="is_bar_icon_enabled"

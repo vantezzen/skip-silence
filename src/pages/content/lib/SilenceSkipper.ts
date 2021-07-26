@@ -5,6 +5,7 @@ import ConfigProvider from '../../shared/configProvider';
 import DynamicThresholdCalculator from "./DynamicThresholdCalculator";
 import AudioSync from "./AudioSync";
 import Statistics from "./Statistics";
+import Preload from "./Preload";
 
 /**
  * Silence Skipper: This class is doing the job of actually inspecting media elements and
@@ -13,6 +14,7 @@ import Statistics from "./Statistics";
 export default class SilenceSkipper {
   // Constructor variables
   element : MediaElement;
+  preloadElement ?: MediaElement;
   config : ConfigProvider;
 
   // State variables
@@ -38,6 +40,7 @@ export default class SilenceSkipper {
   dynamicThresholdCalculator : DynamicThresholdCalculator;
   audioSync : AudioSync;
   statistics : Statistics;
+  preload : Preload;
 
   /**
    * Add silence skipper to element
@@ -49,6 +52,12 @@ export default class SilenceSkipper {
     this.element = mediaElement;
     this.config = config;
 
+    // Setup dependencies
+    this.dynamicThresholdCalculator = new DynamicThresholdCalculator(config);
+    this.audioSync = new AudioSync(this);
+    this.statistics = new Statistics(this);
+    this.preload = new Preload(this);
+
     // Enable Skip Silence if we should
     const isEnabled = this.config.get('enabled');
     if (isEnabled) {
@@ -57,9 +66,6 @@ export default class SilenceSkipper {
         this._inspectSample();
       }
     }
-    this.dynamicThresholdCalculator = new DynamicThresholdCalculator(config);
-    this.audioSync = new AudioSync(this);
-    this.statistics = new Statistics(this);
 
     // Attach our config listener
     this.config.onUpdate(() => this._onConfigUpdate());
@@ -70,24 +76,44 @@ export default class SilenceSkipper {
    * This is only needed when we are actually skipping silent parts as we are using excess resources
    * otherwise - this is why this step is not done in the constructor
    */
-  _attachToElement() {
+  async _attachToElement() {
     // We don't need to attach multiple times
     if (this.isAttached) return false;
 
     this.audioContext = new AudioContext();
 
+    // Try to get a preload element
+    if (this.config.get('use_preload')) {
+      this.config.set('has_preloaded_current_page', true);
+      
+      const preloadElement = await this.preload.createPreloadElement();
+      if (preloadElement) {
+        this.preloadElement = preloadElement;
+      } else {
+        this.config.set('can_use_preload', false);
+      }
+    }
+
     // Create our audio components
     this.analyser = this.audioContext.createAnalyser();
-    this.source = this.audioContext.createMediaElementSource(this.element);
+    this.source = this.audioContext.createMediaElementSource(this.preloadElement || this.element);
     this.gain = this.audioContext.createGain();
 
     // Connect our components
     // Source -> Analyser -> Gain -> Destination
-    this.source
+    let nextNode = this.source
       .connect(this.analyser)
-      .connect(this.gain)
-      .connect(this.audioContext.destination);
+      .connect(this.gain);
 
+    if (this.preloadElement) {
+      const muteGain = this.audioContext.createGain();
+      this.gain.connect(muteGain);
+      // muteGain.gain.value = 0;
+
+      nextNode = muteGain;
+    }
+    nextNode.connect(this.audioContext.destination);
+    
     this.audioFrequencies = new Float32Array(this.analyser.fftSize);
 
     this.isAttached = true;
@@ -156,6 +182,9 @@ export default class SilenceSkipper {
     }
 
     this.element.playbackRate = this._targetPlaybackRate;
+    if (this.preloadElement) {
+      this.preloadElement.playbackRate = this._targetPlaybackRate;
+    }
     if (!this._handlingRateChangeError) {
       // Make sure that the playback rate actually changed
       setTimeout(() => {
@@ -286,11 +315,11 @@ export default class SilenceSkipper {
   /**
    * Inspect the current sample of the media and speed up or down accordingly
    */
-  _inspectSample() {
+  async _inspectSample() {
     this.isInspectionRunning = true;
 
     // Make sure we are attached
-    if (!this.isAttached) this._attachToElement();
+    if (!this.isAttached) await this._attachToElement();
 
     this._samplePosition = (this._samplePosition + 1) % 50;
 

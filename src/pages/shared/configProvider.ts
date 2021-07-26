@@ -19,6 +19,8 @@ const storedKeys : (keyof typeof defaultConfig)[] = [
 
   "mute_silence",
   "keep_audio_sync",
+  "use_preload",
+  "preload_length",
 
   "is_bar_icon_enabled",
   "is_bar_collapsed",
