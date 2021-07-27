@@ -18,7 +18,10 @@
 
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "<all_urls>",
+    "webRequest",
+    "webRequestBlocking"
   ],
 
   "browser_specific_settings": {

@@ -108,7 +108,7 @@ export default class SilenceSkipper {
     if (this.preloadElement) {
       const muteGain = this.audioContext.createGain();
       this.gain.connect(muteGain);
-      // muteGain.gain.value = 0;
+      muteGain.gain.value = 0;
 
       nextNode = muteGain;
     }

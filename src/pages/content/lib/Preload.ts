@@ -1,5 +1,5 @@
 import debug from '../../shared/debug';
-import { MediaElement } from '../../shared/types';
+import { browser } from "webextension-polyfill-ts";
 import SilenceSkipper from './SilenceSkipper';
 
 /**
@@ -97,16 +97,26 @@ export default class Preload {
       debug('Preload: Using YouTube internal url', videoUrl);
     } else {
       videoUrl = this.skipper.element.currentSrc;
+      // Make sure to remove CORS restrictions on the media element
+      await browser.runtime.sendMessage({
+        command: 'corsUnblock',
+        url: videoUrl,
+        for: window.location.origin
+      });
+      debug("Preload: Unblocked CORS");
+    }
 
-      // Try to connect to the video url. If we can't, then we can't preload
-      try {
-        await fetch(videoUrl, {
-          method: 'HEAD'
-        });
-      } catch (e) {
-        debug('Preload: Cannot create preload as URL is not accessible', videoUrl);
-        return false;
-      }
+    if (!videoUrl) return false;
+
+
+    // Try to connect to the video url. If we can't, then we can't preload
+    try {
+      await fetch(videoUrl, {
+        method: 'HEAD'
+      });
+    } catch (e) {
+      debug('Preload: Cannot create preload as URL is not accessible', videoUrl);
+      return false;
     }
 
     if (!videoUrl) return false;
@@ -116,6 +126,7 @@ export default class Preload {
     preloadElement.setAttribute("src", videoUrl);
     preloadElement.setAttribute("style", "display: none;");
     preloadElement.setAttribute("data-skip-silence-ignore", 'true');
+    preloadElement.setAttribute('crossOrigin', 'anonymous')
     preloadElement.id = "skip-silence-preload";
     preloadElement.currentTime = this.skipper.element.currentTime + this.skipper.config.get('preload_length');
     document.body.appendChild(preloadElement);
