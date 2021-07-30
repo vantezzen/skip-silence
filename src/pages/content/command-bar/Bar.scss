@@ -24,6 +24,8 @@
 
   animation: animate-in-command-bar 0.5s;
 
+  z-index: 100000;
+
   .bar-text {
     display: flex;
     align-items:center;
