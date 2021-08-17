@@ -34,7 +34,7 @@ const PlusInfo = ({ onClose, triggerValidation } : { onClose : () => void, trigg
             To help keep the development of "Skip Silence" alive and to help expanding it to more browsers, some more advanced features require "Skip Silence Plus".
           </p>
           <p>
-            "Skip Silence Plus" is a <b>one-time payment of $5</b> and allows you to activate Plus across <b>all your personal devices</b> - so you won't have to purchase mutliple licenses!
+            "Skip Silence Plus" is a <b>one-time payment of $6</b> and allows you to activate Plus across <b>all your personal devices</b> - so you won't have to purchase mutliple licenses!
           </p>
 
           <button className="button-primary" onClick={() => {
