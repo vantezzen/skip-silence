@@ -89,3 +89,7 @@
     opacity: 0;
   }
 }
+
+.skip-silence-bar, .skip-silence-bar-collapsed {
+  z-index: 100000;
+}
