@@ -59,6 +59,7 @@ export default class SilenceSkipper {
     this.preload = new Preload(this);
 
     // Enable Skip Silence if we should
+
     const isEnabled = this.config.get('enabled');
     if (isEnabled) {
       if (!this.isInspectionRunning) {
@@ -202,6 +203,10 @@ export default class SilenceSkipper {
    */
   _onConfigUpdate() {
     const isEnabled = this.config.get('enabled');
+    browser.runtime.sendMessage({
+      command: 'tabEnabledInfo',
+      enabled: isEnabled,
+    })
 
     if (isEnabled) {
       if (!this.isInspectionRunning) {

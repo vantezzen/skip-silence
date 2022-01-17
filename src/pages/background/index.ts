@@ -7,6 +7,9 @@ import '../../assets/img/icon-128.png';
 // URL that should be CORS unblocked
 let corsUnblockedUrls : { url: string, for: string, tab: number }[] = [];
 
+// Tabs where Skip Silence is enabled
+let skipSilenceEnabledTabs : Set<number> = new Set();
+
 // React to keyboard shortcuts
 // We simply redirect them to the page using a browser message
 browser.commands.onCommand.addListener(async (name : String) => {
@@ -23,7 +26,7 @@ browser.commands.onCommand.addListener(async (name : String) => {
 });
 
 // React to messages from the other components
-browser.runtime.onMessage.addListener((msg : ExtMessage, sender) => {
+browser.runtime.onMessage.addListener(async (msg : ExtMessage, sender) => {
   if (!msg.command || !sender || !sender.tab || !sender.tab.id) return;
 
   browser.pageAction.show(sender.tab.id);
@@ -51,6 +54,21 @@ browser.runtime.onMessage.addListener((msg : ExtMessage, sender) => {
       for: msg.for,
       tab: sender.tab.id
     });
+  } else if (msg.command === 'tabEnabledInfo') {
+    // Tab is enabled or disabled
+    console.log('Tab status', sender.tab.id, msg.enabled);
+
+    if (msg.enabled) {
+      // Enable Skip Silence for this tab
+      skipSilenceEnabledTabs.add(sender.tab.id);
+    } else {
+      // Disable Skip Silence for this tab
+      skipSilenceEnabledTabs.delete(sender.tab.id);
+    }
+  } else if (msg.command === 'requestTabIsEnabled') {
+    // Request tab status
+    console.log('Request tab status', sender.tab.id, skipSilenceEnabledTabs.has(sender.tab.id));
+    return skipSilenceEnabledTabs.has(sender.tab.id);
   }
 });
 

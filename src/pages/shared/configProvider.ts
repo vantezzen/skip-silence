@@ -97,6 +97,12 @@ export default class ConfigProvider {
 
       debug("ConfigProvider: Config after loading local storage is", this.config);
     });
+    browser.runtime.sendMessage({
+      command: 'requestTabIsEnabled'
+    }).then((isEnabled) => {
+      debug("ConfigProvider: Got isEnabled from runtime", isEnabled);
+      this.set('enabled', isEnabled);
+    });
   }
 
   /**
