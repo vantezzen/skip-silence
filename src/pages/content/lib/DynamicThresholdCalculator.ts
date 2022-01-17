@@ -38,12 +38,12 @@ export default class DynamicThresholdCalculator {
 
     const currentTreshold = this.threshold;
     const sortedSamples = this.previousSamples.sort((a, b) => a - b);
-    const lowest10Percentile = sortedSamples[Math.floor(this.previousSamples.length * 0.1)];
-    const delta = Math.abs(this.threshold - lowest10Percentile);
+    const lowerLimit = sortedSamples[Math.floor(this.previousSamples.length * 0.15)];
+    const delta = Math.abs(this.threshold - lowerLimit);
 
-    if (lowest10Percentile > this.threshold) {
+    if (lowerLimit > this.threshold) {
       this.threshold += delta * 0.1;
-    } else if (lowest10Percentile < this.threshold) {
+    } else if (lowerLimit < this.threshold) {
       // Threshold should decrease faster so we can better adapt to fast volume changes
       this.threshold -= delta * 0.4;
     }
@@ -51,7 +51,7 @@ export default class DynamicThresholdCalculator {
     debug(`Threshold update:
 Old: ${currentTreshold}
 New: ${this.threshold}
-Lowest 10th: ${lowest10Percentile}
+Lower limit: ${lowerLimit}
 Delta: ${delta}
 Samples: ${this.previousSamples.length}
 Min Sample: ${Math.min(...this.previousSamples)}
