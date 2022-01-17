@@ -121,7 +121,7 @@ export default class Preload {
 
     if (!videoUrl) return false;
 
-    const preloadElement = document.createElement("video");
+    const preloadElement = document.createElement(this.skipper.element.tagName) as HTMLVideoElement | HTMLAudioElement;
     preloadElement.setAttribute("preload", "auto");
     preloadElement.setAttribute("src", videoUrl);
     preloadElement.setAttribute("style", "display: none;");
