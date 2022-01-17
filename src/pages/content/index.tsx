@@ -30,7 +30,9 @@ RenderReact(<Bar config={config} />, containerElement);
 
 // Listen for keyboard shortcuts
 browser.runtime.onMessage.addListener((msg) => {
-  if (msg.command && msg.command === 'shortcut') {
+  if(!msg.command) return;
+
+  if (msg.command === 'shortcut') {
     const { name } = msg;
 
     if (name === 'toggle-enable') {
@@ -49,6 +51,8 @@ browser.runtime.onMessage.addListener((msg) => {
     } else if (name === 'toggle-command-bar') {
       config.set('is_bar_collapsed', !config.get('is_bar_collapsed'));
     }
+  } else if (msg.command === 'reload') {
+    window.location.reload();
   }
 });
 

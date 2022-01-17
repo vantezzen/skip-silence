@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Component } from 'react';
-import { Power, Play, FastForward, BarChart2, Volume2, Columns, Volume, Circle, PieChart, Speaker, Info, Loader, Clock } from 'react-feather';
+import { Power, Play, FastForward, BarChart2, Volume2, Columns, Volume, Circle, PieChart, Speaker, Info, Loader, Clock, AlertTriangle } from 'react-feather';
 import { CSSTransition } from 'react-transition-group';
 import { browser } from 'webextension-polyfill-ts';
 import './Popup.scss';
@@ -127,6 +127,20 @@ class Popup extends Component {
 
   componentWillUnmount() {
     this.isComponentMounted = false;
+  }
+
+  async requestReload() {
+    const tabs = await browser.tabs.query({active: true, currentWindow: true});
+    if (!tabs[0] || !tabs[0].id) {
+      // We can't connect to a page
+      return;
+    }
+
+    await browser.tabs.sendMessage(tabs[0].id, {
+      command: 'reload',
+    });
+
+    window.close();
   }
 
   render() {
@@ -302,14 +316,14 @@ class Popup extends Component {
                 {(this.config.get('use_preload') && this.config.get('enabled') && !this.config.get('has_preloaded_current_page')) && (
                   <Alert>
                     <p>
-                      Preloader is not yet attached on this page. Please refresh the page to enable it! 
+                      Preloader is not yet attached on this page. Please <a href="#" onClick={() => this.requestReload()}>refresh the page</a> to enable it! 
                     </p>
                   </Alert>
                 )}
                 {(!this.config.get('use_preload') && this.config.get('has_preloaded_current_page')) && (
                   <Alert>
                     <p>
-                      Preloader is still attached on this page. Please refresh the page to disable it!
+                      Preloader is still attached on this page. Please <a href="#" onClick={() => this.requestReload()}>refresh the page</a> to disable it!
                     </p>
                   </Alert>
                 )}
