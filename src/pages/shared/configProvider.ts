@@ -168,6 +168,12 @@ export default class ConfigProvider {
         data: this.config,
       });
 
+      // Push to background
+      browser.runtime.sendMessage({
+        command: 'config',
+        data: this.config,
+      });
+
       debug("ConfigProvider: Pushed config to content script", this.config);
     } else {
       // Push to popup

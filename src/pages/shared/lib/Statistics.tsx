@@ -1,8 +1,8 @@
 import React from 'react';
 import { render as RenderReact } from 'react-dom';
 
-import debug from '../../shared/debug';
-import TimeSavedInfo from '../timeSavedInfo';
+import debug from '../debug';
+import TimeSavedInfo from '../../content/timeSavedInfo';
 import SilenceSkipper from './SilenceSkipper';
 
 /**

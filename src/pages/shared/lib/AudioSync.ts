@@ -1,5 +1,5 @@
-import ConfigProvider from "../../shared/configProvider";
-import debug from '../../shared/debug';
+import ConfigProvider from "../configProvider";
+import debug from '../debug';
 import SilenceSkipper from './SilenceSkipper';
 
 /**

@@ -1,4 +1,4 @@
-import debug from '../../shared/debug';
+import debug from '../debug';
 import { browser } from "webextension-polyfill-ts";
 import SilenceSkipper from './SilenceSkipper';
 

@@ -1,7 +1,7 @@
 /**
  * Search for media elements and notify about them
  */
-import { MediaElement } from '../../shared/types';
+import { MediaElement } from '../types';
 
 /**
  * Recursively search the page for media elements

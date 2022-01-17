@@ -12,8 +12,8 @@ import ConfigProvider from '../shared/configProvider';
 import { MediaElement } from '../shared/types';
 import speedSettings from '../shared/speedSettings';
 
-import inspectMediaElements from './lib/inspectMediaElements';
-import SilenceSkipper from './lib/SilenceSkipper';
+import inspectMediaElements from '../shared/lib/inspectMediaElements';
+import SilenceSkipper from '../shared/lib/SilenceSkipper';
 
 // Create config provider so we can exchange information with the popup
 const config = new ConfigProvider("content");
