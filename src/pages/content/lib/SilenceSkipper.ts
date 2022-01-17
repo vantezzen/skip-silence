@@ -6,6 +6,7 @@ import DynamicThresholdCalculator from "./DynamicThresholdCalculator";
 import AudioSync from "./AudioSync";
 import Statistics from "./Statistics";
 import Preload from "./Preload";
+import createAudioContextSecure from "./AudioContext";
 
 /**
  * Silence Skipper: This class is doing the job of actually inspecting media elements and
@@ -81,7 +82,7 @@ export default class SilenceSkipper {
     // We don't need to attach multiple times
     if (this.isAttached) return false;
 
-    this.audioContext = new AudioContext();
+    this.audioContext = await createAudioContextSecure();
 
     // Try to get a preload element
     if (this.config.get('use_preload')) {
