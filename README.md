@@ -1,13 +1,13 @@
 <p align="center">
     <img src="img/title.png"><br />
     <a href="https://chrome.google.com/webstore/detail/skip-silence/fhdmkhbefcbhakffdihhceaklaigdllh">
-        <img src="img/chrome.png" alt="Availible on chrome web store" width="150">
+        <img src="img/chrome.png" alt="Available on chrome web store" width="150">
     </a>
     <a href="https://addons.mozilla.org/de/firefox/addon/skip-silence/">
-        <img src="img/firefox.png" alt="Availible on Firefox Addons" width="150">
+        <img src="img/firefox.png" alt="Available on Firefox Addons" width="150">
     </a>
     <a href="https://microsoftedge.microsoft.com/addons/detail/skip-silence/njflliajflcedhfmpmhdekhmejekonmc">
-        <img src="img/edge.png" alt="Availible on Edge Add-ons" width="150">
+        <img src="img/edge.png" alt="Available on Edge Add-ons" width="150">
     </a>
     <a href="https://www.buymeacoffee.com/vantezzen" target="_blank">
       <img src="src/assets/img/bmc.png" alt="Buy Me A Coffee" width="150">
@@ -15,7 +15,7 @@
 </p>
 
 # Skip Silence
-"Skip Silence" is a browser extension that allows you to autmatically skip parts of a video that are silent.
+"Skip Silence" is a browser extension that allows you to automatically skip parts of a video that are silent.
 It is highly inspired by CaryKH's [automatic on-the-fly video editing tool](https://www.youtube.com/watch?v=DQ8orIurGxw).
 The extension works with most websites that use HTML5 `audio` and `video` elements (like YouTube).
 
@@ -25,7 +25,7 @@ The extension works with most websites that use HTML5 `audio` and `video` elemen
 (Video used: Unedited part of <https://youtu.be/DQ8orIurGxw?t=234>)
 
 ## Installation
-"Skip Silence" is availible through the [chrome web store](https://chrome.google.com/webstore/detail/skip-silence/fhdmkhbefcbhakffdihhceaklaigdllh).
+"Skip Silence" is available through the [chrome web store](https://chrome.google.com/webstore/detail/skip-silence/fhdmkhbefcbhakffdihhceaklaigdllh).
 You can also install this extension on Chrome by downloading the source from GitHub and loading the unpacked, built extension through "chrome://extensions" as a "Temporary Add-On".
 
 ## Firefox
