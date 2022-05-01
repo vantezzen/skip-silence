@@ -6,13 +6,14 @@ import { browser } from 'webextension-polyfill-ts';
 
 import './info.scss';
 import { toTwoDigit } from '../../shared/utils';
+import __ from '../../shared/i18n';
 
 interface InfoProps {
-  timeSaved: number
+  timeSaved: number;
 }
 
 export default class TimeSavedInfo extends Component<InfoProps> {
-  formatSavedTime(time : number) {
+  formatSavedTime(time: number) {
     const seconds = Math.floor(time / 1000);
     if (seconds > 60) {
       const minutes = Math.floor(seconds / 60);
@@ -24,21 +25,21 @@ export default class TimeSavedInfo extends Component<InfoProps> {
   render() {
     return (
       <div className="skip-silence-saved-info">
-
         <div className="skip-silence-saved-info-logo">
-          <img 
+          <img
             src={browser.runtime.getURL('/assets/img/icon-128.png')}
             style={{
               width: 25,
-              height: 25
+              height: 25,
             }}
           />
         </div>
 
         <div className="skip-silence-saved-info-text">
-          Skip Silence saved you {this.formatSavedTime(this.props.timeSaved)} during this media
+          {__('savedInMediaInfo', {
+            time: this.formatSavedTime(this.props.timeSaved),
+          })}
         </div>
-
       </div>
     );
   }

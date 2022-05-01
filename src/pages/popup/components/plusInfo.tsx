@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { browser } from 'webextension-polyfill-ts';
 import trackEvent from '../../shared/analytics';
 import verifyLicense from '../../shared/license';
-import __ from '../i18n';
+import __ from '../../shared/i18n';
 
 import './plusInfo.scss';
 
@@ -65,7 +65,7 @@ const PlusInfo = ({
 
       {screen === 'activate' && (
         <>
-          <label htmlFor="key">License Key</label>
+          <label htmlFor="key">{__('plusInfoLicenseKey')}</label>
           <input
             type="text"
             id="key"
@@ -78,12 +78,12 @@ const PlusInfo = ({
           <button
             onClick={async () => {
               if (licenseKey.length === 0) {
-                setActivateInfo('Please enter a license key');
+                setActivateInfo(__('plusInfoLicenseKeyRequired'));
                 trackEvent('empty_license');
                 return;
               }
 
-              setActivateInfo('Validating your license...');
+              setActivateInfo(__('plusInfoValidating'));
 
               const isValid = await verifyLicense(licenseKey, true);
               if (isValid) {
@@ -92,7 +92,7 @@ const PlusInfo = ({
                 setScreen('activated');
                 trackEvent('activated');
               } else {
-                setActivateInfo('This license key is not valid.');
+                setActivateInfo(__('plusInfoInvalidKey'));
                 trackEvent('invalid_license', { key: licenseKey });
               }
             }}
@@ -101,23 +101,20 @@ const PlusInfo = ({
             {__('plusInfoActivateLicense')}
           </button>
           <button onClick={() => setScreen('info')} className="button-primary">
-            Go Back
+            {__('plusInfoGoBack')}
           </button>
         </>
       )}
 
       {screen === 'activated' && (
         <>
-          <h2>Skip Silence Plus has been activated!</h2>
+          <h2>{__('plusInfoActivationSuccess')}</h2>
 
-          <p>
-            Thank you for purchasing Skip Silence Plus. Your donation helps
-            continue developing Skip Silence!
-          </p>
-          <p>You can now use all of Skip Silence's features.</p>
+          <p>{__('plusInfoActivationSuccessThanks')}</p>
+          <p>{__('plusInfoActivationSuccessInfo')}</p>
 
           <button onClick={onClose} className="button-primary">
-            Start using Skip Silence Plus
+            {__('plusInfoActivationSuccessClose')}
           </button>
         </>
       )}
@@ -129,7 +126,7 @@ const PlusInfo = ({
         }}
         className="close-link"
       >
-        Close
+        {__('plusInfoClose')}
       </button>
     </div>
   );

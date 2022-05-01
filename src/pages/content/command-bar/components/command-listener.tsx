@@ -6,28 +6,29 @@ import SliderSetting from '../../../shared/components/sliderSetting';
 import SpeedSetting from '../../../shared/components/speedSetting';
 import defaultConfig from '../../../shared/config';
 import ConfigProvider from '../../../shared/configProvider';
+import __ from '../../../shared/i18n';
 import speedSettings from '../../../shared/speedSettings';
 
 export const KEYS = {
-  'ARROW_LEFT': 'ArrowLeft',
-  'ARROW_UP': 'ArrowUp',
-  'ARROW_RIGHT': 'ArrowRight',
-  'ARROW_DOWN': 'ArrowDown',
+  ARROW_LEFT: 'ArrowLeft',
+  ARROW_UP: 'ArrowUp',
+  ARROW_RIGHT: 'ArrowRight',
+  ARROW_DOWN: 'ArrowDown',
 
-  'SHIFT': 'Shift',
-  'SPACE': ' ',
+  SHIFT: 'Shift',
+  SPACE: ' ',
 };
 
 const settingNames = {
-  playback_speed: 'Playback Speed',
-  silence_speed: 'Silence Speed',
-  silence_threshold: 'Volume Threshold',
-}
+  playback_speed: __('playbackSpeed'),
+  silence_speed: __('silenceSpeed'),
+  silence_threshold: __('volumeThreshold'),
+};
 
-const IDLE_TEXT = 'Listening for commands...';
+const IDLE_TEXT = __('commandBarListening');
 
 interface CommandListenerProps {
-  config: ConfigProvider
+  config: ConfigProvider;
 }
 
 class CommandListener extends Component<CommandListenerProps> {
@@ -37,7 +38,7 @@ class CommandListener extends Component<CommandListenerProps> {
     text: IDLE_TEXT,
   };
 
-  constructor(props : CommandListenerProps) {
+  constructor(props: CommandListenerProps) {
     super(props);
 
     this._onKeyDown = this._onKeyDown.bind(this);
@@ -55,7 +56,7 @@ class CommandListener extends Component<CommandListenerProps> {
     window.document.removeEventListener('keyup', this._onKeyUp);
   }
 
-  _setHighlighted(name : keyof typeof defaultConfig) {
+  _setHighlighted(name: keyof typeof defaultConfig) {
     this.props.config.set('highlighted_component', name);
 
     // Remove highlighted element after 5 seconds
@@ -66,7 +67,7 @@ class CommandListener extends Component<CommandListenerProps> {
     }, 5000);
   }
 
-  _setText(text : String) {
+  _setText(text: String) {
     this.setState({
       text,
     });
@@ -81,15 +82,20 @@ class CommandListener extends Component<CommandListenerProps> {
     }, 3000);
   }
 
-  _modifySpeed(name : 'playback_speed' | 'silence_speed', config : ConfigProvider, down = false) {
+  _modifySpeed(
+    name: 'playback_speed' | 'silence_speed',
+    config: ConfigProvider,
+    down = false
+  ) {
     const currentSpeed = config.get(name);
 
-    const currentSpeedIndex = speedSettings.findIndex((speed) => currentSpeed === speed) || 2;
-    
+    const currentSpeedIndex =
+      speedSettings.findIndex((speed) => currentSpeed === speed) || 2;
+
     // Increase or decrease the speed
     const newSpeedIndex = down ? currentSpeedIndex - 1 : currentSpeedIndex + 1;
     const newSpeed = speedSettings[newSpeedIndex] || currentSpeed;
-    
+
     // Update our speed
     config.set(name, newSpeed);
 
@@ -97,7 +103,7 @@ class CommandListener extends Component<CommandListenerProps> {
   }
 
   // Handle global key pressing and releasing
-  _onKeyDown(event : KeyboardEvent) {
+  _onKeyDown(event: KeyboardEvent) {
     event.preventDefault();
     event.stopPropagation();
 
@@ -112,13 +118,17 @@ class CommandListener extends Component<CommandListenerProps> {
         break;
       case KEYS.ARROW_UP:
         // Increase Speed
-        const keyName = this.isShiftPressed ? 'silence_speed' : 'playback_speed';
+        const keyName = this.isShiftPressed
+          ? 'silence_speed'
+          : 'playback_speed';
         this._modifySpeed(keyName, config);
         this._setText('Arrow Up: Increased speed');
         break;
       case KEYS.ARROW_DOWN:
         // Decrease Speed
-        const keyNameDown = this.isShiftPressed ? 'silence_speed' : 'playback_speed';
+        const keyNameDown = this.isShiftPressed
+          ? 'silence_speed'
+          : 'playback_speed';
         this._modifySpeed(keyNameDown, config, true);
         this._setText('Arrow Down: Decreased speed');
         break;
@@ -145,13 +155,13 @@ class CommandListener extends Component<CommandListenerProps> {
         break;
     }
   }
-  _onKeyUp(event : KeyboardEvent) {
+  _onKeyUp(event: KeyboardEvent) {
     const { key } = event;
 
     switch (key) {
       case KEYS.SHIFT:
         this.isShiftPressed = false;
-        this.props.config.set('highlighted_component', 'playback_speed')
+        this.props.config.set('highlighted_component', 'playback_speed');
         this._setText('Unshift: Modify Playback Speed');
         break;
     }
@@ -164,15 +174,21 @@ class CommandListener extends Component<CommandListenerProps> {
       <div className="bar-text">
         {highlight && (
           <div style={{ marginRight: 10 }}>
-            {settingNames[highlight as keyof typeof settingNames]}: {this.props.config.get(highlight)}
+            {settingNames[highlight as keyof typeof settingNames]}:{' '}
+            {this.props.config.get(highlight)}
           </div>
         )}
-        <p style={{ color: 'rgb(148 148 148)' }}>
-          {this.state.text}
-        </p>
+        <p style={{ color: 'rgb(148 148 148)' }}>{this.state.text}</p>
         {this.state.text === IDLE_TEXT && (
           <p style={{ color: 'rgb(86 86 86)', marginLeft: 10 }}>
-            Are you new to commands? <a href="https://github.com/vantezzen/skip-silence/blob/master/Command-Bar.md" target="_blank" className="info">Learn about them</a>
+            {__('commandBarAreYouNew')}{' '}
+            <a
+              href="https://github.com/vantezzen/skip-silence/blob/master/Command-Bar.md"
+              target="_blank"
+              className="info"
+            >
+              {__('commandBarLearn')}
+            </a>
           </p>
         )}
       </div>

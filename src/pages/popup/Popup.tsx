@@ -39,7 +39,7 @@ import HelpModal from './components/helpModal';
 import { formatTimelength } from '../shared/utils';
 import trackEvent, { setupAnalytics } from '../shared/analytics';
 import V4Info from './components/v4info';
-import __ from './i18n';
+import __ from '../shared/i18n';
 
 const isChromium = navigator.userAgent.includes('Chrome');
 
@@ -57,33 +57,27 @@ class Popup extends Component {
   steps = [
     {
       element: '.header',
-      intro:
-        'Welcome to Skip Silence! I can show you around, if you want to - otherwise click "Skip" at any point',
+      intro: __('introHeader'),
     },
     {
       element: '#vu_meter',
-      intro:
-        'This bar will show you the current volume of the media you are playing.<br />If the volume is lower than the orange line, Skip Silence will speed up the video.<br />If the bar turns orange, the video is currently sped up.',
+      intro: __('introVuMeter'),
     },
     {
       element: '#enabled',
-      intro:
-        'Click this switch in order to enable or disable Skip Silence on the current page. If you disable Skip Silence you will not see the volume level above.',
+      intro: __('introEnabled'),
     },
     {
       element: '#speed-settings',
-      intro:
-        'You can choose what speed to play back normal parts ("Playback Speed") and silent parts ("Silence Speed") of the media.',
+      intro: __('introSpeed'),
     },
     {
       element: '#silence_threshold',
-      intro:
-        'Use this slider to choose your silence threshold. This will also be represented by the orange line in the volume bar above.',
+      intro: __('introSilenceThreshold'),
     },
     {
       element: '#mute_silence',
-      intro:
-        'If you are having trouble with the audio "clicking" when speeding up or slowing down, try enabling this option.',
+      intro: __('introMuteSilence'),
     },
   ];
 
@@ -242,10 +236,7 @@ class Popup extends Component {
                     info={
                       <HelpModal>
                         <h2>{__('playbackSpeed')}</h2>
-                        <p>
-                          Speed at which normal, non-silent parts of the media
-                          are played.
-                        </p>
+                        <p>{__('playbackSpeedHelp')}</p>
                       </HelpModal>
                     }
                   />
@@ -264,9 +255,7 @@ class Popup extends Component {
                     info={
                       <HelpModal>
                         <h2>{__('silenceSpeed')}</h2>
-                        <p>
-                          Speed at which "silent" parts of the media are played.
-                        </p>
+                        <p>{__('silenceSpeedHelp')}</p>
                       </HelpModal>
                     }
                   />
@@ -292,13 +281,7 @@ class Popup extends Component {
                   info={
                     <HelpModal>
                       <h2>{__('useDynamicThreshold')}</h2>
-                      <p>
-                        Dynamic threshold will try to automatically calculate
-                        the volume of the silence in your media.
-                        <br />
-                        This way, you won't have to manually set the volume
-                        threshold for each video.
-                      </p>
+                      <p>{__('useDynamicThresholdHelp')}</p>
                     </HelpModal>
                   }
                 />
@@ -325,12 +308,7 @@ class Popup extends Component {
                     info={
                       <HelpModal>
                         <h2>{__('volumeThreshold')}</h2>
-                        <p>
-                          If the volume is below this threshold, the video will
-                          be sped up.
-                          <br />
-                          You can also see this threshold in the VU Meter above
-                        </p>
+                        <p>{__('volumeThresholdHelp')}</p>
                       </HelpModal>
                     }
                   />
@@ -351,12 +329,7 @@ class Popup extends Component {
                   info={
                     <HelpModal>
                       <h2>{__('sampleThreshold')}</h2>
-                      <p>
-                        Length of silence needed before speeding up.
-                        <br />
-                        This is to ensure we are not speeding up due to the
-                        short silence between words and sentences.
-                      </p>
+                      <p>{__('sampleThresholdHelp')}</p>
                     </HelpModal>
                   }
                 />
@@ -375,10 +348,7 @@ class Popup extends Component {
                   info={
                     <HelpModal>
                       <h2>{__('muteSilence')}</h2>
-                      <p>
-                        If you are having problems with audio clicking or don't
-                        want to hear any audio when sped up, enable this option.
-                      </p>
+                      <p>{__('muteSilenceHelp')}</p>
                     </HelpModal>
                   }
                 />
@@ -399,21 +369,7 @@ class Popup extends Component {
                     info={
                       <HelpModal>
                         <h2>{__('keepAudioInSync')}</h2>
-                        <p>
-                          Chrome and Browsers that base on Chromium (e.g. Edge)
-                          currently have a bug that will result in audio and
-                          video getting out of sync when changing the speed
-                          often.
-                          <br />
-                          As "Skip Silence" will change the video speed often,
-                          you might experience this issue.
-                          <br />
-                          When this setting is activated, Skip Silence will try
-                          to fix this issue by periodically putting them back
-                          into sync. <br />
-                          Please note that this setting may cause media to
-                          re-buffer every 30s on some websites.
-                        </p>
+                        <p>{__('keepAudioInSyncHelp')}</p>
                       </HelpModal>
                     }
                   />
@@ -467,23 +423,7 @@ class Popup extends Component {
                   info={
                     <HelpModal>
                       <h2>{__('preloadMedia')}</h2>
-                      <p>
-                        Skip Silence can preload the media to improve speeding
-                        up and down.
-                        <br />
-                        Using the preloaded data, Skip Silence knows, how loud
-                        the media will be in 0.1-1s and better slow the media up
-                        and down.
-                        <br />
-                        <br />
-                        This features relies on the functionality of the site
-                        you are using and won't work on all pages!
-                        <br />
-                        <br />
-                        After changing this setting you will need to reload your
-                        current page, otherwise Skip Silence can't attach the
-                        preloader.
-                      </p>
+                      <p>{__('preloadMediaHelp')}</p>
                     </HelpModal>
                   }
                 />
@@ -511,12 +451,7 @@ class Popup extends Component {
                     info={
                       <HelpModal>
                         <h2>{__('preloadLength')}</h2>
-                        <p>
-                          Length of the preload time. For example, preload time
-                          of 0.5s results in the media being preloaded 0.5s into
-                          the future and the speed will be adjusted to the media
-                          0.5s ahead of time.
-                        </p>
+                        <p>{__('preloadLengthHelp')}</p>
                       </HelpModal>
                     }
                   />
@@ -534,13 +469,7 @@ class Popup extends Component {
                   info={
                     <HelpModal>
                       <h2>{__('enableCommandBarIcon')}</h2>
-                      <p>
-                        If you don't like the small command bar logo in the
-                        bottom right, you can completely disable it.
-                        <br />
-                        You can still open the command bar using the shortcut
-                        "ALT/Option + Shift + S".
-                      </p>
+                      <p>{__('enableCommandBarIconHelp')}</p>
                     </HelpModal>
                   }
                 />
@@ -557,13 +486,7 @@ class Popup extends Component {
                   info={
                     <HelpModal>
                       <h2>{__('showSavedTimeInfo')}</h2>
-                      <p>
-                        After a video or audio ended, "Skip Silence" will show a
-                        small info message in the bottom left corner, informing
-                        you how much time you have saved in this media alone.
-                        <br />
-                        If you do not like this message, you can disable it.
-                      </p>
+                      <p>{__('showSavedTimeInfoHelp')}</p>
                     </HelpModal>
                   }
                 />
@@ -580,21 +503,7 @@ class Popup extends Component {
                   info={
                     <HelpModal>
                       <h2>{__('allowAnonymousAnalytics')}</h2>
-                      <p>
-                        "Skip Silence" uses{' '}
-                        <a href="https://simpleanalytics.com/">
-                          Simple Analytics
-                        </a>{' '}
-                        and Plausible to collect a few anonymized analytics
-                        without reducing your privacy.
-                        <br />
-                        This data allows us to better understand how users use
-                        our extension and how we can improve it.
-                        <br />
-                        We understand that some people do not like sending
-                        anonymized analytics, so you can completely opt-out of
-                        this!
-                      </p>
+                      <p>{__('allowAnonymousAnalyticsHelp')}</p>
                     </HelpModal>
                   }
                 />

@@ -1,5 +1,5 @@
 import React from 'react';
-import __ from '../i18n';
+import __ from '../../shared/i18n';
 
 import './header.scss';
 
