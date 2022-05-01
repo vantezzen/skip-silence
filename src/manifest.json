@@ -1,9 +1,12 @@
 {
-  "name": "Skip Silence",
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
 
   "background": {
     "page": "background.html"
   },
+
+  "default_locale": "en",
 
   "page_action": {
     "default_icon": {
@@ -30,12 +33,14 @@
     }
   },
 
-  "content_scripts": [{
-    "all_frames": true,
-    "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-    "js": ["contentScript.bundle.js"],
-    "css": ["content.styles.css"]
-  }],
+  "content_scripts": [
+    {
+      "all_frames": true,
+      "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+      "js": ["contentScript.bundle.js"],
+      "css": ["content.styles.css"]
+    }
+  ],
 
   "web_accessible_resources": [
     "content.styles.css",
@@ -51,7 +56,6 @@
       },
       "description": "Enable/disable Skip Silence for the current tab"
     },
-
 
     "toggle-command-bar": {
       "suggested_key": {

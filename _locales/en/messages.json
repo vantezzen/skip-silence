@@ -1,0 +1,97 @@
+{
+  "extensionName": {
+    "message": "Skip Silence"
+  },
+
+  "extensionDescription": {
+    "message": "Skip silent parts in videos and audio files."
+  },
+
+  "enable": {
+    "message": "Enable Skip Silence"
+  },
+
+  "playbackSpeed": {
+    "message": "Playback Speed"
+  },
+
+  "silenceSpeed": {
+    "message": "Silence Speed"
+  },
+
+  "useDynamicThreshold": {
+    "message": "Use dynamic threshold"
+  },
+
+  "volumeThreshold": {
+    "message": "Volume threshold"
+  },
+
+  "sampleThreshold": {
+    "message": "Sample threshold"
+  },
+
+  "muteSilence": {
+    "message": "Mute silence"
+  },
+
+  "keepAudioInSync": {
+    "message": "Keep audio in sync"
+  },
+
+  "preloadMedia": {
+    "message": "Preload media"
+  },
+
+  "preloadLength": {
+    "message": "Preload length"
+  },
+
+  "enableCommandBarIcon": {
+    "message": "Enable command bar icon"
+  },
+
+  "showSavedTimeInfo": {
+    "message": "Show saved time info"
+  },
+
+  "allowAnonymousAnalytics": {
+    "message": "Allow anonymous analytics"
+  },
+
+  "savedTimeText": {
+    "message": "Using this extension you saved :time (MM:SS) of your time."
+  },
+
+  "developedBy": {
+    "message": "Developed by"
+  },
+
+  "showTheTrainingScreenAgain": {
+    "message": "Show the training screen again"
+  },
+
+  "plusInfoHeader": {
+    "message": "Get more out of Skip Silence with Skip Silence Plus"
+  },
+
+  "plusInfoThankYou": {
+    "message": "Thank you for using \"Skip Silence\" to increase your productivity."
+  },
+
+  "plusInfoWhatIsIt": {
+    "message": "To help keep the development of \"Skip Silence\" alive and to help expanding it to more browsers, some more advanced features require \"Skip Silence Plus\"."
+  },
+
+  "plusInfoPricing": {
+    "message": "\"Skip Silence Plus\" is a one-time payment of $6 and allows you to activate Plus across all your personal devices - so you won't have to purchase mutliple licenses!"
+  },
+
+  "plusInfoLearnMore": {
+    "message": "Learn more and buy license"
+  },
+
+  "plusInfoActivateLicense": {
+    "message": "Activate License"
+  }
+}

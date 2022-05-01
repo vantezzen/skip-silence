@@ -146,6 +146,11 @@ var options = {
           to: path.join(__dirname, 'build', 'assets'),
           force: true,
         },
+        {
+          from: '_locales',
+          to: path.join(__dirname, 'build', '_locales'),
+          force: true,
+        },
       ],
     }),
     new CopyWebpackPlugin({
