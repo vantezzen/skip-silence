@@ -76,10 +76,7 @@ export default class SampleInspector {
   }
 
   private prepareNextInspection() {
-    if (
-      this.skipper.config.get('enabled') &&
-      !this.skipper.config.get('use_preload')
-    ) {
+    if (this.skipper.config.get('enabled')) {
       setTimeout(() => this.inspectSample(), 25);
     } else {
       this.stopInspection();

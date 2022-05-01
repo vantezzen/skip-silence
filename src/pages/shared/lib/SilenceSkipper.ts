@@ -7,6 +7,7 @@ import AudioSync from './AudioSync';
 import Statistics from './Statistics';
 import SpeedController from './SpeedController';
 import SampleInspector from './SampleInspector';
+import Preloader from './Preloader';
 
 /**
  * Silence Skipper: This class is doing the job of actually inspecting media elements and
@@ -36,6 +37,7 @@ export default class SilenceSkipper {
   statistics: Statistics;
   speedController: SpeedController;
   sampleInspector: SampleInspector;
+  preloader: Preloader;
 
   /**
    * Add silence skipper to element
@@ -53,6 +55,7 @@ export default class SilenceSkipper {
     this.statistics = new Statistics(this);
     this.speedController = new SpeedController(this);
     this.sampleInspector = new SampleInspector(this);
+    this.preloader = new Preloader(this);
 
     // Attach our config listener
     this.config.onUpdate(() => this._onConfigUpdate());
@@ -77,26 +80,46 @@ export default class SilenceSkipper {
         this.config.get('use_preload') &&
         this.config.get('can_use_preload')
       ) {
+        debug('SilenceSkipper: Updating preload media config');
         await this.updatePreloadConfig();
       } else {
+        debug('SilenceSkipper: Updating direct media config');
         this.updateDirectMediaConfig();
       }
     }
   }
 
   private async updatePreloadConfig() {
-    debug('SilenceSkipper: Using background media', this.preloader.isLoaded());
-    if (!this.preloader.isLoaded()) {
-      const canUseMedia = await this.preloader.loadElement();
-      if (!canUseMedia) {
+    debug('SilenceSkipper: Using preload media');
+    if (
+      !this.preloadElement &&
+      this.config.get('can_use_preload') &&
+      !this.config.get('has_preloaded_current_page')
+    ) {
+      debug("SilenceSkipper: Preloading current page's media");
+
+      this.config.set('has_preloaded_current_page', true);
+
+      const preloadElement = await this.preloader.createPreloadElement();
+      if (preloadElement) {
+        this.preloadElement = preloadElement;
+
+        if (!this.sampleInspector.isInspectionRunning) {
+          debug('SilenceSkipper: Starting inspection for preload element');
+
+          // Start running the inspection
+          this.sampleInspector.inspectSample();
+        }
+      } else {
         this.config.set('can_use_preload', false);
+        debug('SilenceSkipper: Failed to create preload element');
       }
     }
   }
 
   private updateDirectMediaConfig() {
     if (!this.sampleInspector.isInspectionRunning) {
-      // Start running the inspection
+      debug('SilenceSkipper: Starting inspection for direct media element');
       this.sampleInspector.inspectSample();
     }
 
