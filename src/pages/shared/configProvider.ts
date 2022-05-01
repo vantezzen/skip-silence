@@ -37,6 +37,7 @@ const storedKeys : (keyof typeof defaultConfig)[] = [
  */
 export default class ConfigProvider {
   config : typeof defaultConfig = defaultConfig;
+  previousConfig: typeof defaultConfig = defaultConfig;
   env : Environment;
   onUpdateListeners : Function[] = [];
 
@@ -50,7 +51,7 @@ export default class ConfigProvider {
 
     this._listenForConfigUpdates();
 
-    if (this.env === "popup") {
+    if (this.env === "popup" || this.env === 'background') {
       this.fetch();
     }
     if (this.env === "content") {
@@ -69,6 +70,7 @@ export default class ConfigProvider {
 
       if (msg.command === 'config') {
         // Got data about new config values
+        this.previousConfig = this.config;
         this.config = msg.data;
         
         debug("ConfigProvider: Got config update: ", msg);
@@ -118,6 +120,10 @@ export default class ConfigProvider {
    * Notify update listeners about an update
    */
   _onUpdate() {
+    if (JSON.stringify(this.previousConfig) === JSON.stringify(this.config)) {
+      debug("ConfigProvider: No change, discarding");
+      return;
+    }
     this.onUpdateListeners.forEach((callback) => callback());
   }
 
@@ -143,6 +149,7 @@ export default class ConfigProvider {
         return;
       }
 
+      this.previousConfig = this.config;
       this.config = config;
 
       debug("ConfigProvider: Fetched config: ", this.config);
@@ -201,6 +208,7 @@ export default class ConfigProvider {
    * @param value New config value
    */
   set(key : keyof typeof defaultConfig, value : any) : void {
+    this.previousConfig = {...this.config};
     // @ts-ignore 2322
     this.config[key] = value;
 

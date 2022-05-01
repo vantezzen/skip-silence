@@ -88,6 +88,7 @@ export default class SampleInspector {
     // Send our volume information to the popup
     this.skipper.samplesSinceLastVolumeMessage++;
     if (this.skipper.samplesSinceLastVolumeMessage >= 2) {
+      debug("SampleInspector: Sending volume information to popup");
       this.skipper._sendCommand('volume', {
         data: volume
       });
@@ -95,7 +96,7 @@ export default class SampleInspector {
     }
 
     // Check if we should continue inspecting
-    if (this.skipper.config.get('enabled')) {
+    if (this.skipper.config.get('enabled') && !this.skipper.config.get('use_preload')) {
       // Continue inspecting the next sample
       setTimeout(() => this.inspectSample(), 25);
     } else {

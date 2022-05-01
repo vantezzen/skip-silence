@@ -3,7 +3,8 @@ import { browser } from "webextension-polyfill-ts";
 import '../../assets/img/icon-48.png';
 import '../../assets/img/icon-128.png';
 import setupMessageListener from "./messageListener";
-
+import MediaLoader from "./mediaLoader";
+import unblockCorsForBackgroundScript from "./cors";
 
 // React to keyboard shortcuts
 // We simply redirect them to the page using a browser message
@@ -20,4 +21,7 @@ browser.commands.onCommand.addListener(async (name : String) => {
   });
 });
 
+unblockCorsForBackgroundScript();
 setupMessageListener();
+// @ts-ignore
+window.mediaLoader = new MediaLoader();

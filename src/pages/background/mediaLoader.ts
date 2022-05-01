@@ -9,14 +9,16 @@ import ConfigProvider from "../shared/configProvider";
 type MediaReferences = {
   [key: number]: {
     tabId: number,
-    skipper: SilenceSkipper
-  }
+    skipper: SilenceSkipper,
+    element: HTMLVideoElement | HTMLAudioElement,
+    isBuffering: boolean,
+  } | undefined,
 }
 
 export default class MediaLoader {
 
   media: MediaReferences = {};
-  private nextMediaId = 0;
+  private nextMediaId = 1;
 
   constructor() {
     this.setupMessageListener();
@@ -28,32 +30,44 @@ export default class MediaLoader {
   
       if (msg.command === 'background:setupMedia') {
         console.log('Setup media for tab', sender.tab.id);
-        return this.setupMedia(sender.tab.id, msg.src, msg.tagType);
+        const mediaId = await this.setupMedia(sender.tab.id, msg.src, msg.tagType, msg.playing);
+        console.log('Set up media with id', mediaId);
+
+        browser.tabs.sendMessage(sender.tab.id, {
+          command: 'background:mediaIdResult',
+          mediaId
+        });
+
+        return mediaId;
       } else if (msg.command === 'background:syncMedia') {
         const { event } = msg;
         if (event === 'play') {
           console.log('Play media for tab', sender.tab.id);
-          this.media[msg.mediaId].skipper.element.play();
+          this.media[msg.mediaId]?.skipper.element.play();
         } else if (event === 'pause') {
           console.log('Pause media for tab', sender.tab.id);
-          this.media[msg.mediaId].skipper.element.pause();
+          this.media[msg.mediaId]?.skipper.element.pause();
         } else if (event === 'timeupdate') {
-          console.log('Timeupdate media for tab', sender.tab.id);
+          const media = this.media[msg.mediaId];
+          if (!media) return;
+          console.log('Timeupdate media for tab', sender.tab.id, media.skipper.element.currentTime, msg.time);
 
-          const timeDiff = Math.abs(this.media[msg.mediaId].skipper.element.currentTime - msg.time);
+          const timeDiff = media.skipper.element.currentTime - msg.time;
         
-          if (timeDiff > this.media[msg.mediaId].skipper.config.get('preload_length')) {
-            this.media[msg.mediaId].skipper.element.currentTime = msg.time + this.media[msg.mediaId].skipper.config.get('preload_length');
+          if (timeDiff < 0 || timeDiff > ((media.skipper.config.get('preload_length') * 3) + 0.4)) {
+            media.skipper.element.currentTime = msg.time + media.skipper.config.get('preload_length') + 0.4;
 
             console.log(`Media Loader: Needed to re-sync preload element (Diff: ${timeDiff}s)`);
           }
-          this.media[msg.mediaId].skipper.element.currentTime = msg.time;
         }
+      } else if (msg.command === 'background:destroyMedia') {
+        console.log('Destroy media for tab', sender.tab.id);
+        this.destroyMedia(msg.mediaId);
       }
     });
   }
 
-  private async setupMedia(tabId: number, src: string, tagType: string): Promise<number | false> {
+  private async setupMedia(tabId: number, src: string, tagType: string, playing: boolean): Promise<number | false> {
     const mediaId = this.nextMediaId++;
 
     // Try to connect to the video url. If we can't, then we can't use the background page
@@ -70,15 +84,24 @@ export default class MediaLoader {
     mediaElement.src = src;
     mediaElement.setAttribute("preload", "auto");
     document.body.appendChild(mediaElement);
+    if (playing) mediaElement.play();
 
     const skipper = new SilenceSkipper(mediaElement, new ConfigProvider('background'));
     this.media[mediaId] = {
       tabId,
-      skipper
+      skipper,
+      element: mediaElement,
+      isBuffering: false,
     };
 
     return mediaId;
   }
 
+  private destroyMedia(mediaId: number) {
+    const media = this.media[mediaId];
+    if (!media) return;
 
+    media.element.remove();
+    this.media[mediaId] = undefined;
+  }
 }
