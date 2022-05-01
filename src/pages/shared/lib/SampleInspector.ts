@@ -1,14 +1,14 @@
-import ConfigProvider from "../configProvider";
+import ConfigProvider from '../configProvider';
 import debug from '../debug';
 import SilenceSkipper from './SilenceSkipper';
-import { attachSkipperToElement } from "./Utils";
+import { attachSkipperToElement } from './Utils';
 
 /**
  * Sample Inspector: Inspect individual samples of the media and determine if the media should be sped up or slowed down
  */
 export default class SampleInspector {
   // Parent skipper
-  skipper : SilenceSkipper;
+  skipper: SilenceSkipper;
 
   samplesUnderThreshold = 0;
   isInspectionRunning = false;
@@ -16,17 +16,17 @@ export default class SampleInspector {
 
   /**
    * Set up the class
-   * 
+   *
    * @param config Config to use
    */
-  constructor(skipper : SilenceSkipper) {
+  constructor(skipper: SilenceSkipper) {
     this.skipper = skipper;
   }
 
   /**
    * Calculate the current volume of the media
    */
-   calculateVolume() {
+  calculateVolume() {
     if (!this.skipper.analyser || !this.skipper.audioFrequencies) {
       debug("SilenceSkipper: Can't calculate volume as we are not attached");
       return 100;
@@ -40,7 +40,7 @@ export default class SampleInspector {
       const power = this.skipper.audioFrequencies[i];
       peakInstantaneousPower = Math.max(power, peakInstantaneousPower);
     }
-    const volume = (500 * peakInstantaneousPower);
+    const volume = 500 * peakInstantaneousPower;
 
     return volume;
   }
@@ -48,7 +48,7 @@ export default class SampleInspector {
   /**
    * Inspect the current sample of the media and speed up or down accordingly
    */
-   async inspectSample() {
+  async inspectSample() {
     this.isInspectionRunning = true;
 
     // Make sure we are attached
@@ -57,22 +57,72 @@ export default class SampleInspector {
     this._samplePosition = (this._samplePosition + 1) % 50;
 
     const volume = this.calculateVolume();
-    const useDynamicThreshold = this.skipper.config.get('dynamic_silence_threshold');
+    const useDynamicThreshold = this.skipper.config.get(
+      'dynamic_silence_threshold'
+    );
 
     if (useDynamicThreshold && volume > 0) {
-      this.skipper.dynamicThresholdCalculator.previousSamples.push(volume);
-
-      if (this._samplePosition === 0) {
-        // Let the dynamic threshold calculator re-calculate the threshold
-        // This is only done every 50 samples to reduce load
-        this.skipper.dynamicThresholdCalculator.calculate();
-      }
+      this.addCurrentSampleToDynamicThreshold(volume);
     }
 
-    const threshold = useDynamicThreshold ? this.skipper.dynamicThresholdCalculator.threshold : this.skipper.config.get('silence_threshold');
+    const threshold = useDynamicThreshold
+      ? this.skipper.dynamicThresholdCalculator.threshold
+      : this.skipper.config.get('silence_threshold');
     const sampleThreshold = this.skipper.config.get('samples_threshold');
 
-    if (volume < threshold && !this.skipper.element.paused && !this.skipper.isSpedUp) {
+    this.updateSpeedBasedOnSampleResult(volume, threshold, sampleThreshold);
+    this.sendVolumeInfoToPopup(volume);
+    this.prepareNextInspection();
+  }
+
+  private prepareNextInspection() {
+    if (
+      this.skipper.config.get('enabled') &&
+      !this.skipper.config.get('use_preload')
+    ) {
+      setTimeout(() => this.inspectSample(), 25);
+    } else {
+      this.stopInspection();
+    }
+  }
+
+  private stopInspection() {
+    this.isInspectionRunning = false;
+
+    // Make sure the video is back to normal speed
+    if (this.skipper.isSpedUp) {
+      this.skipper.isSpedUp = false;
+      this.samplesUnderThreshold = 0;
+    }
+    this.skipper._sendCommand('slowDown');
+    this.skipper.speedController.setPlaybackRate(1);
+
+    this.skipper._sendCommand('volume', {
+      data: 0,
+    });
+  }
+
+  private sendVolumeInfoToPopup(volume: number) {
+    this.skipper.samplesSinceLastVolumeMessage++;
+    if (this.skipper.samplesSinceLastVolumeMessage >= 2) {
+      debug('SampleInspector: Sending volume information to popup');
+      this.skipper._sendCommand('volume', {
+        data: volume,
+      });
+      this.skipper.samplesSinceLastVolumeMessage = 0;
+    }
+  }
+
+  private updateSpeedBasedOnSampleResult(
+    volume: number,
+    threshold: any,
+    sampleThreshold: any
+  ) {
+    if (
+      volume < threshold &&
+      !this.skipper.element.paused &&
+      !this.skipper.isSpedUp
+    ) {
       // We are below our threshold and should possibly slow down
       this.samplesUnderThreshold += 1;
 
@@ -84,36 +134,15 @@ export default class SampleInspector {
       // Slow back down as we are now in a loud part again
       this.skipper.speedController.slowDown();
     }
+  }
 
-    // Send our volume information to the popup
-    this.skipper.samplesSinceLastVolumeMessage++;
-    if (this.skipper.samplesSinceLastVolumeMessage >= 2) {
-      debug("SampleInspector: Sending volume information to popup");
-      this.skipper._sendCommand('volume', {
-        data: volume
-      });
-      this.skipper.samplesSinceLastVolumeMessage = 0;
-    }
+  private addCurrentSampleToDynamicThreshold(volume: number) {
+    this.skipper.dynamicThresholdCalculator.previousSamples.push(volume);
 
-    // Check if we should continue inspecting
-    if (this.skipper.config.get('enabled') && !this.skipper.config.get('use_preload')) {
-      // Continue inspecting the next sample
-      setTimeout(() => this.inspectSample(), 25);
-    } else {
-      // Stop inspecting
-      this.isInspectionRunning = false;
-
-      // Make sure the video is back to normal speed
-      if (this.skipper.isSpedUp) {
-        this.skipper.isSpedUp = false;
-        this.samplesUnderThreshold = 0;
-      }
-      this.skipper._sendCommand('slowDown');
-      this.skipper.speedController.setPlaybackRate(1);
-
-      this.skipper._sendCommand('volume', {
-        data: 0
-      });
+    if (this._samplePosition === 0) {
+      // Let the dynamic threshold calculator re-calculate the threshold
+      // This is only done every 50 samples to reduce load
+      this.skipper.dynamicThresholdCalculator.calculate();
     }
   }
 }

@@ -1,15 +1,13 @@
-import { browser } from "webextension-polyfill-ts";
+import { browser } from 'webextension-polyfill-ts';
 
 import '../../assets/img/icon-48.png';
 import '../../assets/img/icon-128.png';
-import setupMessageListener from "./messageListener";
-import MediaLoader from "./mediaLoader";
-import unblockCorsForBackgroundScript from "./cors";
+import setupMessageListener from './messageListener';
 
 // React to keyboard shortcuts
 // We simply redirect them to the page using a browser message
-browser.commands.onCommand.addListener(async (name : String) => {
-  const tabs = await browser.tabs.query({active: true, currentWindow: true});
+browser.commands.onCommand.addListener(async (name: String) => {
+  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
   if (!tabs[0] || !tabs[0].id) {
     // We can't connect to a page
     return;
@@ -21,7 +19,4 @@ browser.commands.onCommand.addListener(async (name : String) => {
   });
 });
 
-unblockCorsForBackgroundScript();
 setupMessageListener();
-// @ts-ignore
-window.mediaLoader = new MediaLoader();
