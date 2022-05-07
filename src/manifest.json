@@ -16,10 +16,7 @@
     "128": "assets/img/icon-128.png"
   },
 
-  "permissions": [
-    "activeTab",
-    "storage"
-  ],
+  "permissions": ["activeTab", "storage"],
 
   "browser_specific_settings": {
     "gecko": {
@@ -27,12 +24,14 @@
     }
   },
 
-  "content_scripts": [{
-    "all_frames": true,
-    "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-    "js": ["contentScript.bundle.js"],
-    "css": ["content.styles.css"]
-  }],
+  "content_scripts": [
+    {
+      "all_frames": true,
+      "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+      "js": ["contentScript.bundle.js"],
+      "css": ["content.styles.css"]
+    }
+  ],
 
   "web_accessible_resources": [
     "content.styles.css",
@@ -49,7 +48,6 @@
       "description": "Enable/disable Skip Silence for the current tab"
     },
 
-
     "toggle-command-bar": {
       "suggested_key": {
         "default": "Alt+Shift+S"
@@ -59,5 +57,5 @@
   },
 
   "manifest_version": 2,
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://scripts.simpleanalyticscdn.com https://a.vantezzen.io; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
