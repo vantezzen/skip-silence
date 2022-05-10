@@ -80,7 +80,7 @@ To start development, follow these steps:
 
 ## Docker build
 
-Skip Silence offers a simple docker container to enable building. Simply run `docker-compose up --build` in the root directory. After the build is done, the raw contents will be placed in `/build` and the compacted zip will be placed in `/build/build.zip`.
+Skip Silence offers a docker container to enable building. First, make sure the Docker Engine is running and run `docker-compose up --build` in the root directory. After the build is done, the raw contents will be placed in `/build` and the compacted zip will be placed in `/build/build.zip`.
 
 ## Contributing
 
