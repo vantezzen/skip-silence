@@ -7,7 +7,7 @@ const playSelectedFile = (file) => {
   videoNode.src = fileURL;
 
   document.querySelector('.selection').classList.add('hidden');
-  document.querySelector('.player').classList.remove('hidden');
+  document.querySelector('#player').classList.remove('hidden');
   document.querySelector('.activate-info').classList.remove('hidden');
   document.querySelector('.drag-info').style.display = 'none';
 }
