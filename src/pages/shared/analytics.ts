@@ -16,13 +16,6 @@ export function setupAnalytics() {
   sa.setAttribute('data-collect-dnt', 'true');
   sa.setAttribute('data-hostname', 'skipsilence.analytics.vantezzen.io');
   document.body.appendChild(sa);
-
-  const plausible = document.createElement('script');
-  plausible.setAttribute('data-domain', 'skipsilence.a.vantezzen.io');
-  plausible.async = true;
-  plausible.defer = true;
-  plausible.src = '/assets/external/plausible.js';
-  document.body.appendChild(plausible);
 }
 
 /**
@@ -37,9 +30,4 @@ export default function trackEvent(
   debug(`Analytics: New event "${name}"`, data);
 
   window.sa_event(name);
-  if (data) {
-    window.plausible(name, { props: data });
-  } else {
-    window.plausible(name);
-  }
 }
