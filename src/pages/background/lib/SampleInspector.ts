@@ -12,6 +12,7 @@ export default class SampleInspector {
   samplesUnderThreshold = 0;
   isInspectionRunning = false;
   _samplePosition = 0; // This will count up to 50, then and reset to 0
+  _lastSentVolumeInfo = 0;
 
   /**
    * Set up the class
@@ -101,12 +102,16 @@ export default class SampleInspector {
   private sendVolumeInfoToPopup(volume: number) {
     this.skipper.samplesSinceLastVolumeMessage++;
     if (this.skipper.samplesSinceLastVolumeMessage >= 3) {
-      debug('SampleInspector: Sending volume information to popup');
-      try {
-        this.skipper._sendCommand('volume', {
-          data: volume,
-        });
-      } catch (e) {}
+      if (this._lastSentVolumeInfo !== volume) {
+        debug('SampleInspector: Sending volume information to popup');
+        try {
+          this.skipper._sendCommand('volume', {
+            data: volume,
+          });
+        } catch (e) {}
+
+        this._lastSentVolumeInfo = volume;
+      }
       this.skipper.samplesSinceLastVolumeMessage = 0;
     }
   }
