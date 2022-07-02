@@ -1,10 +1,8 @@
-import debugging from 'debug';
-import browser from 'webextension-polyfill';
+import { browser } from 'webextension-polyfill-ts';
 
 import defaultConfig, { ConfigKey } from './config';
+import debug from './debug';
 import type { ExtMessage } from './types';
-
-const debug = debugging('skip-silence:shared:configProvider');
 
 type Environment = 'popup' | 'content' | 'background';
 
@@ -110,7 +108,7 @@ export default class ConfigProvider {
    * Restore values from the local browser storage
    */
   _getValuesFromStorage() {
-    browser.storage.local.get(storedKeys).then((data) => {
+    browser.storage.local.get(storedKeys).then((data: any) => {
       debug('ConfigProvider: Got data from localstorage', data);
 
       for (const key of storedKeys) {
