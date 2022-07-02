@@ -381,88 +381,6 @@ class Popup extends Component {
                   />
                 )}
 
-                {this.config.get('use_preload') &&
-                  this.config.get('enabled') &&
-                  !this.config.get('has_preloaded_current_page') && (
-                    <Alert>
-                      <p>
-                        Preloader is not yet attached on this page. Please{' '}
-                        <a href="#" onClick={() => this.requestReload()}>
-                          refresh the page
-                        </a>{' '}
-                        to enable it!
-                      </p>
-                    </Alert>
-                  )}
-                {!this.config.get('use_preload') &&
-                  this.config.get('has_preloaded_current_page') && (
-                    <Alert>
-                      <p>
-                        Preloader is still attached on this page. Please{' '}
-                        <a href="#" onClick={() => this.requestReload()}>
-                          refresh the page
-                        </a>{' '}
-                        to disable it!
-                      </p>
-                    </Alert>
-                  )}
-                {!this.config.get('can_use_preload') && (
-                  <Alert>
-                    <p>
-                      Unfortunately, preloader does not work on this page.
-                      Please disable it or try again on antoher page.
-                    </p>
-                  </Alert>
-                )}
-
-                <Switch
-                  name="use_preload"
-                  label={
-                    <>
-                      <Loader className="setting-icon" /> {__('preloadMedia')}
-                      {!this.state.isPlus ? ' ★' : ''}
-                    </>
-                  }
-                  config={this.config}
-                  plusDisabled={!this.state.isPlus}
-                  openPlusPopup={() => this.showPlusPopup()}
-                  info={
-                    <HelpModal>
-                      <h2>{__('preloadMedia')}</h2>
-                      <p>{__('preloadMediaHelp')}</p>
-                    </HelpModal>
-                  }
-                />
-
-                <CSSTransition
-                  in={this.config.get('use_preload')}
-                  timeout={300}
-                  classNames="opacity-transition"
-                  className="opacity-transition"
-                >
-                  <SliderSetting
-                    label={
-                      <>
-                        <Clock className="setting-icon" /> {__('preloadLength')}
-                      </>
-                    }
-                    max={1}
-                    min={0.1}
-                    step={0.1}
-                    name="preload_length"
-                    config={this.config}
-                    unit="s"
-                    half={false}
-                    orange
-                    info={
-                      <HelpModal>
-                        <h2>{__('preloadLength')}</h2>
-                        <p>{__('preloadLengthHelp')}</p>
-                      </HelpModal>
-                    }
-                  />
-                </CSSTransition>
-
                 <Switch
                   name="is_bar_icon_enabled"
                   label={
@@ -519,11 +437,11 @@ class Popup extends Component {
         </div>
 
         <div className="plugin-info">
-          {__('savedTimeText', {
+          {/* {__('savedTimeText', {
             time: formatTimelength(this.config.get('saved_time')),
           })}
           <br />
-          <br />
+          <br /> */}
           {__('developedBy')}{' '}
           <a
             href="https://github.com/vantezzen"

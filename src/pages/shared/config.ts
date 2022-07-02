@@ -16,12 +16,6 @@ const defaultConfig = {
   mute_silence: false,
   keep_audio_sync: false,
 
-  // Preload feature
-  use_preload: false,
-  has_preloaded_current_page: false,
-  can_use_preload: true,
-  preload_length: 0.2,
-
   // Command Bar
   is_bar_icon_enabled: true,
   is_bar_collapsed: true,
