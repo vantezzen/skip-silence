@@ -4,8 +4,7 @@ import debug from '../debug';
 import createAudioContextSecure from './AudioContext';
 import type SilenceSkipper from './SilenceSkipper';
 
-const getTabAudioCapture = (tabId: number): Promise<MediaStream | null> => {
-  // TODO: Use tabId instead of current tab only
+const getTabAudioCapture = (): Promise<MediaStream | null> => {
   return new Promise((resolve) => {
     chrome.tabCapture.capture({ audio: true, video: false }, resolve);
   });
@@ -25,7 +24,7 @@ export async function attachSkipper(skipper: SilenceSkipper) {
       skipper.element
     );
   } else {
-    const stream = await getTabAudioCapture(skipper.config.tabId);
+    const stream = await getTabAudioCapture();
     if (!stream) {
       debug('No stream found');
       return false;
