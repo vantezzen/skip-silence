@@ -1,6 +1,6 @@
 {
   "name": "skip-silence",
-  "version": "5.0.0-beta.2",
+  "version": "5.0.0.3",
   "description": "Skip silent parts in videos and audio files",
   "license": "MIT",
   "repository": {
