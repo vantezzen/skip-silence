@@ -1,4 +1,4 @@
-import debug from '../../shared/debug';
+import debug from '../debug';
 import type SilenceSkipper from './SilenceSkipper';
 
 /**

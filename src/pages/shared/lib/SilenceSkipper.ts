@@ -1,6 +1,7 @@
 import { browser } from 'webextension-polyfill-ts';
-import ConfigProvider from '../../shared/configProvider';
-import debug from '../../shared/debug';
+import ConfigProvider from '../configProvider';
+import debug from '../debug';
+import { MediaElement } from '../types';
 
 import DynamicThresholdCalculator from './DynamicThresholdCalculator';
 import SampleInspector from './SampleInspector';
@@ -12,6 +13,7 @@ import SpeedController from './SpeedController';
  */
 export default class SilenceSkipper {
   config: ConfigProvider;
+  element?: MediaElement;
 
   // State variables
   isDestroyed = false;
@@ -23,7 +25,7 @@ export default class SilenceSkipper {
   audioContext: AudioContext | undefined;
   analyser: AnalyserNode | undefined;
   gain: GainNode | undefined;
-  source: MediaStreamAudioSourceNode | undefined;
+  source: MediaStreamAudioSourceNode | MediaElementAudioSourceNode | undefined;
   audioFrequencies: Float32Array | undefined;
 
   // Dependencies
@@ -34,11 +36,12 @@ export default class SilenceSkipper {
   /**
    * Add silence skipper to tab
    *
-   * @param mediaElement Element to attach to
    * @param config Config Provider to use
+   * @param mediaElement If provided the mediaelement to inspect - otherwise tabCapture will be used
    */
-  constructor(config: ConfigProvider) {
+  constructor(config: ConfigProvider, mediaElement?: MediaElement) {
     this.config = config;
+    this.element = mediaElement;
 
     // Setup dependencies
     this.dynamicThresholdCalculator = new DynamicThresholdCalculator(config);

@@ -1,5 +1,5 @@
 import { browser } from 'webextension-polyfill-ts';
-import debug from '../../shared/debug';
+import debug from '../debug';
 
 import createAudioContextSecure from './AudioContext';
 import type SilenceSkipper from './SilenceSkipper';
@@ -11,7 +11,7 @@ const getTabAudioCapture = (tabId: number): Promise<MediaStream | null> => {
   });
 };
 
-export async function attachSkipperToTab(skipper: SilenceSkipper) {
+export async function attachSkipper(skipper: SilenceSkipper) {
   // We don't need to attach multiple times
   if (skipper.isAttached) return false;
 
@@ -20,13 +20,19 @@ export async function attachSkipperToTab(skipper: SilenceSkipper) {
   // Create our audio components
   skipper.analyser = skipper.audioContext.createAnalyser();
 
-  const stream = await getTabAudioCapture(skipper.config.tabId);
-  if (!stream) {
-    debug('No stream found');
-    return false;
-  }
+  if (skipper.element) {
+    skipper.source = skipper.audioContext.createMediaElementSource(
+      skipper.element
+    );
+  } else {
+    const stream = await getTabAudioCapture(skipper.config.tabId);
+    if (!stream) {
+      debug('No stream found');
+      return false;
+    }
 
-  skipper.source = skipper.audioContext.createMediaStreamSource(stream);
+    skipper.source = skipper.audioContext.createMediaStreamSource(stream);
+  }
   skipper.gain = skipper.audioContext.createGain();
 
   // Connect our components

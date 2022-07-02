@@ -1,6 +1,6 @@
 import { browser } from 'webextension-polyfill-ts';
 import debug from '../shared/debug';
-import SilenceSkipper from './lib/SilenceSkipper';
+import SilenceSkipper from '../shared/lib/SilenceSkipper';
 import ConfigProvider from '../shared/configProvider';
 
 export type BackgroundTabReference = {

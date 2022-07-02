@@ -1,5 +1,5 @@
-import type ConfigProvider from '../../shared/configProvider';
-import debug from '../../shared/debug';
+import type ConfigProvider from '../configProvider';
+import debug from '../debug';
 
 /**
  * Dynamic Threshold Calculator:

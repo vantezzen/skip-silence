@@ -1,6 +1,6 @@
-import debug from '../../shared/debug';
+import debug from '../debug';
 import type SilenceSkipper from './SilenceSkipper';
-import { attachSkipperToTab } from './Utils';
+import { attachSkipper } from './Utils';
 
 /**
  * Sample Inspector: Inspect individual samples of the media and determine if the media should be sped up or slowed down
@@ -52,7 +52,7 @@ export default class SampleInspector {
     this.isInspectionRunning = true;
 
     // Make sure we are attached
-    if (!this.skipper.isAttached) await attachSkipperToTab(this.skipper);
+    if (!this.skipper.isAttached) await attachSkipper(this.skipper);
 
     this._samplePosition = (this._samplePosition + 1) % 50;
 
