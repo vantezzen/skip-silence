@@ -82,6 +82,26 @@ To start development, follow these steps:
 
 Skip Silence offers a docker container to enable building. First, make sure the Docker Engine is running and run `docker-compose up --build` in the root directory. After the build is done, the raw contents will be placed in `/build` and the compacted zip will be placed in `/build/build.zip`.
 
+## Build without Docker
+
+Requirements:
+
+- NodeJS 14
+- npm
+- Python
+
+Run these commands in the root of the extension files:
+
+```bash
+npm install
+npm run build
+
+cd build
+zip -r build.zip .
+```
+
+After the build is done, the raw contents will be placed in `/build` and the compacted zip will be placed in `/build/build.zip`.
+
 ## Contributing
 
 Please fork this repository and create a new pull request to contribute to it.
