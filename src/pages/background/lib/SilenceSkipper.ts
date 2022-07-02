@@ -107,7 +107,6 @@ export default class SilenceSkipper {
   }
 
   destroy() {
-    this.isAttached = false;
     this.isDestroyed = true;
     this.analyser?.disconnect();
     this.source?.disconnect();
