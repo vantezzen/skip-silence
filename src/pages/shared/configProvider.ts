@@ -1,4 +1,4 @@
-import { browser } from 'webextension-polyfill-ts';
+import { browser, Runtime } from 'webextension-polyfill-ts';
 
 import defaultConfig, { ConfigKey } from './config';
 import debug from './debug';
@@ -60,6 +60,7 @@ export default class ConfigProvider {
   constructor(environment: Environment, tabId: number = -1) {
     this.env = environment;
     this.tabId = tabId;
+    this._configUpdateListener = this._configUpdateListener.bind(this);
     if (this.env === 'content') {
       chrome.runtime.sendMessage({ command: 'get-tab-id' }, (tabId) => {
         this.tabId = tabId;
@@ -79,33 +80,38 @@ export default class ConfigProvider {
     debug('ConfigProvider: Setup');
   }
 
+  private _configUpdateListener(
+    msg: ExtMessage,
+    sender: Runtime.MessageSender
+  ) {
+    if (!msg.command) return;
+
+    const senderTab = msg.tabId === -1 ? sender.tab?.id : msg.tabId;
+    if (senderTab !== this.tabId) {
+      debug('ConfigProvider: Discarding message from wrong tab', msg);
+      return;
+    }
+
+    if (msg.command === 'config') {
+      // Got data about new config values
+      this.previousConfig = this.config;
+      this.config = msg.data;
+
+      debug('ConfigProvider: Got config update: ', msg);
+      this._onUpdate();
+    } else if (msg.command === 'requestConfig') {
+      // Other components requested us to send them our config values
+      debug('ConfigProvider: Sending requested config');
+
+      return Promise.resolve(this.config);
+    }
+  }
+
   /**
    * Listen for config push or pull from other components over the browser message API
    */
   _listenForConfigUpdates() {
-    browser.runtime.onMessage.addListener((msg: ExtMessage, sender) => {
-      if (!msg.command) return;
-
-      const senderTab = msg.tabId === -1 ? sender.tab?.id : msg.tabId;
-      if (senderTab !== this.tabId) {
-        debug('ConfigProvider: Discarding message from wrong tab', msg);
-        return;
-      }
-
-      if (msg.command === 'config') {
-        // Got data about new config values
-        this.previousConfig = this.config;
-        this.config = msg.data;
-
-        debug('ConfigProvider: Got config update: ', msg);
-        this._onUpdate();
-      } else if (msg.command === 'requestConfig') {
-        // Other components requested us to send them our config values
-        debug('ConfigProvider: Sending requested config');
-
-        return Promise.resolve(this.config);
-      }
-    });
+    browser.runtime.onMessage.addListener(this._configUpdateListener);
   }
 
   /**
@@ -135,6 +141,12 @@ export default class ConfigProvider {
    */
   onUpdate(callback: Function) {
     this.onUpdateListeners.push(callback);
+  }
+
+  removeOnUpdateListener(callback: Function) {
+    this.onUpdateListeners = this.onUpdateListeners.filter(
+      (listener) => listener !== callback
+    );
   }
 
   /**
@@ -231,5 +243,10 @@ export default class ConfigProvider {
 
     this.push();
     this._onUpdate();
+  }
+
+  destroy() {
+    this.onUpdateListeners = [];
+    browser.runtime.onMessage.removeListener(this._configUpdateListener);
   }
 }

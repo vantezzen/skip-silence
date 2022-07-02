@@ -14,6 +14,7 @@ export default class SilenceSkipper {
   config: ConfigProvider;
 
   // State variables
+  isDestroyed = false;
   isAttached = false;
   isSpedUp = false;
   samplesSinceLastVolumeMessage = 0;
@@ -45,7 +46,8 @@ export default class SilenceSkipper {
     this.sampleInspector = new SampleInspector(this);
 
     // Attach our config listener
-    this.config.onUpdate(() => this._onConfigUpdate());
+    this._onConfigUpdate = this._onConfigUpdate.bind(this);
+    this.config.onUpdate(this._onConfigUpdate);
 
     // Initial update to setup current config
     this._onConfigUpdate();
@@ -102,5 +104,15 @@ export default class SilenceSkipper {
    */
   _sendCommand(command: String, data: Object = {}) {
     browser.runtime.sendMessage({ command, ...data });
+  }
+
+  destroy() {
+    this.isAttached = false;
+    this.isDestroyed = true;
+    this.analyser?.disconnect();
+    this.source?.disconnect();
+    this.gain?.disconnect();
+    this.audioContext?.close();
+    this.config.removeOnUpdateListener(this._onConfigUpdate);
   }
 }

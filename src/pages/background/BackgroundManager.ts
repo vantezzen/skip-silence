@@ -41,42 +41,73 @@ export default class BackgroundManager {
       return;
     }
 
-    debug('Enabling page action for tab', tabId);
-    browser.pageAction.show(tabId);
-    browser.pageAction.setIcon({
-      tabId,
-      path: 'assets/img/icon-32.png',
-    });
+    this.enableBrowserActionForTab(tabId);
+    this.setupTabReferenceForTabId(tabId);
+    this.listenForTabRemovedEvent(tabId);
+  }
 
+  private listenForTabRemovedEvent(tabId: number) {
+    const tabRemovedListener = (removedTabId: number) => {
+      if (removedTabId === tabId) {
+        debug(`Tab ${tabId} removed - detaching`);
+        this.detachTab(tabId);
+        browser.tabs.onRemoved.removeListener(tabRemovedListener);
+      }
+    };
+    browser.tabs.onRemoved.addListener(tabRemovedListener);
+  }
+
+  private detachTab(tabId: number) {
+    if (!this.tabReferences[tabId]) {
+      debug(`Already detached from tab ${tabId}`);
+      return;
+    }
+    this.tabReferences[tabId]?.silenceSkipper?.destroy();
+    this.tabReferences[tabId]?.configProvider.destroy();
+    this.tabReferences[tabId] = undefined;
+  }
+
+  private setupTabReferenceForTabId(tabId: number) {
     const configProvider = new ConfigProvider('background', tabId);
     this.tabReferences[tabId] = {
       tabId,
       configProvider,
     };
 
-    configProvider.onUpdate(() => {
-      if (
-        this.tabReferences[tabId] &&
-        configProvider.get('enabled') &&
-        !this.tabReferences[tabId]!.silenceSkipper
-      ) {
-        debug('Creating silence skipper for tab', tabId);
-        this.tabReferences[tabId]!.silenceSkipper = new SilenceSkipper(
-          configProvider
-        );
-      }
+    this.tabReferences[tabId]!.configProvider.onUpdate(() => {
+      this.createOrDestroySkipperForTab(tabId);
+    });
+  }
 
-      if (
-        this.tabReferences[tabId] &&
-        !configProvider.get('enabled') &&
-        this.tabReferences[tabId]!.silenceSkipper
-      ) {
-        // TODO: Check for memory leak
-        debug('Destroying silence skipper for tab', tabId);
-        delete this.tabReferences[tabId]!.silenceSkipper;
-      }
+  private createOrDestroySkipperForTab(tabId: number) {
+    if (!this.tabReferences[tabId]) return;
 
-      console.log('Config updated for tab', tabId);
+    const configProvider = this.tabReferences[tabId]!.configProvider;
+    const skipper = this.tabReferences[tabId]!.silenceSkipper;
+    const isEnabled = configProvider.get('enabled');
+
+    if (isEnabled && !skipper) {
+      debug('Creating silence skipper for tab', tabId);
+      this.tabReferences[tabId]!.silenceSkipper = new SilenceSkipper(
+        configProvider
+      );
+    }
+
+    if (!isEnabled && skipper) {
+      debug('Destroying silence skipper for tab', tabId);
+      this.tabReferences[tabId]!.silenceSkipper?.destroy();
+      delete this.tabReferences[tabId]!.silenceSkipper;
+    }
+
+    console.log('Config updated for tab', tabId);
+  }
+
+  private enableBrowserActionForTab(tabId: number) {
+    debug('Enabling page action for tab', tabId);
+    browser.pageAction.show(tabId);
+    browser.pageAction.setIcon({
+      tabId,
+      path: 'assets/img/icon-32.png',
     });
   }
 }
