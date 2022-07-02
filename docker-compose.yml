@@ -1,0 +1,7 @@
+version: '3'
+services:
+  builder:
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
