@@ -1,84 +1,106 @@
-import { browser } from "webextension-polyfill-ts";
-import { ExtMessage } from './types';
-import defaultConfig from './config';
-import debug from './debug';
-import { strict } from "assert";
+import debugging from 'debug';
+import browser from 'webextension-polyfill';
 
-type Environment = "popup" | "content" | "background";
+import defaultConfig, { ConfigKey } from './config';
+import type { ExtMessage } from './types';
+
+const debug = debugging('skip-silence:shared:configProvider');
+
+type Environment = 'popup' | 'content' | 'background';
 
 // List of keys that should be saved to local storage
-const storedKeys : (keyof typeof defaultConfig)[] = [
-  "silence_threshold",
-  "dynamic_silence_threshold",
-  "samples_threshold",
+const storedKeys: ConfigKey[] = [
+  'silence_threshold',
+  'dynamic_silence_threshold',
+  'samples_threshold',
 
-  "playback_speed",
-  "playback_speed_is_custom",
-  "silence_speed",
-  "silence_speed_is_custom",
+  'playback_speed',
+  'playback_speed_is_custom',
+  'silence_speed',
+  'silence_speed_is_custom',
 
-  "mute_silence",
-  "keep_audio_sync",
-  "use_preload",
-  "preload_length",
+  'mute_silence',
+  'keep_audio_sync',
+  'use_preload',
+  'preload_length',
 
-  "is_bar_icon_enabled",
-  "is_bar_collapsed",
+  'is_bar_icon_enabled',
+  'is_bar_collapsed',
 
-  "show_saved_time_info",
+  'show_saved_time_info',
 
-  "allow_analytics",
-  "saved_time",
+  'allow_analytics',
+  'saved_time',
 ];
+
+export async function getCurrentTabId(): Promise<number> {
+  const tabs = await browser.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+  if (!tabs[0] || !tabs[0].id) {
+    // We can't connect to a page
+    return -1;
+  }
+  return tabs[0].id;
+}
 
 /**
  * Config Provider: Provides the config data in a way that syncs all data with other components of the
  * extension (e.g. content and background script)
  */
 export default class ConfigProvider {
-  config : typeof defaultConfig = defaultConfig;
+  config: typeof defaultConfig = defaultConfig;
   previousConfig: typeof defaultConfig = defaultConfig;
-  env : Environment;
-  onUpdateListeners : Function[] = [];
+  env: Environment;
+  onUpdateListeners: Function[] = [];
+  tabId: number;
 
   /**
    * Create a new Config Provider
-   * 
+   *
    * @param environment Environent, the provider is used in. This is needed to determine what components to communicate with
    */
-  constructor(environment : Environment) {
+  constructor(environment: Environment, tabId: number = -1) {
     this.env = environment;
+    this.tabId = tabId;
 
     this._listenForConfigUpdates();
 
-    if (this.env === "popup" || this.env === 'background') {
+    if (this.env === 'popup' || this.env === 'content') {
       this.fetch();
     }
-    if (this.env === "content") {
+    if (this.env === 'background') {
       this._getValuesFromStorage();
     }
 
-    debug("ConfigProvider: Setup");
+    debug('ConfigProvider: Setup');
   }
 
   /**
    * Listen for config push or pull from other components over the browser message API
    */
   _listenForConfigUpdates() {
-    browser.runtime.onMessage.addListener((msg : ExtMessage) => {
+    browser.runtime.onMessage.addListener((msg: ExtMessage, sender) => {
       if (!msg.command) return;
+
+      const senderTab = msg.tabId === -1 ? sender.tab?.id : msg.tabId;
+      if (senderTab !== this.tabId) {
+        debug('ConfigProvider: Discarding message from wrong tab', msg);
+        return;
+      }
 
       if (msg.command === 'config') {
         // Got data about new config values
         this.previousConfig = this.config;
         this.config = msg.data;
-        
-        debug("ConfigProvider: Got config update: ", msg);
+
+        debug('ConfigProvider: Got config update: ', msg);
         this._onUpdate();
       } else if (msg.command === 'requestConfig') {
         // Other components requested us to send them our config values
-        debug("ConfigProvider: Sending requested config");
-        
+        debug('ConfigProvider: Sending requested config');
+
         return Promise.resolve(this.config);
       }
     });
@@ -89,30 +111,27 @@ export default class ConfigProvider {
    */
   _getValuesFromStorage() {
     browser.storage.local.get(storedKeys).then((data) => {
-      debug("ConfigProvider: Got data from localstorage", data);
+      debug('ConfigProvider: Got data from localstorage', data);
 
-      for(const key of storedKeys) {
+      for (const key of storedKeys) {
         if (data.hasOwnProperty(key)) {
           this.set(key, data[key]);
         }
       }
 
-      debug("ConfigProvider: Config after loading local storage is", this.config);
-    });
-    browser.runtime.sendMessage({
-      command: 'requestTabIsEnabled'
-    }).then((isEnabled) => {
-      debug("ConfigProvider: Got isEnabled from runtime", isEnabled);
-      this.set('enabled', isEnabled);
+      debug(
+        'ConfigProvider: Config after loading local storage is',
+        this.config
+      );
     });
   }
 
   /**
    * Attach a callback listener to notify when the config changes
-   * 
+   *
    * @param callback Callback to use
    */
-  onUpdate(callback : Function) {
+  onUpdate(callback: Function) {
     this.onUpdateListeners.push(callback);
   }
 
@@ -121,98 +140,84 @@ export default class ConfigProvider {
    */
   _onUpdate() {
     if (JSON.stringify(this.previousConfig) === JSON.stringify(this.config)) {
-      debug("ConfigProvider: No change, discarding");
+      debug('ConfigProvider: No change, discarding');
       return;
     }
     this.onUpdateListeners.forEach((callback) => callback());
   }
 
-  /**
-   * Fetch config data from another source
-   * 
-   * This will use the content script when inside a popup or the popup script when inside the content script
-   */
   async fetch() {
-    if (this.env === "popup" || this.env === "background") {
-      const tabs = await browser.tabs.query({active: true, currentWindow: true});
-      if (!tabs[0] || !tabs[0].id) {
-        // We can't connect to a page
-        return;
-      }
-  
-      const config = await browser.tabs.sendMessage(tabs[0].id, {
+    if (this.env === 'popup' || this.env === 'content') {
+      const config = await browser.runtime.sendMessage({
         command: 'requestConfig',
+        tabId: this.tabId,
       });
       if (!config) {
-        // Content script hasn't sent any data
-        debug("ConfigProvider:  Fetched, but no result");
+        debug('ConfigProvider:  Fetched, but no result');
+        return;
+      }
+
+      if (JSON.stringify(this.config) === JSON.stringify(config)) {
+        debug('ConfigProvider: Fetched, but no change');
         return;
       }
 
       this.previousConfig = this.config;
       this.config = config;
 
-      debug("ConfigProvider: Fetched config: ", this.config);
-      
+      debug('ConfigProvider: Fetched config: ', this.config);
+
       this._onUpdate();
-    } else if (this.env === "content") {}
+    }
   }
 
   /**
    * Push changes to all other components
    */
   async push() {
-    if (this.env === "popup" || this.env === "background") {
+    if (this.env === 'popup' || this.env === 'background') {
       // Push changes to Content script
-      const tabs = await browser.tabs.query({active: true, currentWindow: true});
-      if (!tabs[0] || !tabs[0].id) {
-        // We can't connect to a page
-        return;
+      try {
+        await browser.tabs.sendMessage(this.tabId, {
+          command: 'config',
+          data: this.config,
+          tabId: this.tabId,
+        });
+      } catch (e) {
+        debug('ConfigProvider: Error pushing config to content script', e);
       }
 
-      await browser.tabs.sendMessage(tabs[0].id, {
-        command: 'config',
-        data: this.config,
-      });
-
-      // Push to background
-      browser.runtime.sendMessage({
-        command: 'config',
-        data: this.config,
-      });
-
-      debug("ConfigProvider: Pushed config to content script", this.config);
-    } else {
-      // Push to popup
-      browser.runtime.sendMessage({
-        command: 'config',
-        data: this.config,
-      });
+      debug('ConfigProvider: Pushed config to content script', this.config);
     }
+    browser.runtime.sendMessage({
+      command: 'config',
+      data: this.config,
+      tabId: this.tabId,
+    });
   }
 
   /**
    * Get a config value
-   * 
+   *
    * @param key Config key
    * @return Value
    */
-  get(key : keyof typeof defaultConfig) : any {
+  get(key: keyof typeof defaultConfig): any {
     return this.config[key];
   }
 
   /**
    * Set a config value
-   * 
+   *
    * @param key Config key
    * @param value New config value
    */
-  set(key : keyof typeof defaultConfig, value : any) : void {
-    this.previousConfig = {...this.config};
+  set(key: keyof typeof defaultConfig, value: any): void {
+    this.previousConfig = { ...this.config };
     // @ts-ignore 2322
     this.config[key] = value;
 
-    if(storedKeys.includes(key)) {
+    if (storedKeys.includes(key)) {
       // Save changes locally
       browser.storage.local.set({
         [key]: value,

@@ -1,22 +1,16 @@
 import { browser } from 'webextension-polyfill-ts';
-import { MediaElement } from '../types';
-import debug from '../debug';
-import ConfigProvider from '../configProvider';
+import ConfigProvider from '../../shared/configProvider';
+import debug from '../../shared/debug';
+
 import DynamicThresholdCalculator from './DynamicThresholdCalculator';
-import AudioSync from './AudioSync';
-import Statistics from './Statistics';
-import SpeedController from './SpeedController';
 import SampleInspector from './SampleInspector';
-import Preloader from './Preloader';
+import SpeedController from './SpeedController';
 
 /**
  * Silence Skipper: This class is doing the job of actually inspecting media elements and
  * slowing them up or down
  */
 export default class SilenceSkipper {
-  // Constructor variables
-  element: MediaElement;
-  preloadElement?: MediaElement;
   config: ConfigProvider;
 
   // State variables
@@ -28,34 +22,27 @@ export default class SilenceSkipper {
   audioContext: AudioContext | undefined;
   analyser: AnalyserNode | undefined;
   gain: GainNode | undefined;
-  source: MediaElementAudioSourceNode | undefined;
+  source: MediaStreamAudioSourceNode | undefined;
   audioFrequencies: Float32Array | undefined;
 
   // Dependencies
   dynamicThresholdCalculator: DynamicThresholdCalculator;
-  audioSync: AudioSync;
-  statistics: Statistics;
   speedController: SpeedController;
   sampleInspector: SampleInspector;
-  preloader: Preloader;
 
   /**
-   * Add silence skipper to element
+   * Add silence skipper to tab
    *
    * @param mediaElement Element to attach to
    * @param config Config Provider to use
    */
-  constructor(mediaElement: MediaElement, config: ConfigProvider) {
-    this.element = mediaElement;
+  constructor(config: ConfigProvider) {
     this.config = config;
 
     // Setup dependencies
     this.dynamicThresholdCalculator = new DynamicThresholdCalculator(config);
-    this.audioSync = new AudioSync(this);
-    this.statistics = new Statistics(this);
     this.speedController = new SpeedController(this);
     this.sampleInspector = new SampleInspector(this);
-    this.preloader = new Preloader(this);
 
     // Attach our config listener
     this.config.onUpdate(() => this._onConfigUpdate());
@@ -69,51 +56,11 @@ export default class SilenceSkipper {
    */
   async _onConfigUpdate() {
     const isEnabled = this.config.get('enabled');
-    browser.runtime.sendMessage({
-      command: 'tabEnabledInfo',
-      enabled: isEnabled,
-    });
-    console.log(`Silence Skipper is ${isEnabled ? 'enabled' : 'disabled'}`);
+    // TODO: Change icon color
 
     if (isEnabled) {
-      if (
-        this.config.get('use_preload') &&
-        this.config.get('can_use_preload')
-      ) {
-        debug('SilenceSkipper: Updating preload media config');
-        await this.updatePreloadConfig();
-      } else {
-        debug('SilenceSkipper: Updating direct media config');
-        this.updateDirectMediaConfig();
-      }
-    }
-  }
-
-  private async updatePreloadConfig() {
-    debug('SilenceSkipper: Using preload media');
-    if (
-      !this.preloadElement &&
-      this.config.get('can_use_preload') &&
-      !this.config.get('has_preloaded_current_page')
-    ) {
-      debug("SilenceSkipper: Preloading current page's media");
-
-      this.config.set('has_preloaded_current_page', true);
-
-      const preloadElement = await this.preloader.createPreloadElement();
-      if (preloadElement) {
-        this.preloadElement = preloadElement;
-
-        if (!this.sampleInspector.isInspectionRunning) {
-          debug('SilenceSkipper: Starting inspection for preload element');
-
-          // Start running the inspection
-          this.sampleInspector.inspectSample();
-        }
-      } else {
-        this.config.set('can_use_preload', false);
-        debug('SilenceSkipper: Failed to create preload element');
-      }
+      debug('SilenceSkipper: Updating direct media config');
+      this.updateDirectMediaConfig();
     }
   }
 

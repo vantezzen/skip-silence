@@ -1,7 +1,6 @@
-import ConfigProvider from '../configProvider';
-import debug from '../debug';
-import SilenceSkipper from './SilenceSkipper';
-import { attachSkipperToElement } from './Utils';
+import debug from '../../shared/debug';
+import type SilenceSkipper from './SilenceSkipper';
+import { attachSkipperToTab } from './Utils';
 
 /**
  * Sample Inspector: Inspect individual samples of the media and determine if the media should be sped up or slowed down
@@ -52,7 +51,7 @@ export default class SampleInspector {
     this.isInspectionRunning = true;
 
     // Make sure we are attached
-    if (!this.skipper.isAttached) await attachSkipperToElement(this.skipper);
+    if (!this.skipper.isAttached) await attachSkipperToTab(this.skipper);
 
     this._samplePosition = (this._samplePosition + 1) % 50;
 
@@ -101,11 +100,9 @@ export default class SampleInspector {
 
   private sendVolumeInfoToPopup(volume: number) {
     this.skipper.samplesSinceLastVolumeMessage++;
-    if (this.skipper.samplesSinceLastVolumeMessage >= 2) {
+    if (this.skipper.samplesSinceLastVolumeMessage >= 50) {
       debug('SampleInspector: Sending volume information to popup');
-      this.skipper._sendCommand('volume', {
-        data: volume,
-      });
+      this.skipper.config.set('volume', volume);
       this.skipper.samplesSinceLastVolumeMessage = 0;
     }
   }
@@ -115,11 +112,7 @@ export default class SampleInspector {
     threshold: any,
     sampleThreshold: any
   ) {
-    if (
-      volume < threshold &&
-      !this.skipper.element.paused &&
-      !this.skipper.isSpedUp
-    ) {
+    if (volume < threshold && !this.skipper.isSpedUp) {
       // We are below our threshold and should possibly slow down
       this.samplesUnderThreshold += 1;
 

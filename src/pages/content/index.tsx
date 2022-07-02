@@ -2,23 +2,30 @@
  * Content Script
  * This script will be loaded into all pages
  */
-import { browser } from "webextension-polyfill-ts";
+import { browser } from 'webextension-polyfill-ts';
 import React from 'react';
 import { render as RenderReact } from 'react-dom';
 
 import Bar from './command-bar/Bar';
 import debug from '../shared/debug';
 import ConfigProvider from '../shared/configProvider';
-import { MediaElement } from '../shared/types';
+import { MediaElement } from '../shared/types';
 import speedSettings from '../shared/speedSettings';
+import SpeedController from './SpeedController';
+import AudioSync from './AudioSync';
 
-import inspectMediaElements from '../shared/lib/inspectMediaElements';
-import SilenceSkipper from '../shared/lib/SilenceSkipper';
+const config = new ConfigProvider('content');
+const speedController = new SpeedController();
+new AudioSync(config);
+let mediaSpeed = 1;
 
-// Create config provider so we can exchange information with the popup
-const config = new ConfigProvider("content");
 config.onUpdate(() => {
-  debug("Main: Updated config: ", config.config);
+  const shouldBeMediaSpeed = config.get('media_speed');
+
+  if (shouldBeMediaSpeed !== mediaSpeed) {
+    mediaSpeed = shouldBeMediaSpeed;
+    speedController.setPlaybackRate(config.get('media_speed'));
+  }
 });
 
 // Render bar
@@ -30,20 +37,27 @@ RenderReact(<Bar config={config} />, containerElement);
 
 // Listen for keyboard shortcuts
 browser.runtime.onMessage.addListener((msg) => {
-  if(!msg.command) return;
+  if (!msg.command) return;
 
   if (msg.command === 'shortcut') {
     const { name } = msg;
 
     if (name === 'toggle-enable') {
       config.set('enabled', !config.get('enabled'));
-    } else if (name === 'increase-playback-speed' || name === 'decrease-playback-speed') {
+    } else if (
+      name === 'increase-playback-speed' ||
+      name === 'decrease-playback-speed'
+    ) {
       // Find out index of the current speed setting
       const currentSpeed = config.get('playback_speed');
-      const currentSpeedIndex = speedSettings.findIndex((speed) => currentSpeed === speed) || 2;
+      const currentSpeedIndex =
+        speedSettings.findIndex((speed) => currentSpeed === speed) || 2;
 
       // Increase or decrease the speed
-      const newSpeedIndex = name === 'increase-playback-speed' ? currentSpeedIndex + 1 : currentSpeedIndex - 1;
+      const newSpeedIndex =
+        name === 'increase-playback-speed'
+          ? currentSpeedIndex + 1
+          : currentSpeedIndex - 1;
       const newSpeed = speedSettings[newSpeedIndex] || currentSpeed;
 
       // Update our speed
@@ -57,12 +71,3 @@ browser.runtime.onMessage.addListener((msg) => {
 });
 
 browser.runtime.sendMessage({ command: 'noElement' });
-
-// Attach the skipper to all media elements
-inspectMediaElements((element : MediaElement) => {
-  debug("Main: Attaching skipper to new element", element);
-
-  browser.runtime.sendMessage({ command: 'hasElement' });
-
-  new SilenceSkipper(element, config);
-});
