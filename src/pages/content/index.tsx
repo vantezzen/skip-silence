@@ -24,6 +24,8 @@ config.onUpdate(() => {
 
   if (shouldBeMediaSpeed !== mediaSpeed) {
     mediaSpeed = shouldBeMediaSpeed;
+
+    debug('Media speed changed to', mediaSpeed);
     speedController.setPlaybackRate(config.get('media_speed'));
   }
 });
@@ -70,4 +72,4 @@ browser.runtime.onMessage.addListener((msg) => {
   }
 });
 
-browser.runtime.sendMessage({ command: 'noElement' });
+browser.runtime.sendMessage({ command: 'request-activation' });

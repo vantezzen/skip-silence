@@ -19,13 +19,7 @@
     "128": "assets/img/icon-128.png"
   },
 
-  "permissions": [
-    "activeTab",
-    "storage",
-    "<all_urls>",
-    "webRequest",
-    "webRequestBlocking"
-  ],
+  "permissions": ["activeTab", "storage", "<all_urls>", "tabCapture"],
 
   "browser_specific_settings": {
     "gecko": {

@@ -15,34 +15,22 @@ export default class BackgroundManager {
   } = {};
 
   constructor() {
-    this.attachToAllCurrentTabs();
-    this.listenForTabChanges();
+    this.attachToTabsRequestingActivation();
+    this.provideTabIdApi();
   }
 
-  private attachToAllCurrentTabs() {
-    browser.tabs.query({}).then((tabs) => {
-      debug('Found tabs - attaching to all', tabs);
-      tabs.forEach((tab) => {
-        if (tab.id) {
-          this.attachToTab(tab.id);
-        }
-      });
-    });
-  }
-
-  private listenForTabChanges() {
-    browser.tabs.onCreated.addListener((tab) => {
-      debug('Tab created - attaching', tab);
-
-      if (tab.id) {
-        this.attachToTab(tab.id);
+  private provideTabIdApi() {
+    browser.runtime.onMessage.addListener((request, sender) => {
+      if (request.command === 'get-tab-id') {
+        return Promise.resolve(sender.tab?.id);
       }
     });
-    chrome.tabs.onRemoved.addListener((tabId) => {
-      debug('Tab removed - detaching', tabId);
+  }
 
-      if (tabId) {
-        this.tabReferences[tabId] = undefined;
+  private attachToTabsRequestingActivation() {
+    browser.runtime.onMessage.addListener((request, sender) => {
+      if (request.command === 'request-activation') {
+        this.attachToTab(sender.tab!.id!);
       }
     });
   }
@@ -52,6 +40,13 @@ export default class BackgroundManager {
       debug(`Already attached to tab ${tabId}`);
       return;
     }
+
+    debug('Enabling page action for tab', tabId);
+    browser.pageAction.show(tabId);
+    browser.pageAction.setIcon({
+      tabId,
+      path: 'assets/img/icon-32.png',
+    });
 
     const configProvider = new ConfigProvider('background', tabId);
     this.tabReferences[tabId] = {
@@ -65,10 +60,22 @@ export default class BackgroundManager {
         configProvider.get('enabled') &&
         !this.tabReferences[tabId]!.silenceSkipper
       ) {
+        debug('Creating silence skipper for tab', tabId);
         this.tabReferences[tabId]!.silenceSkipper = new SilenceSkipper(
           configProvider
         );
       }
+
+      if (
+        this.tabReferences[tabId] &&
+        !configProvider.get('enabled') &&
+        this.tabReferences[tabId]!.silenceSkipper
+      ) {
+        // TODO: Check for memory leak
+        debug('Destroying silence skipper for tab', tabId);
+        delete this.tabReferences[tabId]!.silenceSkipper;
+      }
+
       console.log('Config updated for tab', tabId);
     });
   }

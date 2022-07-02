@@ -56,11 +56,13 @@ export default class SilenceSkipper {
    */
   async _onConfigUpdate() {
     const isEnabled = this.config.get('enabled');
-    // TODO: Change icon color
 
     if (isEnabled) {
       debug('SilenceSkipper: Updating direct media config');
       this.updateDirectMediaConfig();
+    } else if (this.config.previousConfig.enabled) {
+      debug('SilenceSkipper: Returning to normal playback');
+      this.speedController.setPlaybackRate(1);
     }
   }
 

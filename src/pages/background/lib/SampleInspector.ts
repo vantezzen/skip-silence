@@ -100,9 +100,13 @@ export default class SampleInspector {
 
   private sendVolumeInfoToPopup(volume: number) {
     this.skipper.samplesSinceLastVolumeMessage++;
-    if (this.skipper.samplesSinceLastVolumeMessage >= 50) {
+    if (this.skipper.samplesSinceLastVolumeMessage >= 3) {
       debug('SampleInspector: Sending volume information to popup');
-      this.skipper.config.set('volume', volume);
+      try {
+        this.skipper._sendCommand('volume', {
+          data: volume,
+        });
+      } catch (e) {}
       this.skipper.samplesSinceLastVolumeMessage = 0;
     }
   }

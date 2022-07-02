@@ -25,7 +25,7 @@ const defaultConfig = {
   // Command Bar
   is_bar_icon_enabled: true,
   is_bar_collapsed: true,
-  highlighted_component: "",
+  highlighted_component: '',
 
   // Info bar
   show_saved_time_info: true,
@@ -35,10 +35,8 @@ const defaultConfig = {
   saved_time: 0,
 
   // Current status
-  volume: 1,
-  is_sped_up: false,
-  media_speed: 1
-}
+  media_speed: 1,
+};
 
-export default defaultConfig
-export type ConfigKey = keyof typeof defaultConfig
+export default defaultConfig;
+export type ConfigKey = keyof typeof defaultConfig;

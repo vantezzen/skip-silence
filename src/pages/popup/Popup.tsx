@@ -44,7 +44,7 @@ import __ from '../shared/i18n';
 const isChromium = navigator.userAgent.includes('Chrome');
 
 class Popup extends Component {
-  config: ConfigProvider;
+  config?: ConfigProvider;
   isComponentMounted = false;
 
   state = {
@@ -84,8 +84,27 @@ class Popup extends Component {
   constructor(props: object) {
     super(props);
 
+    // Check if we are on a local player
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+      if (tabs[0] && tabs[0].url) {
+        this.setupConfigProvider(tabs[0].id!);
+        const url = new URL(tabs[0].url);
+
+        if (url.protocol === 'file:') {
+          this.setState({
+            isLocalPlayer: true,
+          });
+        }
+        window.sa_event(`open_${url.host}`);
+        window.plausible('open', { props: { site: url.host } });
+      }
+    });
+  }
+
+  private setupConfigProvider(tabId: number) {
     let initialUpdate = true;
-    this.config = new ConfigProvider('popup');
+    this.config = new ConfigProvider('popup', tabId);
+    this.forceUpdate();
     this.config.onUpdate(() => {
       if (this.isComponentMounted) {
         this.forceUpdate();
@@ -94,30 +113,13 @@ class Popup extends Component {
         initialUpdate = false;
 
         if (
-          this.config.get('allow_analytics') &&
+          this.config!.get('allow_analytics') &&
           !document.getElementById('simpleanalytics')
         ) {
           setupAnalytics();
         }
       }
     });
-
-    // Check if we are on a local player
-    browser.tabs
-      .query({ active: true, lastFocusedWindow: true })
-      .then((tabs) => {
-        if (tabs[0] && tabs[0].url) {
-          const url = new URL(tabs[0].url);
-
-          if (url.protocol === 'file:') {
-            this.setState({
-              isLocalPlayer: true,
-            });
-          }
-          window.sa_event(`open_${url.host}`);
-          window.plausible('open', { props: { site: url.host } });
-        }
-      });
   }
 
   async checkPlusStatus() {
@@ -168,6 +170,10 @@ class Popup extends Component {
   }
 
   render() {
+    if (!this.config) {
+      return null;
+    }
+
     const grayOutWhenDisabled = {
       opacity: this.config.get('enabled') ? 1 : 0.3,
       transition: 'all 0.3s',

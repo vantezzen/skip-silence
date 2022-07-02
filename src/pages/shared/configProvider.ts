@@ -62,6 +62,12 @@ export default class ConfigProvider {
   constructor(environment: Environment, tabId: number = -1) {
     this.env = environment;
     this.tabId = tabId;
+    if (this.env === 'content') {
+      chrome.runtime.sendMessage({ command: 'get-tab-id' }, (tabId) => {
+        this.tabId = tabId;
+        this.fetch();
+      });
+    }
 
     this._listenForConfigUpdates();
 
@@ -187,11 +193,14 @@ export default class ConfigProvider {
 
       debug('ConfigProvider: Pushed config to content script', this.config);
     }
-    browser.runtime.sendMessage({
-      command: 'config',
-      data: this.config,
-      tabId: this.tabId,
-    });
+
+    try {
+      browser.runtime.sendMessage({
+        command: 'config',
+        data: this.config,
+        tabId: this.tabId,
+      });
+    } catch (e) {}
   }
 
   /**
