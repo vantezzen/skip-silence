@@ -27,6 +27,7 @@ export default class SilenceSkipper {
   gain: GainNode | undefined;
   source: MediaStreamAudioSourceNode | MediaElementAudioSourceNode | undefined;
   audioFrequencies: Float32Array | undefined;
+  tabCaptureStream: MediaStream | null = null;
 
   // Dependencies
   dynamicThresholdCalculator: DynamicThresholdCalculator;
@@ -116,5 +117,6 @@ export default class SilenceSkipper {
     this.gain?.disconnect();
     this.audioContext?.close();
     this.config.removeOnUpdateListener(this._onConfigUpdate);
+    this.tabCaptureStream?.getTracks().forEach((track) => track.stop());
   }
 }

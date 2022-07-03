@@ -24,13 +24,15 @@ export async function attachSkipper(skipper: SilenceSkipper) {
       skipper.element
     );
   } else {
-    const stream = await getTabAudioCapture();
-    if (!stream) {
+    skipper.tabCaptureStream = await getTabAudioCapture();
+    if (!skipper.tabCaptureStream) {
       debug('No stream found');
       return false;
     }
 
-    skipper.source = skipper.audioContext.createMediaStreamSource(stream);
+    skipper.source = skipper.audioContext.createMediaStreamSource(
+      skipper.tabCaptureStream
+    );
   }
   skipper.gain = skipper.audioContext.createGain();
 
