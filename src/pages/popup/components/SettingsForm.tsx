@@ -18,9 +18,8 @@ import SpeedSetting from '../../shared/components/speedSetting';
 import Switch from '../../shared/components/switch';
 import ConfigProvider from '../../shared/configProvider';
 import __ from '../../shared/i18n';
+import { isChromium } from '../../shared/platform';
 import HelpModal from './helpModal';
-
-const isChromium = navigator.userAgent.includes('Chrome');
 
 function SettingsForm({
   config,
