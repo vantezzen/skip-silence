@@ -2,10 +2,12 @@
  * Content Script
  * This script will be loaded into all pages
  */
+import { StateEnvironment } from "@vantezzen/plasmo-state"
 import type { PlasmoContentScript } from "plasmo"
 import browser from "webextension-polyfill"
 
-import ConfigProvider from "../shared/configProvider"
+import getState from "~shared/state"
+
 import { isChromium } from "../shared/platform"
 import setupFirefoxContent from "./lib/browserSetup/firefox"
 import setupBrowserContent from "./lib/browserSetup/shared"
@@ -18,18 +20,17 @@ export const config: PlasmoContentScript = {
   all_frames: true
 }
 
-const configProvider = new ConfigProvider("content")
+const state = getState(StateEnvironment.Content)
 
-setupBrowserContent(configProvider)
+setupBrowserContent(state)
 if (!isChromium) {
-  setupFirefoxContent(configProvider)
+  setupFirefoxContent(state)
 }
 
-setupKeyboardShortcuts(configProvider)
+setupKeyboardShortcuts(state)
 
 browser.runtime.sendMessage({ command: "request-activation" })
 export default () => {
-  const config = configProvider
-  console.log("Content script loaded", config)
+  const config = state
   return <Bar config={config} />
 }

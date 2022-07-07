@@ -3,14 +3,14 @@ import "fontsource-poppins/600.css"
 import React, { Component } from "react"
 import browser from "webextension-polyfill"
 
-import type ConfigProvider from "~shared/configProvider"
+import type { TabState } from "~shared/state"
 
 import "./Bar.scss"
 import CommandListener from "./components/command-listener"
 import Header from "./components/header"
 
 interface BarProps {
-  config: ConfigProvider
+  config: TabState
 }
 
 class Bar extends Component<BarProps> {
@@ -20,7 +20,7 @@ class Bar extends Component<BarProps> {
     super(props)
 
     console.log(this.props)
-    this.props.config.onUpdate(() => {
+    this.props.config.addListener("change", () => {
       if (this.isComponentMounted) {
         this.forceUpdate()
       }
@@ -36,9 +36,9 @@ class Bar extends Component<BarProps> {
   }
 
   render() {
-    const isEnabled = this.props.config.get("enabled")
-    const iconEnabled = this.props.config.get("is_bar_icon_enabled")
-    const isCollapsed = this.props.config.get("is_bar_collapsed")
+    const isEnabled = this.props.config.current.enabled
+    const iconEnabled = this.props.config.current.is_bar_icon_enabled
+    const isCollapsed = this.props.config.current.is_bar_collapsed
 
     if (!isEnabled || (isCollapsed && !iconEnabled)) return <></>
 
@@ -53,7 +53,7 @@ class Bar extends Component<BarProps> {
               height: 25
             }}
             onClick={() => {
-              this.props.config.set("is_bar_collapsed", false)
+              this.props.config.current.is_bar_collapsed = false
             }}
           />
         </div>

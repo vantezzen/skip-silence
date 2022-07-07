@@ -1,3 +1,4 @@
+import { StateEnvironment } from "@vantezzen/plasmo-state"
 import "fontsource-poppins"
 import "fontsource-poppins/600.css"
 import { Steps } from "intro.js-react"
@@ -5,10 +6,11 @@ import "intro.js/introjs.css"
 import React, { ChangeEvent, Component } from "react"
 import browser from "webextension-polyfill"
 
+import getState, { TabState } from "~shared/state"
+
 import trackEvent, { setupAnalytics } from "../shared/analytics"
 import LocalPlayerInfo from "../shared/components/localPlayerInfo"
 import VUMeter from "../shared/components/vuMeter"
-import ConfigProvider, { getCurrentTabId } from "../shared/configProvider"
 import __ from "../shared/i18n"
 import verifyLicense from "../shared/license"
 import "./Popup.scss"
@@ -36,7 +38,7 @@ window.plausible =
   }
 
 class Popup extends Component {
-  config?: ConfigProvider
+  tabState?: TabState
   isComponentMounted = false
 
   state = {
@@ -68,9 +70,9 @@ class Popup extends Component {
 
   private setupConfigProvider(tabId: number) {
     let initialUpdate = true
-    this.config = new ConfigProvider("popup", tabId)
+    this.tabState = getState(StateEnvironment.Popup, tabId)
     this.forceUpdate()
-    this.config.onUpdate(() => {
+    this.tabState.addListener("change", () => {
       if (this.isComponentMounted) {
         this.forceUpdate()
       }
@@ -78,7 +80,7 @@ class Popup extends Component {
         initialUpdate = false
 
         if (
-          this.config!.get("allow_analytics") &&
+          this.tabState!.current.allow_analytics &&
           !document.getElementById("simpleanalytics")
         ) {
           setupAnalytics()
@@ -118,12 +120,12 @@ class Popup extends Component {
   }
 
   render() {
-    if (!this.config) {
+    if (!this.tabState) {
       return null
     }
 
     const grayOutWhenDisabled = {
-      opacity: this.config.get("enabled") ? 1 : 0.3,
+      opacity: this.tabState?.current?.enabled ? 1 : 0.3,
       transition: "all 0.3s"
     }
 
@@ -157,11 +159,11 @@ class Popup extends Component {
               <V4Info />
 
               <div style={grayOutWhenDisabled}>
-                <VUMeter config={this.config} />
+                <VUMeter config={this.tabState} />
               </div>
 
               <SettingsForm
-                config={this.config}
+                config={this.tabState}
                 isPlus={this.state.isPlus}
                 showPlusPopup={() => this.showPlusPopup()}
               />

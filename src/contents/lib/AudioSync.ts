@@ -1,6 +1,7 @@
 import debugging from "debug"
 
-import type ConfigProvider from "../../shared/configProvider"
+import type { TabState } from "~shared/state"
+
 import type { MediaElement } from "../../shared/types"
 
 const debug = debugging("skip-silence:contents:lib:AudioSync")
@@ -15,19 +16,19 @@ export default class AudioSync {
   // Is the loop currently running
   isActive = false
 
-  private config: ConfigProvider
+  private config: TabState
 
   /**
    * Set up the class
    *
    * @param config Config to use
    */
-  constructor(config: ConfigProvider) {
+  constructor(config: TabState) {
     this.config = config
     this.sync = this.sync.bind(this)
 
-    this.config.onUpdate(() => {
-      if (this.config.get("keep_audio_sync") && !this.isActive) {
+    this.config.addListener("change", () => {
+      if (this.config.current.keep_audio_sync && !this.isActive) {
         // Start the loop
         this.sync()
       }
@@ -51,7 +52,7 @@ export default class AudioSync {
    * Synchronize the audio and video of the media element
    */
   private sync() {
-    if (this.config.get("keep_audio_sync") && this.config.get("enabled")) {
+    if (this.config.current.keep_audio_sync && this.config.current.enabled) {
       this.isActive = true
       this.resetAllElements()
       debug("AudioSync: Synced audio")

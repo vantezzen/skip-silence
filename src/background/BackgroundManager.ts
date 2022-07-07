@@ -1,12 +1,15 @@
+import { StateEnvironment } from "@vantezzen/plasmo-state"
 import browser from "webextension-polyfill"
 
-import ConfigProvider from "../shared/configProvider"
+import type { TabState } from "~shared/state"
+import getState from "~shared/state"
+
 import debug from "../shared/debug"
 import SilenceSkipper from "../shared/lib/SilenceSkipper"
 
 export type BackgroundTabReference = {
   tabId: number
-  configProvider: ConfigProvider
+  state: TabState
   silenceSkipper?: SilenceSkipper
 }
 
@@ -64,18 +67,18 @@ export default class BackgroundManager {
       return
     }
     this.tabReferences[tabId]?.silenceSkipper?.destroy()
-    this.tabReferences[tabId]?.configProvider.destroy()
+    this.tabReferences[tabId]?.state.destroy()
     this.tabReferences[tabId] = undefined
   }
 
   private setupTabReferenceForTabId(tabId: number) {
-    const configProvider = new ConfigProvider("background", tabId)
+    const state = getState(StateEnvironment.Background, tabId)
     this.tabReferences[tabId] = {
       tabId,
-      configProvider
+      state
     }
 
-    this.tabReferences[tabId]!.configProvider.onUpdate(() => {
+    this.tabReferences[tabId]!.state.addListener("change", () => {
       this.createOrDestroySkipperForTab(tabId)
     })
   }
@@ -83,15 +86,13 @@ export default class BackgroundManager {
   private createOrDestroySkipperForTab(tabId: number) {
     if (!this.tabReferences[tabId]) return
 
-    const configProvider = this.tabReferences[tabId]!.configProvider
+    const state = this.tabReferences[tabId]!.state
     const skipper = this.tabReferences[tabId]!.silenceSkipper
-    const isEnabled = configProvider.get("enabled")
+    const isEnabled = state.current.enabled
 
     if (isEnabled && !skipper) {
       debug("Creating silence skipper for tab", tabId)
-      this.tabReferences[tabId]!.silenceSkipper = new SilenceSkipper(
-        configProvider
-      )
+      this.tabReferences[tabId]!.silenceSkipper = new SilenceSkipper(state)
     }
 
     if (!isEnabled && skipper) {

@@ -2,11 +2,12 @@ import React from "react"
 import { X } from "react-feather"
 import browser from "webextension-polyfill"
 
-import ConfigProvider from "../../../shared/configProvider"
+import type { TabState } from "~shared/state"
+
 import "./collapse-btn.scss"
 
 interface CollapseBtnProps {
-  config: ConfigProvider
+  config: TabState
 }
 
 const CollapseBtn = ({ config }: CollapseBtnProps) => {
@@ -14,7 +15,7 @@ const CollapseBtn = ({ config }: CollapseBtnProps) => {
     <div className="collapse-btn">
       <X
         onClick={() => {
-          config.set("is_bar_collapsed", !config.get("is_bar_collapsed"))
+          config.current.is_bar_collapsed = !config.current.is_bar_collapsed
         }}
       />
     </div>

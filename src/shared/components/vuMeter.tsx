@@ -2,12 +2,13 @@ import React, { Component } from "react"
 import { Volume2 } from "react-feather"
 import browser from "webextension-polyfill"
 
-import type ConfigProvider from "../configProvider"
+import type { TabState } from "~shared/state"
+
 import type { ExtMessage } from "../types"
 import "./vuMeter.scss"
 
 interface VUMeterProps {
-  config: ConfigProvider
+  config: TabState
 }
 
 /**
@@ -101,7 +102,7 @@ export default class VUMeter extends Component<VUMeterProps> {
     // Render Threshold bar
     this.canvasContext.fillStyle = "#EEA861"
     this.canvasContext.fillRect(
-      0 + this.props.config.get("silence_threshold"),
+      0 + this.props.config.current.silence_threshold,
       0,
       2,
       this.canvasElement.height

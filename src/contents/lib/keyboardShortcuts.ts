@@ -1,9 +1,10 @@
 import browser from "webextension-polyfill"
 
-import type ConfigProvider from "../../shared/configProvider"
+import type { TabState } from "~shared/state"
+
 import speedSettings from "../../shared/speedSettings"
 
-export default function setupKeyboardShortcuts(config: ConfigProvider) {
+export default function setupKeyboardShortcuts(config: TabState) {
   browser.runtime.onMessage.addListener((msg) => {
     if (!msg.command) return
 
@@ -11,13 +12,13 @@ export default function setupKeyboardShortcuts(config: ConfigProvider) {
       const { name } = msg
 
       if (name === "toggle-enable") {
-        config.set("enabled", !config.get("enabled"))
+        config.current.enabled = !config.current.enabled
       } else if (
         name === "increase-playback-speed" ||
         name === "decrease-playback-speed"
       ) {
         // Find out index of the current speed setting
-        const currentSpeed = config.get("playback_speed")
+        const currentSpeed = config.current.playback_speed
         const currentSpeedIndex =
           speedSettings.findIndex((speed) => currentSpeed === speed) || 2
 
@@ -29,9 +30,9 @@ export default function setupKeyboardShortcuts(config: ConfigProvider) {
         const newSpeed = speedSettings[newSpeedIndex] || currentSpeed
 
         // Update our speed
-        config.set("playback_speed", newSpeed)
+        config.current.playback_speed = newSpeed
       } else if (name === "toggle-command-bar") {
-        config.set("is_bar_collapsed", !config.get("is_bar_collapsed"))
+        config.current.is_bar_collapsed = !config.current.is_bar_collapsed
       }
     } else if (msg.command === "reload") {
       window.location.reload()

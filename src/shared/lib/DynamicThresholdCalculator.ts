@@ -1,5 +1,6 @@
-import type ConfigProvider from '../configProvider';
-import debug from '../debug';
+import type { TabState } from "~shared/state"
+
+import debug from "../debug"
 
 /**
  * Dynamic Threshold Calculator:
@@ -9,21 +10,21 @@ import debug from '../debug';
  */
 export default class DynamicThresholdCalculator {
   // Current dynamic threshold
-  threshold = 10;
+  threshold = 10
 
   // Extension configuration
-  config: ConfigProvider;
+  config: TabState
 
   // Volume of the previous 500 samples to better calculate the threshold
-  previousSamples: number[] = [];
+  previousSamples: number[] = []
 
   /**
    * Set up the calculator
    *
    * @param config Config to use
    */
-  constructor(config: ConfigProvider) {
-    this.config = config;
+  constructor(config: TabState) {
+    this.config = config
   }
 
   /**
@@ -33,20 +34,20 @@ export default class DynamicThresholdCalculator {
   calculate() {
     if (this.previousSamples.length < 20) {
       // Not enough data yet
-      return;
+      return
     }
 
-    const currentTreshold = this.threshold;
-    const sortedSamples = this.previousSamples.sort((a, b) => a - b);
+    const currentTreshold = this.threshold
+    const sortedSamples = this.previousSamples.sort((a, b) => a - b)
     const lowerLimit =
-      sortedSamples[Math.floor(this.previousSamples.length * 0.15)];
-    const delta = Math.abs(this.threshold - lowerLimit);
+      sortedSamples[Math.floor(this.previousSamples.length * 0.15)]
+    const delta = Math.abs(this.threshold - lowerLimit)
 
     if (lowerLimit > this.threshold) {
-      this.threshold += delta * 0.1;
+      this.threshold += delta * 0.1
     } else if (lowerLimit < this.threshold) {
       // Threshold should decrease faster so we can better adapt to fast volume changes
-      this.threshold -= delta * 0.4;
+      this.threshold -= delta * 0.4
     }
 
     debug(
@@ -59,13 +60,13 @@ Samples: ${this.previousSamples.length}
 Min Sample: ${Math.min(...this.previousSamples)}
 Max Sample: ${Math.max(...this.previousSamples)}`,
       sortedSamples
-    );
+    )
 
-    this.config.set('silence_threshold', this.threshold);
+    this.config.current.silence_threshold = this.threshold
 
     // Make sure the samples array only contains 100 samples max
     while (this.previousSamples.length > 100) {
-      this.previousSamples.shift();
+      this.previousSamples.shift()
     }
   }
 }

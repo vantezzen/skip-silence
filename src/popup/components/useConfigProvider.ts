@@ -1,27 +1,25 @@
-import { useEffect, useState } from 'react';
+import { StateEnvironment } from "@vantezzen/plasmo-state"
+import { useEffect, useState } from "react"
 
-import ConfigProvider, { getCurrentTabId } from '../../shared/configProvider';
+import type { TabState } from "~shared/state"
+import getState from "~shared/state"
 
-export default function useConfigProvider(): ConfigProvider | undefined {
-  const [tabId, setTabId] = useState(-1);
-  const [provider, setProvider] = useState<ConfigProvider | undefined>();
-  const [, forceUpdate] = useState({});
+export default function useConfigProvider(): TabState | undefined {
+  const [provider] = useState<TabState | undefined>(() => {
+    return getState(StateEnvironment.Popup)
+  })
+  const [, forceUpdate] = useState({})
 
   useEffect(() => {
-    if (tabId === -1) {
-      return;
+    const onChange = () => {
+      forceUpdate({})
     }
-    const provider = new ConfigProvider('popup', tabId);
-    setProvider(provider);
+    provider.addListener("change", onChange)
 
-    provider.onUpdate(() => {
-      forceUpdate({});
-    });
-  }, [tabId]);
+    return () => {
+      provider.removeListener("change", onChange)
+    }
+  }, [provider])
 
-  useEffect(() => {
-    getCurrentTabId().then(setTabId);
-  }, []);
-
-  return provider;
+  return provider
 }

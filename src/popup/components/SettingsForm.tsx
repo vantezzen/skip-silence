@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react"
 import {
   BarChart2,
   Circle,
@@ -10,30 +10,32 @@ import {
   Power,
   Speaker,
   Volume,
-  Volume2,
-} from 'react-feather';
-import { CSSTransition } from 'react-transition-group';
-import SliderSetting from '../../shared/components/sliderSetting';
-import SpeedSetting from '../../shared/components/speedSetting';
-import Switch from '../../shared/components/switch';
-import ConfigProvider from '../../shared/configProvider';
-import __ from '../../shared/i18n';
-import { isChromium } from '../../shared/platform';
-import HelpModal from './helpModal';
+  Volume2
+} from "react-feather"
+import { CSSTransition } from "react-transition-group"
+
+import type { TabState } from "~shared/state"
+
+import SliderSetting from "../../shared/components/sliderSetting"
+import SpeedSetting from "../../shared/components/speedSetting"
+import Switch from "../../shared/components/switch"
+import __ from "../../shared/i18n"
+import { isChromium } from "../../shared/platform"
+import HelpModal from "./helpModal"
 
 function SettingsForm({
   config,
   isPlus,
-  showPlusPopup,
+  showPlusPopup
 }: {
-  config: ConfigProvider;
-  isPlus: boolean;
-  showPlusPopup: () => void;
+  config: TabState
+  isPlus: boolean
+  showPlusPopup: () => void
 }) {
   const grayOutWhenDisabled = {
-    opacity: config.get('enabled') ? 1 : 0.3,
-    transition: 'all 0.3s',
-  };
+    opacity: config.current.enabled ? 1 : 0.3,
+    transition: "all 0.3s"
+  }
 
   return (
     <>
@@ -45,8 +47,8 @@ function SettingsForm({
               strokeWidth={3}
               style={{ width: 15 }}
               className="setting-icon"
-            />{' '}
-            {__('enable')}
+            />{" "}
+            {__("enable")}
           </>
         }
         config={config}
@@ -57,7 +59,7 @@ function SettingsForm({
           <SpeedSetting
             label={
               <>
-                <Play className="setting-icon" /> {__('playbackSpeed')}
+                <Play className="setting-icon" /> {__("playbackSpeed")}
               </>
             }
             name="playback_speed"
@@ -66,8 +68,8 @@ function SettingsForm({
             showPlusPopup={() => showPlusPopup()}
             info={
               <HelpModal>
-                <h2>{__('playbackSpeed')}</h2>
-                <p>{__('playbackSpeedHelp')}</p>
+                <h2>{__("playbackSpeed")}</h2>
+                <p>{__("playbackSpeedHelp")}</p>
               </HelpModal>
             }
           />
@@ -75,7 +77,7 @@ function SettingsForm({
           <SpeedSetting
             label={
               <>
-                <FastForward className="setting-icon" /> {__('silenceSpeed')}
+                <FastForward className="setting-icon" /> {__("silenceSpeed")}
               </>
             }
             name="silence_speed"
@@ -84,8 +86,8 @@ function SettingsForm({
             showPlusPopup={() => showPlusPopup()}
             info={
               <HelpModal>
-                <h2>{__('silenceSpeed')}</h2>
-                <p>{__('silenceSpeedHelp')}</p>
+                <h2>{__("silenceSpeed")}</h2>
+                <p>{__("silenceSpeedHelp")}</p>
               </HelpModal>
             }
           />
@@ -95,8 +97,8 @@ function SettingsForm({
           name="dynamic_silence_threshold"
           label={
             <>
-              <BarChart2 className="setting-icon" /> {__('useDynamicThreshold')}
-              {!isPlus ? ' ★' : ''}{' '}
+              <BarChart2 className="setting-icon" /> {__("useDynamicThreshold")}
+              {!isPlus ? " ★" : ""}{" "}
               <div className="beta">
                 beta
                 <br />
@@ -109,22 +111,21 @@ function SettingsForm({
           openPlusPopup={() => showPlusPopup()}
           info={
             <HelpModal>
-              <h2>{__('useDynamicThreshold')}</h2>
-              <p>{__('useDynamicThresholdHelp')}</p>
+              <h2>{__("useDynamicThreshold")}</h2>
+              <p>{__("useDynamicThresholdHelp")}</p>
             </HelpModal>
           }
         />
 
         <CSSTransition
-          in={!config.get('dynamic_silence_threshold')}
+          in={!config.current.dynamic_silence_threshold}
           timeout={300}
           classNames="opacity-transition"
-          className="speed-transition"
-        >
+          className="speed-transition">
           <SliderSetting
             label={
               <>
-                <Volume2 className="setting-icon" /> {__('volumeThreshold')}
+                <Volume2 className="setting-icon" /> {__("volumeThreshold")}
               </>
             }
             max={200}
@@ -135,8 +136,8 @@ function SettingsForm({
             orange
             info={
               <HelpModal>
-                <h2>{__('volumeThreshold')}</h2>
-                <p>{__('volumeThresholdHelp')}</p>
+                <h2>{__("volumeThreshold")}</h2>
+                <p>{__("volumeThresholdHelp")}</p>
               </HelpModal>
             }
           />
@@ -145,7 +146,7 @@ function SettingsForm({
         <SliderSetting
           label={
             <>
-              <Columns className="setting-icon" /> {__('sampleThreshold')}
+              <Columns className="setting-icon" /> {__("sampleThreshold")}
             </>
           }
           max={50}
@@ -155,8 +156,8 @@ function SettingsForm({
           half={false}
           info={
             <HelpModal>
-              <h2>{__('sampleThreshold')}</h2>
-              <p>{__('sampleThresholdHelp')}</p>
+              <h2>{__("sampleThreshold")}</h2>
+              <p>{__("sampleThresholdHelp")}</p>
             </HelpModal>
           }
         />
@@ -165,8 +166,8 @@ function SettingsForm({
           name="mute_silence"
           label={
             <>
-              <Volume className="setting-icon" /> {__('muteSilence')}
-              {!isPlus ? ' ★' : ''}
+              <Volume className="setting-icon" /> {__("muteSilence")}
+              {!isPlus ? " ★" : ""}
             </>
           }
           config={config}
@@ -174,8 +175,8 @@ function SettingsForm({
           openPlusPopup={() => showPlusPopup()}
           info={
             <HelpModal>
-              <h2>{__('muteSilence')}</h2>
-              <p>{__('muteSilenceHelp')}</p>
+              <h2>{__("muteSilence")}</h2>
+              <p>{__("muteSilenceHelp")}</p>
             </HelpModal>
           }
         />
@@ -185,8 +186,8 @@ function SettingsForm({
             name="keep_audio_sync"
             label={
               <>
-                <Speaker className="setting-icon" /> {__('keepAudioInSync')}
-                {!isPlus ? ' ★' : ''}
+                <Speaker className="setting-icon" /> {__("keepAudioInSync")}
+                {!isPlus ? " ★" : ""}
               </>
             }
             config={config}
@@ -194,8 +195,8 @@ function SettingsForm({
             openPlusPopup={() => showPlusPopup()}
             info={
               <HelpModal>
-                <h2>{__('keepAudioInSync')}</h2>
-                <p>{__('keepAudioInSyncHelp')}</p>
+                <h2>{__("keepAudioInSync")}</h2>
+                <p>{__("keepAudioInSyncHelp")}</p>
               </HelpModal>
             }
           />
@@ -205,14 +206,14 @@ function SettingsForm({
           name="is_bar_icon_enabled"
           label={
             <>
-              <Circle className="setting-icon" /> {__('enableCommandBarIcon')}
+              <Circle className="setting-icon" /> {__("enableCommandBarIcon")}
             </>
           }
           config={config}
           info={
             <HelpModal>
-              <h2>{__('enableCommandBarIcon')}</h2>
-              <p>{__('enableCommandBarIconHelp')}</p>
+              <h2>{__("enableCommandBarIcon")}</h2>
+              <p>{__("enableCommandBarIconHelp")}</p>
             </HelpModal>
           }
         />
@@ -221,14 +222,14 @@ function SettingsForm({
           name="show_saved_time_info"
           label={
             <>
-              <Info className="setting-icon" /> {__('showSavedTimeInfo')}
+              <Info className="setting-icon" /> {__("showSavedTimeInfo")}
             </>
           }
           config={config}
           info={
             <HelpModal>
-              <h2>{__('showSavedTimeInfo')}</h2>
-              <p>{__('showSavedTimeInfoHelp')}</p>
+              <h2>{__("showSavedTimeInfo")}</h2>
+              <p>{__("showSavedTimeInfoHelp")}</p>
             </HelpModal>
           }
         />
@@ -237,21 +238,21 @@ function SettingsForm({
           name="allow_analytics"
           label={
             <>
-              <PieChart className="setting-icon" />{' '}
-              {__('allowAnonymousAnalytics')}
+              <PieChart className="setting-icon" />{" "}
+              {__("allowAnonymousAnalytics")}
             </>
           }
           config={config}
           info={
             <HelpModal>
-              <h2>{__('allowAnonymousAnalytics')}</h2>
-              <p>{__('allowAnonymousAnalyticsHelp')}</p>
+              <h2>{__("allowAnonymousAnalytics")}</h2>
+              <p>{__("allowAnonymousAnalyticsHelp")}</p>
             </HelpModal>
           }
         />
       </div>
     </>
-  );
+  )
 }
 
-export default SettingsForm;
+export default SettingsForm

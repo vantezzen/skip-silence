@@ -1,8 +1,9 @@
 import browser from "webextension-polyfill"
 
-import ConfigProvider from "../configProvider"
+import type { TabState } from "~shared/state"
+import type { MediaElement } from "~shared/types"
+
 import debug from "../debug"
-import { MediaElement } from "../types"
 import DynamicThresholdCalculator from "./DynamicThresholdCalculator"
 import SampleInspector from "./SampleInspector"
 import SpeedController from "./SpeedController"
@@ -12,7 +13,7 @@ import SpeedController from "./SpeedController"
  * slowing them up or down
  */
 export default class SilenceSkipper {
-  config: ConfigProvider
+  config: TabState
   element?: MediaElement
 
   // State variables
@@ -20,6 +21,7 @@ export default class SilenceSkipper {
   isAttached = false
   isSpedUp = false
   samplesSinceLastVolumeMessage = 0
+  wasEnabled = false
 
   // Audio variables
   audioContext: AudioContext | undefined
@@ -40,7 +42,7 @@ export default class SilenceSkipper {
    * @param config Config Provider to use
    * @param mediaElement If provided the mediaelement to inspect - otherwise tabCapture will be used
    */
-  constructor(config: ConfigProvider, mediaElement?: MediaElement) {
+  constructor(config: TabState, mediaElement?: MediaElement) {
     this.config = config
     this.element = mediaElement
 
@@ -51,7 +53,7 @@ export default class SilenceSkipper {
 
     // Attach our config listener
     this._onConfigUpdate = this._onConfigUpdate.bind(this)
-    this.config.onUpdate(this._onConfigUpdate)
+    this.config.addListener("change", this._onConfigUpdate)
 
     // Initial update to setup current config
     this._onConfigUpdate()
@@ -61,15 +63,17 @@ export default class SilenceSkipper {
    * Listener for config changes to update the settings
    */
   async _onConfigUpdate() {
-    const isEnabled = this.config.get("enabled")
+    const isEnabled = this.config.current.enabled
 
     if (isEnabled) {
       debug("SilenceSkipper: Updating direct media config")
       this.updateDirectMediaConfig()
-    } else if (this.config.previousConfig.enabled) {
+    } else if (this.wasEnabled) {
       debug("SilenceSkipper: Returning to normal playback")
       this.speedController.setPlaybackRate(1)
     }
+
+    this.wasEnabled = isEnabled
   }
 
   private updateDirectMediaConfig() {
@@ -79,8 +83,8 @@ export default class SilenceSkipper {
     }
 
     // Update our speed to the new config speed
-    const playbackSpeed = this.config.get("playback_speed")
-    const silenceSpeed = this.config.get("silence_speed")
+    const playbackSpeed = this.config.current.playback_speed
+    const silenceSpeed = this.config.current.silence_speed
     if (this.isSpedUp) {
       this.speedController.setPlaybackRate(silenceSpeed)
     } else {
@@ -88,7 +92,7 @@ export default class SilenceSkipper {
     }
 
     // Update gain level
-    const muteSilence = this.config.get("mute_silence")
+    const muteSilence = this.config.current.mute_silence
     if (muteSilence && this.isSpedUp) {
       if (this.gain) {
         // Make sure our silence is muted
@@ -116,7 +120,7 @@ export default class SilenceSkipper {
     this.source?.disconnect()
     this.gain?.disconnect()
     this.audioContext?.close()
-    this.config.removeOnUpdateListener(this._onConfigUpdate)
+    this.config.removeListener("change", this._onConfigUpdate)
     this.tabCaptureStream?.getTracks().forEach((track) => track.stop())
   }
 }

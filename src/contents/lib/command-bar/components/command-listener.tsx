@@ -3,10 +3,9 @@
  */
 import React, { Component } from "react"
 
-import type defaultConfig from "~shared/config"
-import type ConfigProvider from "~shared/configProvider"
 import __ from "~shared/i18n"
 import speedSettings from "~shared/speedSettings"
+import type { StateKey, TabState } from "~shared/state"
 
 export const KEYS = {
   ARROW_LEFT: "ArrowLeft",
@@ -27,7 +26,7 @@ const settingNames = {
 const IDLE_TEXT = __("commandBarListening")
 
 interface CommandListenerProps {
-  config: ConfigProvider
+  config: TabState
 }
 
 class CommandListener extends Component<CommandListenerProps> {
@@ -55,13 +54,13 @@ class CommandListener extends Component<CommandListenerProps> {
     window.document.removeEventListener("keyup", this._onKeyUp)
   }
 
-  _setHighlighted(name: keyof typeof defaultConfig) {
-    this.props.config.set("highlighted_component", name)
+  _setHighlighted(name: StateKey) {
+    this.props.config.current.highlighted_component = name
 
     // Remove highlighted element after 5 seconds
     setTimeout(() => {
-      if (this.props.config.get("highlighted_component") === name) {
-        this.props.config.set("highlighted_component", "")
+      if (this.props.config.current.highlighted_component === name) {
+        this.props.config.current.highlighted_component = ""
       }
     }, 5000)
   }
@@ -83,10 +82,10 @@ class CommandListener extends Component<CommandListenerProps> {
 
   _modifySpeed(
     name: "playback_speed" | "silence_speed",
-    config: ConfigProvider,
+    config: TabState,
     down = false
   ) {
-    const currentSpeed = config.get(name)
+    const currentSpeed = config.current[name]
 
     const currentSpeedIndex =
       speedSettings.findIndex((speed) => currentSpeed === speed) || 2
@@ -96,7 +95,7 @@ class CommandListener extends Component<CommandListenerProps> {
     const newSpeed = speedSettings[newSpeedIndex] || currentSpeed
 
     // Update our speed
-    config.set(name, newSpeed)
+    config.current[name] = newSpeed
 
     this._setHighlighted(name)
   }
@@ -131,22 +130,22 @@ class CommandListener extends Component<CommandListenerProps> {
         break
       case KEYS.ARROW_RIGHT:
         // Increase Volume Threshold
-        let thresholdUp = config.get("silence_threshold")
+        let thresholdUp = config.current.silence_threshold
         if (thresholdUp <= 190) {
           thresholdUp += 10
         }
-        config.set("silence_threshold", thresholdUp)
-        config.set("highlighted_component", "silence_threshold")
+        config.current.silence_threshold = thresholdUp
+        config.current.highlighted_component = "silence_threshold"
         this._setHighlighted("silence_threshold")
         this._setText("Arrow Right: Increased threshold")
         break
       case KEYS.ARROW_LEFT:
         // Decrease Volume Threshold
-        let thresholdDown = config.get("silence_threshold")
+        let thresholdDown = config.current.silence_threshold
         if (thresholdDown > 10) {
           thresholdDown -= 10
         }
-        config.set("silence_threshold", thresholdDown)
+        config.current.silence_threshold = thresholdDown
         this._setHighlighted("silence_threshold")
         this._setText("Arrow Left: Decreased threshold")
         break
@@ -158,21 +157,21 @@ class CommandListener extends Component<CommandListenerProps> {
     switch (key) {
       case KEYS.SHIFT:
         this.isShiftPressed = false
-        this.props.config.set("highlighted_component", "playback_speed")
+        this.props.config.current.highlighted_component = "playback_speed"
         this._setText("Unshift: Modify Playback Speed")
         break
     }
   }
 
   render() {
-    const highlight = this.props.config.get("highlighted_component")
+    const highlight = this.props.config.current.highlighted_component
 
     return (
       <div className="bar-text">
         {highlight && (
           <div style={{ marginRight: 10 }}>
             {settingNames[highlight as keyof typeof settingNames]}:{" "}
-            {this.props.config.get(highlight)}
+            {this.props.config.current[highlight]}
           </div>
         )}
         <p style={{ color: "rgb(148 148 148)" }}>{this.state.text}</p>
