@@ -16,17 +16,7 @@ function Footer({ triggerIntro }: { triggerIntro: () => void }) {
       <a href="https://github.com/vantezzen" target="_blank" className="yellow">
         vantezzen
       </a>
-      .
-      <div className="coffee">
-        <a
-          href="https://www.buymeacoffee.com/vantezzen"
-          target="_blank"
-          onClick={() => {
-            trackEvent("coffee")
-          }}>
-          <img src={bmcLogo} alt="Buy Me A Coffee" width="150" />
-        </a>
-      </div>
+      .<br />
       <a
         href="#"
         onClick={() => {
