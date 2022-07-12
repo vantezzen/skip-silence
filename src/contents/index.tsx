@@ -3,6 +3,7 @@
  * This script will be loaded into all pages
  */
 import { StateEnvironment } from "@vantezzen/plasmo-state"
+import cssText from "data-text:./lib/content.styles.css"
 import type { PlasmoContentScript } from "plasmo"
 import browser from "webextension-polyfill"
 
@@ -30,11 +31,12 @@ if (!isChromium) {
 setupKeyboardShortcuts(state)
 
 browser.runtime.sendMessage({ command: "request-activation" })
-// export default () => {
-//   const config = state
-//   return (
-//     <div style={{ position: "absolute" }}>
-//       <Bar config={config} />
-//     </div>
-//   )
-// }
+export default () => {
+  const config = state
+  return <Bar config={config} />
+}
+export const getStyle = () => {
+  const style = document.createElement("style")
+  style.textContent = cssText
+  return style
+}

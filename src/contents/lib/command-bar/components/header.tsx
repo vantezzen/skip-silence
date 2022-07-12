@@ -1,3 +1,4 @@
+import icon from "data-base64:~assets/icon512.png"
 import React from "react"
 import browser from "webextension-polyfill"
 
@@ -9,13 +10,14 @@ const Header = ({ config }: { config: TabState }) => {
   return (
     <div className="header">
       <img
-        src={browser.runtime.getURL("/assets/img/icon-128.png")}
+        src={icon}
         onClick={() => {
           config.current.is_bar_collapsed = !config.current.is_bar_collapsed
         }}
         style={{
           width: 25,
-          height: 25
+          height: 25,
+          marginLeft: 10
         }}
       />
     </div>
