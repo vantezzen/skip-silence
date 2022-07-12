@@ -60,7 +60,7 @@ function SettingsForm({
       />
 
       <div style={grayOutWhenDisabled}>
-        <FormSection title="Speed">
+        <FormSection title={__("sectionSpeed")}>
           <div id="speed-settings">
             <SpeedSetting
               label={
@@ -100,7 +100,7 @@ function SettingsForm({
           </div>
         </FormSection>
 
-        <FormSection title="Threshold">
+        <FormSection title={__("sectionThreshold")}>
           <Switch
             name="dynamic_silence_threshold"
             label={
@@ -153,7 +153,7 @@ function SettingsForm({
           </CSSTransition>
         </FormSection>
 
-        <FormSection title="Advanced">
+        <FormSection title={__("sectionAdvanced")}>
           <button
             className="advanced-button"
             onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}>
@@ -162,7 +162,7 @@ function SettingsForm({
             ) : (
               <ChevronDown className="setting-icon" />
             )}
-            Advanced settings
+            {__("advancedSettings")}
           </button>
 
           {showAdvancedSettings && (
