@@ -56,13 +56,16 @@ export default class SilenceSkipper {
     this.config.addListener("change", this._onConfigUpdate)
 
     // Initial update to setup current config
-    this._onConfigUpdate()
+    this._onConfigUpdate("*")
   }
 
   /**
    * Listener for config changes to update the settings
    */
-  async _onConfigUpdate() {
+  async _onConfigUpdate(key: string) {
+    // Ignore updates by this context as it will cause an infinite loop
+    if (key !== "*") return
+
     const isEnabled = this.config.current.enabled
 
     if (isEnabled) {
@@ -111,7 +114,7 @@ export default class SilenceSkipper {
    * @param data Additional data to send (optional)
    */
   _sendCommand(command: String, data: Object = {}) {
-    browser.runtime.sendMessage({ command, ...data })
+    browser.runtime.sendMessage({ command, ...data }).catch(() => {})
   }
 
   destroy() {

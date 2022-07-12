@@ -1,5 +1,5 @@
-import debug from '../debug';
-import type SilenceSkipper from './SilenceSkipper';
+import debug from "../debug"
+import type SilenceSkipper from "./SilenceSkipper"
 
 /**
  * Speed Controller
@@ -7,7 +7,7 @@ import type SilenceSkipper from './SilenceSkipper';
  */
 export default class SpeedController {
   // Parent skipper
-  skipper: SilenceSkipper;
+  skipper: SilenceSkipper
 
   /**
    * Set up the class
@@ -15,29 +15,30 @@ export default class SpeedController {
    * @param config Config to use
    */
   constructor(skipper: SilenceSkipper) {
-    this.skipper = skipper;
+    this.skipper = skipper
   }
 
   /**
    * Attempts to change the video playback rate
    */
   setPlaybackRate(rate: number) {
-    this.skipper.config.set('media_speed', rate);
+    debug(`SilenceSkipper: Setting playback rate to ${rate}`)
+    this.skipper.config.current.media_speed = rate
   }
 
   /**
    * Slow the video down to playback speed
    */
   slowDown() {
-    const playbackSpeed = this.skipper.config.get('playback_speed');
+    const playbackSpeed = this.skipper.config.current.playback_speed
 
-    this.skipper.isSpedUp = false;
-    this.skipper.sampleInspector.samplesUnderThreshold = 0;
+    this.skipper.isSpedUp = false
+    this.skipper.sampleInspector.samplesUnderThreshold = 0
 
-    this.skipper._sendCommand('slowDown');
-    this.setPlaybackRate(playbackSpeed);
+    this.skipper._sendCommand("slowDown")
+    this.setPlaybackRate(playbackSpeed)
 
-    if (this.skipper.config.get('mute_silence')) {
+    if (this.skipper.config.current.mute_silence) {
       // Slowly remove our mute
       // If we do this immediately, we may cause a "clicking" noise
       // Source: http://alemangui.github.io/ramp-to-value
@@ -46,7 +47,7 @@ export default class SpeedController {
           1,
           this.skipper.audioContext.currentTime,
           0.04
-        );
+        )
       }
     }
   }
@@ -55,12 +56,12 @@ export default class SpeedController {
    * Speed the video up to silence speed
    */
   speedUp() {
-    const silenceSpeed = this.skipper.config.get('silence_speed');
+    const silenceSpeed = this.skipper.config.current.silence_speed
 
-    this.skipper._sendCommand('speedUp');
-    this.skipper.isSpedUp = true;
+    this.skipper._sendCommand("speedUp")
+    this.skipper.isSpedUp = true
 
-    if (this.skipper.config.get('mute_silence')) {
+    if (this.skipper.config.current.mute_silence) {
       // Get the audio muted before we speed up the video
       // This will help remove the "clicking" sound when speeding up with remaining audio
       if (this.skipper.gain && this.skipper.audioContext) {
@@ -68,14 +69,14 @@ export default class SpeedController {
           0,
           this.skipper.audioContext.currentTime,
           0.015
-        );
+        )
       }
 
       setTimeout(() => {
-        this.setPlaybackRate(silenceSpeed);
-      }, 20);
+        this.setPlaybackRate(silenceSpeed)
+      }, 20)
     } else {
-      this.setPlaybackRate(silenceSpeed);
+      this.setPlaybackRate(silenceSpeed)
     }
   }
 }

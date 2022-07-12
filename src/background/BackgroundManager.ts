@@ -78,7 +78,8 @@ export default class BackgroundManager {
       state
     }
 
-    this.tabReferences[tabId]!.state.addListener("change", () => {
+    this.tabReferences[tabId]!.state.addListener("change", (key) => {
+      if (key !== "*") return
       this.createOrDestroySkipperForTab(tabId)
     })
   }
@@ -87,18 +88,18 @@ export default class BackgroundManager {
     if (!this.tabReferences[tabId]) return
 
     const state = this.tabReferences[tabId]!.state
-    const skipper = this.tabReferences[tabId]!.silenceSkipper
+    const hasSkipper = this.tabReferences[tabId]!.silenceSkipper !== undefined
     const isEnabled = state.current.enabled
 
-    if (isEnabled && !skipper) {
+    if (isEnabled && !hasSkipper) {
       debug("Creating silence skipper for tab", tabId)
       this.tabReferences[tabId]!.silenceSkipper = new SilenceSkipper(state)
     }
 
-    if (!isEnabled && skipper) {
+    if (!isEnabled && hasSkipper) {
       debug("Destroying silence skipper for tab", tabId)
       this.tabReferences[tabId]!.silenceSkipper?.destroy()
-      delete this.tabReferences[tabId]!.silenceSkipper
+      this.tabReferences[tabId]!.silenceSkipper = undefined
     }
 
     console.log("Config updated for tab", tabId)

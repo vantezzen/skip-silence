@@ -30,7 +30,11 @@ if (!isChromium) {
 setupKeyboardShortcuts(state)
 
 browser.runtime.sendMessage({ command: "request-activation" })
-export default () => {
-  const config = state
-  return <Bar config={config} />
-}
+// export default () => {
+//   const config = state
+//   return (
+//     <div style={{ position: "absolute" }}>
+//       <Bar config={config} />
+//     </div>
+//   )
+// }

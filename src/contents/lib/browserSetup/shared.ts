@@ -13,6 +13,9 @@ export default function setupBrowserContent(config: TabState) {
   let mediaSpeed = 1
 
   config.addListener("change", () => {
+    debug(
+      `Config changed, current speed is ${mediaSpeed}, should be ${config.current.media_speed}`
+    )
     const shouldBeMediaSpeed = config.current.media_speed
 
     if (shouldBeMediaSpeed !== mediaSpeed) {
