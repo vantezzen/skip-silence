@@ -13,8 +13,8 @@
   "scripts": {
     "dev": "plasmo dev --target=chrome-mv2",
     "dev:firefox": "plasmo dev --target=firefox-mv2",
-    "build": "plasmo build --target=chrome-mv2",
-    "build:firefox": "plasmo build --target=firefox-mv2"
+    "build": "plasmo build --target=chrome-mv2 --zip",
+    "build:firefox": "plasmo build --target=firefox-mv2 --zip"
   },
   "dependencies": {
     "@parcel/core": "^2.6.1",
