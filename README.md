@@ -33,7 +33,11 @@ You can also install this extension on Chrome by downloading the source from Git
 
 ## Firefox
 
-"Skip Silence" will only work on Firefox Beta 91+ due to [a bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1517199) that has been fixed in that version.
+"Skip Silence" only has **restricted** support for Firefox.
+
+On Chrome, "Skip Silence" uses a browser API to support analyzing audio on almost all websites. Unfortunately, Firefox currently doesn't support this API and thus the extension doesn't work on some websites.
+
+If you have problems with the extension on a website on Firefox, you can try using a Chromium-based browser like Ungoogled Chromium.
 
 ## Usage
 
@@ -61,46 +65,37 @@ The extension attaches a JavaScript audio analyser to the current video or audio
 
 ## Development
 
-This extension is based on [lxieyang's React Extension boilerplate](https://github.com/lxieyang/chrome-extension-boilerplate-react).
+This extension is using the [plasmo framework](https://docs.plasmo.com/) for developing and building.
 
 To start development, follow these steps:
 
-1. Check if your [Node.js](https://nodejs.org/) version is >= **10.13**.
+1. Check if your [Node.js](https://nodejs.org/) version is v18 or newer.
 2. Clone this repository.
-3. Change the package's `name`, `description`, and `repository` fields in `package.json`.
-4. Change the name of your extension on `src/manifest.json`.
-5. Run `npm install` to install the dependencies.
-6. Run `npm start`
-7. Load your extension on Chrome following:
+3. Run `pnpm install` to install the dependencies.
+4. Run `pnpm dev` to start the development server for chrome or `pnpm dev:firefox` for Firefox.
+5. Load your extension on Chrome following:
    1. Access `chrome://extensions/`
    2. Check `Developer mode`
    3. Click on `Load unpacked extension`
    4. Select the `build` folder.
-8. Happy hacking.
+6. Happy hacking.
 
-## Docker build
-
-Skip Silence offers a docker container to enable building. First, make sure the Docker Engine is running and run `docker-compose up --build` in the root directory. After the build is done, the raw contents will be placed in `/build` and the compacted zip will be placed in `/build/build.zip`.
-
-## Build without Docker
+## Build
 
 Requirements:
 
-- NodeJS 14
-- npm
-- Python
+- NodeJS 18
+- preferably pnpm but npm will also work
 
 Run these commands in the root of the extension files:
 
 ```bash
-npm install
-npm run build
-
-cd build
-zip -r build.zip .
+pnpm install # or npm install
+pnpm run build # or npm run build
+pnpm run build:firefox # or npm run build
 ```
 
-After the build is done, the raw contents will be placed in `/build` and the compacted zip will be placed in `/build/build.zip`.
+After the build is done, the raw contents will be placed in `/build` and the compacted zip will be placed in `/build/[chrome/firefox]-mv2-prod.zip`.
 
 ## Contributing
 
