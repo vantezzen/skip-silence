@@ -1,9 +1,9 @@
-import { isChromium } from "~shared/platform"
+import { supportsTabCapture } from "~shared/platform"
 
 import BackgroundManager from "./BackgroundManager"
 import setupKeyboardShortcutsListener from "./keyboardShortcuts"
 
-if (isChromium) {
+if (supportsTabCapture) {
   new BackgroundManager()
 }
 setupKeyboardShortcutsListener()

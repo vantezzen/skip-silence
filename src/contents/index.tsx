@@ -9,7 +9,7 @@ import browser from "webextension-polyfill"
 
 import getState from "~shared/state"
 
-import { isChromium } from "../shared/platform"
+import { supportsTabCapture } from "../shared/platform"
 import setupFirefoxContent from "./lib/browserSetup/firefox"
 import setupBrowserContent from "./lib/browserSetup/shared"
 import Bar from "./lib/command-bar/Bar"
@@ -24,7 +24,7 @@ export const config: PlasmoContentScript = {
 const state = getState(StateEnvironment.Content)
 
 setupBrowserContent(state)
-if (!isChromium) {
+if (!supportsTabCapture) {
   setupFirefoxContent(state)
 }
 
