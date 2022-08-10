@@ -88,9 +88,10 @@ export default class SilenceSkipper {
     // Update our speed to the new config speed
     const playbackSpeed = this.config.current.playback_speed
     const silenceSpeed = this.config.current.silence_speed
-    if (this.isSpedUp) {
+    const mediaSpeed = this.config.current.media_speed
+    if (this.isSpedUp && mediaSpeed !== silenceSpeed) {
       this.speedController.setPlaybackRate(silenceSpeed)
-    } else {
+    } else if (!this.isSpedUp && mediaSpeed !== playbackSpeed) {
       this.speedController.setPlaybackRate(playbackSpeed)
     }
 

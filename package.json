@@ -12,7 +12,9 @@
   },
   "scripts": {
     "dev": "plasmo dev --target=chrome-mv2",
-    "build": "plasmo build --target=chrome-mv2"
+    "dev:firefox": "plasmo dev --target=firefox-mv2",
+    "build": "plasmo build --target=chrome-mv2",
+    "build:firefox": "plasmo build --target=firefox-mv2"
   },
   "dependencies": {
     "@parcel/core": "^2.6.1",
@@ -23,7 +25,7 @@
     "fontsource-poppins": "^4.0.0",
     "intro.js": "^5.1.0",
     "intro.js-react": "^0.6.0",
-    "plasmo": "0.46.0-alpha.2",
+    "plasmo": "0.50.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-feather": "^2.0.10",
