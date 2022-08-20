@@ -12,15 +12,17 @@
   },
   "scripts": {
     "dev": "plasmo dev --target=chrome-mv2",
+    "dev:mv3": "plasmo dev --target=chrome-mv3",
     "dev:firefox": "plasmo dev --target=firefox-mv2",
     "build": "plasmo build --target=chrome-mv2 --zip",
+    "build:mv3": "plasmo build --target=chrome-mv3 --zip",
     "build:firefox": "plasmo build --target=firefox-mv2 --zip"
   },
   "dependencies": {
     "@parcel/core": "^2.6.1",
     "@types/debug": "^4.1.7",
     "@types/webextension-polyfill": "^0.9.0",
-    "@vantezzen/plasmo-state": "1.0.7",
+    "@vantezzen/plasmo-state": "^1.0.7",
     "debug": "^4.3.4",
     "fontsource-poppins": "^4.0.0",
     "intro.js": "^5.1.0",
