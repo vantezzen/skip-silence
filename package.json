@@ -1,7 +1,7 @@
 {
   "name": "skip-silence",
   "displayName": "Skip silence",
-  "version": "5.0.5",
+  "version": "5.0.7",
   "description": "Skip silent parts in videos and audio files.",
   "author": "vantezzen",
   "packageManager": "pnpm@6.19.1",
@@ -27,7 +27,7 @@
     "fontsource-poppins": "^4.0.0",
     "intro.js": "^5.1.0",
     "intro.js-react": "^0.6.0",
-    "plasmo": "0.50.1",
+    "plasmo": "0.52.1-alpha.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-feather": "^2.0.10",
