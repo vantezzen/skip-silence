@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { Volume2 } from "react-feather"
 import browser from "webextension-polyfill"
 
+import { VOLUME_MULTIPLIER } from "~popup/config"
 import type { TabState } from "~shared/state"
 
 import type { ExtMessage } from "../types"
@@ -95,7 +96,10 @@ export default class VUMeter extends Component<VUMeterProps> {
     this.canvasContext.fillRect(
       0,
       0,
-      Math.min(this.volume + 1, this.canvasElement.width - 60),
+      Math.min(
+        this.volume * VOLUME_MULTIPLIER + 1,
+        this.canvasElement.width - 60
+      ),
       this.canvasElement.height
     )
 

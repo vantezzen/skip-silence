@@ -81,6 +81,9 @@ Current list of bugs/feature requests the extension is waiting for
 - Chrome MV3 doesn't support the `tabCapture` API
   - https://github.com/GoogleChrome/chrome-extensions-samples/issues/627
   - Due to this, Skip silence is currently still using MV2 on Chrome
+- Chrome video and audio desynchronize over time when repeatedly switching speed
+  - https://bugs.chromium.org/p/chromium/issues/detail?id=1231093
+  - "Keep audio in sync" was added as a temporary fix for this bug
 
 ## Development
 

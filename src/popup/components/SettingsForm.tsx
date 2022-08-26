@@ -17,6 +17,7 @@ import {
 } from "react-feather"
 import { CSSTransition } from "react-transition-group"
 
+import { VOLUME_MULTIPLIER } from "~popup/config"
 import SelectAnalyserType from "~shared/components/SelectAnalyserType"
 import type { TabState } from "~shared/state"
 
@@ -141,7 +142,7 @@ function SettingsForm({
                   <Volume2 className="setting-icon" /> {__("volumeThreshold")}
                 </>
               }
-              max={200}
+              max={200 / VOLUME_MULTIPLIER}
               name="silence_threshold"
               config={config}
               unit="%"

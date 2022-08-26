@@ -1,28 +1,30 @@
-import __ from '../shared/i18n';
+import __ from "../shared/i18n"
 
 export const introSteps = [
   {
-    element: '.header',
-    intro: __('introHeader'),
+    element: ".header",
+    intro: __("introHeader")
   },
   {
-    element: '#vu_meter',
-    intro: __('introVuMeter'),
+    element: "#vu_meter",
+    intro: __("introVuMeter")
   },
   {
-    element: '#enabled',
-    intro: __('introEnabled'),
+    element: "#enabled",
+    intro: __("introEnabled")
   },
   {
-    element: '#speed-settings',
-    intro: __('introSpeed'),
+    element: "#speed-settings",
+    intro: __("introSpeed")
   },
   {
-    element: '#silence_threshold',
-    intro: __('introSilenceThreshold'),
+    element: "#silence_threshold",
+    intro: __("introSilenceThreshold")
   },
   {
-    element: '#mute_silence',
-    intro: __('introMuteSilence'),
-  },
-];
+    element: "#mute_silence",
+    intro: __("introMuteSilence")
+  }
+]
+
+export const VOLUME_MULTIPLIER = 0.7
