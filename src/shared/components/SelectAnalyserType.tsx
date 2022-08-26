@@ -4,7 +4,7 @@ import Browser from "webextension-polyfill"
 
 import HelpModal from "~popup/components/helpModal"
 import __ from "~shared/i18n"
-import { supportsTabCapture } from "~shared/platform"
+import { isChromium, supportsTabCapture } from "~shared/platform"
 import type { TabState } from "~shared/state"
 
 import "./SelectAnalyserType.scss"
@@ -95,9 +95,7 @@ function SelectAnalyserType({
                   <td>
                     <Check strokeWidth={4} size={20} />
                   </td>
-                  <td>
-                    <Check strokeWidth={4} size={20} />
-                  </td>
+                  <td></td>
                   <td></td>
                 </tr>
               </tbody>
@@ -128,7 +126,8 @@ function SelectAnalyserType({
           {__("analyzerTypeElement")}{" "}
           {!supportsTabCapture && <>({__("analyzerTypeDefault")})</>}
         </option>
-        {isSecureContext && (
+        {/* https://bugzilla.mozilla.org/show_bug.cgi?id=1541425 */}
+        {isSecureContext && isChromium && (
           <option value="displayMedia">{__("analyzerTypeDisplayMedia")}</option>
         )}
       </select>
