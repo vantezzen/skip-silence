@@ -8,10 +8,10 @@ import debugging from "debug"
 import type { PlasmoContentScript } from "plasmo"
 import browser from "webextension-polyfill"
 
-import getState from "~shared/state"
+import getState, { AnalyserType } from "~shared/state"
 
 import { supportsTabCapture } from "../shared/platform"
-import setupFirefoxContent from "./lib/browserSetup/firefox"
+import setupOnPageSkipperContent from "./lib/browserSetup/onPage"
 import setupBrowserContent from "./lib/browserSetup/shared"
 import Bar from "./lib/command-bar/Bar"
 import "./lib/content.styles.css"
@@ -26,15 +26,21 @@ export const config: PlasmoContentScript = {
 
 const state = getState(StateEnvironment.Content)
 
-setupBrowserContent(state)
-if (!supportsTabCapture) {
-  debug("Doesn't support tabCapture")
-  setupFirefoxContent(state)
-}
+state.once("ready", () => {
+  setupBrowserContent(state)
+  if (
+    !supportsTabCapture ||
+    state.current.analyserType !== AnalyserType.tabCapture
+  ) {
+    debug("Doesn't support tabCapture or should use direct method")
+    setupOnPageSkipperContent(state)
+  } else {
+    browser.runtime.sendMessage({ command: "request-activation" })
+  }
 
-setupKeyboardShortcuts(state)
+  setupKeyboardShortcuts(state)
+})
 
-browser.runtime.sendMessage({ command: "request-activation" })
 export default () => {
   const config = state
   return <Bar config={config} />

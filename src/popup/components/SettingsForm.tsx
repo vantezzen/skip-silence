@@ -16,6 +16,7 @@ import {
 } from "react-feather"
 import { CSSTransition } from "react-transition-group"
 
+import SelectAnalyserType from "~shared/components/SelectAnalyserType"
 import type { TabState } from "~shared/state"
 
 import SliderSetting from "../../shared/components/sliderSetting"
@@ -167,6 +168,8 @@ function SettingsForm({
 
           {showAdvancedSettings && (
             <>
+              <SelectAnalyserType config={config} />
+
               <SliderSetting
                 label={
                   <>

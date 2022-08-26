@@ -30,6 +30,7 @@ export default class SilenceSkipper {
   source: MediaStreamAudioSourceNode | MediaElementAudioSourceNode | undefined
   audioFrequencies: Float32Array | undefined
   tabCaptureStream: MediaStream | null = null
+  deviceMediaStream: MediaStream | null = null
 
   // Dependencies
   dynamicThresholdCalculator: DynamicThresholdCalculator
@@ -126,5 +127,6 @@ export default class SilenceSkipper {
     this.audioContext?.close()
     this.config.removeListener("change", this._onConfigUpdate)
     this.tabCaptureStream?.getTracks().forEach((track) => track.stop())
+    this.deviceMediaStream?.getTracks().forEach((track) => track.stop())
   }
 }

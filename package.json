@@ -22,7 +22,7 @@
     "@parcel/core": "^2.6.1",
     "@types/debug": "^4.1.7",
     "@types/webextension-polyfill": "^0.9.0",
-    "@vantezzen/plasmo-state": "^2.0.3",
+    "@vantezzen/plasmo-state": "^2.0.4",
     "debug": "^4.3.4",
     "fontsource-poppins": "^4.0.0",
     "intro.js": "^5.1.0",

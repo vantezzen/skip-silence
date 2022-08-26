@@ -1,7 +1,7 @@
 import { StateEnvironment } from "@vantezzen/plasmo-state"
 import browser from "webextension-polyfill"
 
-import type { TabState } from "~shared/state"
+import { AnalyserType, TabState } from "~shared/state"
 import getState from "~shared/state"
 
 import debug from "../shared/debug"
@@ -91,12 +91,19 @@ export default class BackgroundManager {
     const hasSkipper = this.tabReferences[tabId]!.silenceSkipper !== undefined
     const isEnabled = state.current.enabled
 
-    if (isEnabled && !hasSkipper) {
+    if (
+      isEnabled &&
+      !hasSkipper &&
+      state.current.analyserType === AnalyserType.tabCapture
+    ) {
       debug("Creating silence skipper for tab", tabId)
       this.tabReferences[tabId]!.silenceSkipper = new SilenceSkipper(state)
     }
 
-    if (!isEnabled && hasSkipper) {
+    if (
+      hasSkipper &&
+      (!isEnabled || state.current.analyserType !== AnalyserType.tabCapture)
+    ) {
       debug("Destroying silence skipper for tab", tabId)
       this.tabReferences[tabId]!.silenceSkipper?.destroy()
       this.tabReferences[tabId]!.silenceSkipper = undefined

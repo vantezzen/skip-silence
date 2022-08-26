@@ -10,7 +10,7 @@ specifiers:
   '@types/react': 18.0.14
   '@types/react-dom': 18.0.5
   '@types/webextension-polyfill': ^0.9.0
-  '@vantezzen/plasmo-state': ^2.0.3
+  '@vantezzen/plasmo-state': ^2.0.4
   debug: ^4.3.4
   fontsource-poppins: ^4.0.0
   intro.js: ^5.1.0
@@ -28,7 +28,7 @@ dependencies:
   '@parcel/core': 2.6.2
   '@types/debug': 4.1.7
   '@types/webextension-polyfill': 0.9.0
-  '@vantezzen/plasmo-state': 2.0.3_react@18.2.0
+  '@vantezzen/plasmo-state': 2.0.4_react@18.2.0
   debug: 4.3.4
   fontsource-poppins: 4.0.0
   intro.js: 5.1.0
@@ -2102,8 +2102,8 @@ packages:
     resolution: {integrity: sha512-HG1y1o2hK8ag6Y7dfkrAbfKmMIP+B0E6SwAzUfmQ1dDxEIdLTtMyrStY26suHBPrAL7Xw/chlDW02ugc3uXWtQ==}
     dev: false
 
-  /@vantezzen/plasmo-state/2.0.3_react@18.2.0:
-    resolution: {integrity: sha512-O+0DBdtmhhxJ6fuIAu4rVZQ75aguvpqc0WrYlFX6HQ7sxQZIwyyRdLcCumLew0dHWV0WU7CVF+1iMc7MWAo+GA==}
+  /@vantezzen/plasmo-state/2.0.4_react@18.2.0:
+    resolution: {integrity: sha512-h40mm9XJLW4jQ3RDP4BrHwpeHv1HK6FlutQXpbcOyWv7XPy9+dxvVk+LlS3RMyVDitLQzOO+axooPDQGfUXGpQ==}
     peerDependencies:
       react: ^16.8.6 || ^17 || ^18
     dependencies:

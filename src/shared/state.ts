@@ -1,7 +1,16 @@
 import setupState, { State, StateEnvironment } from "@vantezzen/plasmo-state"
 
+import { isChromium } from "./platform"
+
+export enum AnalyserType {
+  tabCapture = "tabCapture",
+  element = "element",
+  displayMedia = "displayMedia"
+}
+
 const initialState = {
   enabled: false,
+  analyserType: isChromium ? AnalyserType.tabCapture : AnalyserType.element,
 
   // Thresholds
   silence_threshold: 30,
@@ -40,6 +49,8 @@ export default function getState(
 ): TabState {
   return setupState(environment, initialState, {
     persistent: [
+      "analyserType",
+
       "silence_threshold",
       "dynamic_silence_threshold",
       "samples_threshold",
