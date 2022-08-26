@@ -1,15 +1,108 @@
 import React from "react"
+import { Check, Search } from "react-feather"
 import Browser from "webextension-polyfill"
 
+import HelpModal from "~popup/components/helpModal"
+import __ from "~shared/i18n"
 import { supportsTabCapture } from "~shared/platform"
 import type { TabState } from "~shared/state"
 
-function SelectAnalyserType({ config }: { config: TabState }) {
+import "./SelectAnalyserType.scss"
+
+function SelectAnalyserType({
+  config,
+  isSecureContext
+}: {
+  config: TabState
+  isSecureContext: boolean
+}) {
   return (
     <div className={`analyser-setting`}>
       <div className="setting-info">
         <label htmlFor="analyservalue" className="analyser-label">
-          Analyser Type
+          <Search className="setting-icon" /> {__("analyzerType")}
+          <HelpModal>
+            <h2>{__("analyzerType")}</h2>
+            <p>{__("analyzerTypeHelp")}</p>
+
+            <table className="analyzer-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>{__("analyzerTypeElement").replace(/- /g, "\n")}</th>
+                  <th>{__("analyzerTypeDisplayMedia").replace(/- /g, "\n")}</th>
+                  <th>{__("analyzerTypeTabCapture").replace(/- /g, "\n")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Supports
+                    <br />
+                    Fullscreen
+                    <br />
+                    View
+                  </td>
+                  <td>
+                    <Check strokeWidth={4} size={20} />
+                  </td>
+                  <td>
+                    <Check strokeWidth={4} size={20} />
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                    Works
+                    <br />
+                    on
+                    <br />
+                    almost
+                    <br />
+                    all
+                    <br />
+                    pages
+                  </td>
+                  <td></td>
+                  <td></td>
+
+                  <td>
+                    <Check strokeWidth={4} size={20} />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Supports
+                    <br />
+                    Insecure
+                    <br />
+                    Pages
+                  </td>
+                  <td>
+                    <Check strokeWidth={4} size={20} />
+                  </td>
+                  <td></td>
+                  <td>
+                    <Check strokeWidth={4} size={20} />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Supports
+                    <br />
+                    Firefox
+                  </td>
+                  <td>
+                    <Check strokeWidth={4} size={20} />
+                  </td>
+                  <td>
+                    <Check strokeWidth={4} size={20} />
+                  </td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </HelpModal>
         </label>
       </div>
       <select
@@ -19,16 +112,23 @@ function SelectAnalyserType({ config }: { config: TabState }) {
           // @ts-ignore
           config.current.analyserType = e.target.value
 
-          const confirmed = window.confirm(
-            "Changing analyser type requires reloading the page. Do you want to reload now?"
-          )
+          const confirmed = window.confirm(__("analyzerTypeReload"))
           if (confirmed) {
             Browser.tabs.reload()
           }
         }}>
-        <option value="element">Element</option>
-        <option value="displayMedia">DisplayMedia</option>
-        {supportsTabCapture && <option value="tabCapture">TabCapture</option>}
+        {supportsTabCapture && (
+          <option value="tabCapture">
+            {__("analyzerTypeTabCapture")} ({__("analyzerTypeDefault")})
+          </option>
+        )}
+        <option value="element">
+          {__("analyzerTypeElement")}{" "}
+          {!supportsTabCapture && <>({__("analyzerTypeDefault")})</>}
+        </option>
+        {isSecureContext && (
+          <option value="displayMedia">{__("analyzerTypeDisplayMedia")}</option>
+        )}
       </select>
     </div>
   )

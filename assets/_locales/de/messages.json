@@ -55,6 +55,28 @@
     "message": "Erweiterte Einstellungen"
   },
 
+  "analyzerType": {
+    "message": "Analyse-Art"
+  },
+  "analyzerTypeHelp": {
+    "message": "Die Erweiterung unterstützt unterschiedliche Arten der Lautstärken-Analyse, um in unterschieden Kontexten das beste Ergebnis zu erzielen."
+  },
+  "analyzerTypeReload": {
+    "message": "Ändern der Analyse-Art erfordert das neu-laden der Seite. Jetzt neu laden?"
+  },
+  "analyzerTypeTabCapture": {
+    "message": "Tab-Ausgabe Analyse"
+  },
+  "analyzerTypeElement": {
+    "message": "Element Analyse"
+  },
+  "analyzerTypeDisplayMedia": {
+    "message": "Bildschirm-Aufnahme"
+  },
+  "analyzerTypeDefault": {
+    "message": "Standard"
+  },
+
   "sampleThreshold": {
     "message": "Abtastungsschwelle"
   },

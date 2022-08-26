@@ -6,6 +6,7 @@ import { AnalyserType } from "~shared/state"
 import debug from "../debug"
 import createAudioContextSecure from "./AudioContext"
 import type SilenceSkipper from "./SilenceSkipper"
+import getDisplayCapture from "./getDisplayCapture"
 
 const getTabAudioCapture = (): Promise<MediaStream | null> => {
   return new Promise((resolve) => {
@@ -31,12 +32,7 @@ async function getAudioSource(skipper: SilenceSkipper) {
     )
   }
   if (analyserType === AnalyserType.displayMedia) {
-    skipper.deviceMediaStream = await navigator.mediaDevices.getDisplayMedia({
-      video: true,
-      audio: true,
-      // @ts-ignore
-      preferCurrentTab: true
-    })
+    skipper.deviceMediaStream = await getDisplayCapture()
     if (!skipper.deviceMediaStream) {
       debug("No stream found")
       throw new Error("No stream found")

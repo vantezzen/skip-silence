@@ -44,6 +44,7 @@ class Popup extends Component {
   state = {
     shouldShowIntro: localStorage.getItem("hasShownIntro") !== "yes",
     isLocalPlayer: false,
+    isSecureContext: true,
     isPlus: false,
     showPlusPopup: false
   }
@@ -62,6 +63,13 @@ class Popup extends Component {
             isLocalPlayer: true
           })
         }
+
+        if (url.protocol === "http:") {
+          this.setState({
+            isSecureContext: false
+          })
+        }
+
         window.sa_event(`open_${url.host}`)
         window.plausible("open", { props: { site: url.host } })
       }
@@ -166,6 +174,7 @@ class Popup extends Component {
                 config={this.tabState}
                 isPlus={this.state.isPlus}
                 showPlusPopup={() => this.showPlusPopup()}
+                isSecureContext={this.state.isSecureContext}
               />
             </>
           )}

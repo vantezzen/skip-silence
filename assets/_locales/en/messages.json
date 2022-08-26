@@ -55,6 +55,28 @@
     "message": "Advanced Settings"
   },
 
+  "analyzerType": {
+    "message": "Analyzer Type"
+  },
+  "analyzerTypeHelp": {
+    "message": "The extension supports different analyzer types to achieve the best result in different contexts."
+  },
+  "analyzerTypeReload": {
+    "message": "Changing analyser type requires reloading the page. Do you want to reload now?"
+  },
+  "analyzerTypeTabCapture": {
+    "message": "Tab output analyzer"
+  },
+  "analyzerTypeElement": {
+    "message": "Element analyzer"
+  },
+  "analyzerTypeDisplayMedia": {
+    "message": "Screen capture"
+  },
+  "analyzerTypeDefault": {
+    "message": "Default"
+  },
+
   "sampleThreshold": {
     "message": "Sample threshold"
   },

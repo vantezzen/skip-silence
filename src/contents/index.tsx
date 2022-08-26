@@ -28,11 +28,8 @@ const state = getState(StateEnvironment.Content)
 
 state.once("ready", () => {
   setupBrowserContent(state)
-  if (
-    !supportsTabCapture ||
-    state.current.analyserType !== AnalyserType.tabCapture
-  ) {
-    debug("Doesn't support tabCapture or should use direct method")
+  if (state.current.analyserType !== AnalyserType.tabCapture) {
+    debug("Using on-page analyser")
     setupOnPageSkipperContent(state)
   } else {
     browser.runtime.sendMessage({ command: "request-activation" })

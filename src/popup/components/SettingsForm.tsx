@@ -1,6 +1,7 @@
 import React from "react"
 import {
   BarChart2,
+  Check,
   ChevronDown,
   ChevronUp,
   Circle,
@@ -31,11 +32,13 @@ import HelpModal from "./helpModal"
 function SettingsForm({
   config,
   isPlus,
-  showPlusPopup
+  showPlusPopup,
+  isSecureContext
 }: {
   config: TabState
   isPlus: boolean
   showPlusPopup: () => void
+  isSecureContext: boolean
 }) {
   const grayOutWhenDisabled = {
     opacity: config.current.enabled ? 1 : 0.3,
@@ -168,7 +171,10 @@ function SettingsForm({
 
           {showAdvancedSettings && (
             <>
-              <SelectAnalyserType config={config} />
+              <SelectAnalyserType
+                config={config}
+                isSecureContext={isSecureContext}
+              />
 
               <SliderSetting
                 label={
