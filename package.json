@@ -67,6 +67,11 @@
       "storage",
       "tabCapture"
     ],
-    "default_locale": "en"
+    "default_locale": "en",
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "skip-silence@vantezzen.io"
+      }
+    }
   }
 }

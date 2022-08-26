@@ -112,10 +112,12 @@ function SelectAnalyserType({
           // @ts-ignore
           config.current.analyserType = e.target.value
 
-          const confirmed = window.confirm(__("analyzerTypeReload"))
-          if (confirmed) {
-            Browser.tabs.reload()
-          }
+          setTimeout(() => {
+            const confirmed = window.confirm(__("analyzerTypeReload"))
+            if (confirmed) {
+              Browser.tabs.reload()
+            }
+          }, 100)
         }}>
         {supportsTabCapture && (
           <option value="tabCapture">

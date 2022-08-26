@@ -5,7 +5,7 @@ import type { TabState } from "~shared/state"
 import AudioSync from "../AudioSync"
 import SpeedController from "../SpeedController"
 
-const debug = debugging("skip-silence:contents:lib:browserSetup:firefox")
+const debug = debugging("skip-silence:contents:lib:browserSetup:shared")
 
 export default function setupBrowserContent(config: TabState) {
   const speedController = new SpeedController()
