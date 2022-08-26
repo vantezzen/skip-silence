@@ -64,7 +64,11 @@ class Popup extends Component {
           })
         }
 
-        if (url.protocol === "http:") {
+        if (
+          url.protocol === "http:" &&
+          url.hostname !== "localhost" &&
+          url.hostname !== "127.0.0.1"
+        ) {
           this.setState({
             isSecureContext: false
           })
