@@ -35,7 +35,7 @@ You can also install this extension on Chrome by downloading the source from Git
 
 "Skip Silence" only has **restricted** support for Firefox.
 
-On Chrome, "Skip Silence" uses a browser API to support analyzing audio on almost all websites. Unfortunately, Firefox currently doesn't support this API and thus the extension doesn't work on some websites.
+On Chrome, "Skip Silence" uses a browser API to support analyzing audio on almost all websites. Unfortunately, Firefox currently doesn't support this API and thus the extension doesn't work on some websites. Take a look at [open bugs](#open-browser-bugs) for more info.
 
 If you have problems with the extension on a website on Firefox, you can try using a Chromium-based browser like Ungoogled Chromium.
 
@@ -62,6 +62,25 @@ You can now:
 ## How does it work?
 
 The extension attaches a JavaScript audio analyser to the current video or audio source and will speed up or slow down the video using the current volume of the audio.
+
+## Open browser bugs
+
+The extension sometimes seems to push the boundaries of what browsers can do. Due to this, some features that would be nice to have can't be implemented as the browsers contain bugs or missing features.
+
+Current list of bugs/feature requests the extension is waiting for
+
+- Chrome mutes tab when `preferCurrentTab: true` is set
+  - https://bugs.chromium.org/p/chromium/issues/detail?id=1317964&q=preferCurrentTab&can=2
+  - This would make selecting the tab for the "Screen capture" analyzer type easier
+- Firefox doesn't support audio for screen capture
+  - https://bugzilla.mozilla.org/show_bug.cgi?id=1541425
+  - Due to this, the "Screen capture" analyzer type is not available on Firefox
+- Firefox doesn't support the `tabCapture` API
+  - https://bugzilla.mozilla.org/show_bug.cgi?id=1391223
+  - Due to this, the "Tab-output analysis" analyzer type is not available on Firefox#
+- Chrome MV3 doesn't support the `tabCapture` API
+  - https://github.com/GoogleChrome/chrome-extensions-samples/issues/627
+  - Due to this, Skip silence is currently still using MV2 on Chrome
 
 ## Development
 
