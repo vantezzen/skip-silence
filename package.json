@@ -1,7 +1,7 @@
 {
   "name": "skip-silence",
   "displayName": "Skip silence",
-  "version": "5.0.7",
+  "version": "5.0.8",
   "description": "Skip silent parts in videos and audio files.",
   "author": "vantezzen",
   "packageManager": "pnpm@6.19.1",
@@ -22,7 +22,7 @@
     "@parcel/core": "^2.6.1",
     "@types/debug": "^4.1.7",
     "@types/webextension-polyfill": "^0.9.0",
-    "@vantezzen/plasmo-state": "^1.0.7",
+    "@vantezzen/plasmo-state": "^2.0.3",
     "debug": "^4.3.4",
     "fontsource-poppins": "^4.0.0",
     "intro.js": "^5.1.0",
