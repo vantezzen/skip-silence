@@ -1,0 +1,72 @@
+.skip-silence-bar {
+  all: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #293033;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  max-height: 25px;
+  padding: 8px;
+  padding-left: 20px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  animation: animate-in-command-bar 0.5s;
+}
+.skip-silence-bar .bar-text {
+  display: flex;
+  align-items: center;
+}
+.skip-silence-bar .info {
+  color: #565656 !important;
+  text-decoration: underline;
+}
+.skip-silence-bar .speed-setting {
+  display: flex;
+}
+.skip-silence-bar .speed-setting label {
+  margin-right: 5px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+.skip-silence-bar .slider-setting .setting-info {
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+}
+.skip-silence-bar .slider-setting input {
+  display: none;
+}
+@keyframes animate-in-command-bar {
+  from {
+    opacity: 0;
+  }
+}
+.skip-silence-bar-collapsed {
+  background: #293033;
+  color: #fff;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  animation: animate-in-command-collapsed 0.5s;
+}
+@keyframes animate-in-command-collapsed {
+  from {
+    opacity: 0;
+  }
+}
+.skip-silence-bar,
+.skip-silence-bar-collapsed {
+  z-index: 100000;
+}

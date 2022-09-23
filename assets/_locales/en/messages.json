@@ -1,0 +1,237 @@
+{
+  "extensionName": {
+    "message": "Skip Silence"
+  },
+
+  "extensionDescription": {
+    "message": "Skip silent parts in videos and audio files."
+  },
+
+  "enable": {
+    "message": "Enable Skip Silence"
+  },
+
+  "sectionSpeed": {
+    "message": "Speed"
+  },
+
+  "playbackSpeed": {
+    "message": "Playback Speed"
+  },
+  "playbackSpeedHelp": {
+    "message": "Speed at which normal, non-silent parts of the media are played."
+  },
+
+  "silenceSpeed": {
+    "message": "Silence Speed"
+  },
+  "silenceSpeedHelp": {
+    "message": "Speed at which \"silent\" parts of the media are played."
+  },
+
+  "sectionThreshold": {
+    "message": "Threshold"
+  },
+
+  "useDynamicThreshold": {
+    "message": "Use dynamic threshold"
+  },
+  "useDynamicThresholdHelp": {
+    "message": "Dynamic threshold will try to automatically calculate the volume of the silence in your media.\nThis way, you won't have to manually set the volume threshold for each video."
+  },
+
+  "volumeThreshold": {
+    "message": "Volume threshold"
+  },
+  "volumeThresholdHelp": {
+    "message": "If the volume is below this threshold, the video will be sped up.\nYou can also see this threshold in the VU Meter above"
+  },
+
+  "sectionAdvanced": {
+    "message": "Advanced"
+  },
+
+  "advancedSettings": {
+    "message": "Advanced Settings"
+  },
+
+  "analyzerType": {
+    "message": "Analyzer Type"
+  },
+  "analyzerTypeHelp": {
+    "message": "The extension supports different analyzer types to achieve the best result in different contexts."
+  },
+  "analyzerTypeReload": {
+    "message": "Changing analyser type requires reloading the page. Do you want to reload now?"
+  },
+  "analyzerTypeTabCapture": {
+    "message": "Tab output analyzer"
+  },
+  "analyzerTypeElement": {
+    "message": "Element analyzer"
+  },
+  "analyzerTypeDisplayMedia": {
+    "message": "Screen capture"
+  },
+  "analyzerTypeDefault": {
+    "message": "Default"
+  },
+
+  "sampleThreshold": {
+    "message": "Sample threshold"
+  },
+  "sampleThresholdHelp": {
+    "message": "Length of silence needed before speeding up.\nThis is to ensure we are not speeding up due to the short silence between words and sentences."
+  },
+
+  "muteSilence": {
+    "message": "Mute silence"
+  },
+  "muteSilenceHelp": {
+    "message": "If you are having problems with audio clicking or don't want to hear any audio when sped up, enable this option."
+  },
+
+  "keepAudioInSync": {
+    "message": "Keep audio in sync"
+  },
+  "keepAudioInSyncHelp": {
+    "message": "Chrome and Browsers that base on Chromium (e.g. Edge) currently have a bug that will result in audio and video getting out of sync when changing the speed often.\n As \"Skip Silence\" will change the video speed often, you might experience this issue.\n When this setting is activated, Skip Silence will try to fix this issue by periodically putting them back into sync.\n Please note that this setting may cause media to re-buffer every 30s on some websites."
+  },
+
+  "enableCommandBarIcon": {
+    "message": "Enable command bar icon"
+  },
+  "enableCommandBarIconHelp": {
+    "message": "If you don't like the small command bar logo in the bottom right, you can completely disable it. \nYou can still open the command bar using the shortcut \"ALT/Option + Shift + S\"."
+  },
+
+  "showSavedTimeInfo": {
+    "message": "Show saved time info"
+  },
+  "showSavedTimeInfoHelp": {
+    "message": "After a video or audio ended, \"Skip Silence\" will show a small info message in the bottom left corner, informing you how much time you have saved in this media alone. \nIf you do not like this message, you can disable it."
+  },
+
+  "allowAnonymousAnalytics": {
+    "message": "Allow anonymous analytics"
+  },
+  "allowAnonymousAnalyticsHelp": {
+    "message": "\"Skip Silence\" uses Simple Analytics (https://simpleanalytics.com/) and Plausible to collect a few anonymized analytics without reducing your privacy.\nThis data allows us to better understand how users use our extension and how we can improve it.\nWe understand that some people do not like sending anonymized analytics, so you can completely opt-out of this!"
+  },
+
+  "savedTimeText": {
+    "message": "Using this extension you saved :time (MM:SS) of your time."
+  },
+
+  "developedBy": {
+    "message": "Developed by"
+  },
+
+  "showTheTrainingScreenAgain": {
+    "message": "Show the training screen again"
+  },
+
+  "plusInfoHeader": {
+    "message": "Get more out of Skip Silence with Skip Silence Plus"
+  },
+
+  "plusInfoThankYou": {
+    "message": "Thank you for using \"Skip Silence\" to increase your productivity."
+  },
+
+  "plusInfoWhatIsIt": {
+    "message": "To help keep the development of \"Skip Silence\" alive and to help expanding it to more browsers, some more advanced features require \"Skip Silence Plus\"."
+  },
+
+  "plusInfoPricing": {
+    "message": "\"Skip Silence Plus\" is a one-time payment and allows you to activate Plus across all your personal devices - so you won't have to purchase mutliple licenses!"
+  },
+
+  "plusInfoLearnMore": {
+    "message": "Learn more and buy license"
+  },
+
+  "plusInfoActivateLicense": {
+    "message": "Activate License"
+  },
+
+  "plusInfoLicenseKey": {
+    "message": "License Key"
+  },
+
+  "plusInfoLicenseKeyRequired": {
+    "message": "Please enter a license key"
+  },
+
+  "plusInfoValidating": {
+    "message": "Validating your license..."
+  },
+
+  "plusInfoInvalidKey": {
+    "message": "This license key is not valid."
+  },
+
+  "plusInfoGoBack": {
+    "message": "Go Back"
+  },
+
+  "plusInfoClose": {
+    "message": "Close"
+  },
+
+  "plusInfoActivationSuccess": {
+    "message": "Skip Silence Plus has been activated!"
+  },
+
+  "plusInfoActivationSuccessThanks": {
+    "message": "Thank you for purchasing Skip Silence Plus. Your donation helps continue developing Skip Silence!"
+  },
+
+  "plusInfoActivationSuccessInfo": {
+    "message": "You can now use all of Skip Silence's features."
+  },
+
+  "plusInfoActivationSuccessClose": {
+    "message": "Start using Skip Silence Plus"
+  },
+
+  "introHeader": {
+    "message": "Welcome to Skip Silence! I can show you around, if you want to - otherwise click the X at any point"
+  },
+
+  "introVuMeter": {
+    "message": "This bar will show you the current volume of the media you are playing.<br />If the volume is lower than the orange line, Skip Silence will speed up the video.<br />If the bar turns orange, the video is currently sped up."
+  },
+
+  "introEnabled": {
+    "message": "Click this switch in order to enable or disable Skip Silence on the current page. If you disable Skip Silence you will not see the volume level above."
+  },
+
+  "introSpeed": {
+    "message": "You can choose what speed to play back normal parts (\"Playback Speed\") and silent parts (\"Silence Speed\") of the media."
+  },
+
+  "introSilenceThreshold": {
+    "message": "Use this slider to choose your silence threshold. This will also be represented by the orange line in the volume bar above."
+  },
+
+  "introMuteSilence": {
+    "message": "If you are having trouble with the audio \"clicking\" when speeding up or slowing down, try enabling \"Mute silence\" under the advanced settings."
+  },
+
+  "savedInMediaInfo": {
+    "message": "Skip Silence saved you :time during this media"
+  },
+
+  "commandBarListening": {
+    "message": "Listening for commands..."
+  },
+
+  "commandBarAreYouNew": {
+    "message": "Are you new to commands?"
+  },
+
+  "commandBarLearn": {
+    "message": "Learn about them"
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "extensionName": {
+    "message": "Skip Silence"
+  },
+
+  "extensionDescription": {
+    "message": "Spiele leise Sektionen in Medien schneller ab."
+  },
+
+  "enable": {
+    "message": "Aktivieren"
+  },
+
+  "sectionSpeed": {
+    "message": "Geschwindigkeit"
+  },
+
+  "playbackSpeed": {
+    "message": "Abspielgeschwindigkeit"
+  },
+  "playbackSpeedHelp": {
+    "message": "Geschwindigkeit, mit der die normalen Sektionen abgespielt werden."
+  },
+
+  "silenceSpeed": {
+    "message": "Leise Sektionen"
+  },
+  "silenceSpeedHelp": {
+    "message": "Geschwindigkeit, mit der leise Sektionen abgespielt werden."
+  },
+
+  "sectionThreshold": {
+    "message": "Schwelle"
+  },
+
+  "useDynamicThreshold": {
+    "message": "Dynamische Schwelle aktivieren"
+  },
+  "useDynamicThresholdHelp": {
+    "message": "Die dynamische Schwelle passt sich automatisch an das aktuelle Medium an, um die ideale Lautstärke zu erreichen, ohne diese manuell anpassen zu müssen."
+  },
+
+  "volumeThreshold": {
+    "message": "Lautstärkenschwelle"
+  },
+  "volumeThresholdHelp": {
+    "message": "Die Lautstärkenschwelle, ab der das Medium schneller abgespielt wird. Diese Schwelle wird im VU-Meter oben in orange angezeigt."
+  },
+
+  "sectionAdvanced": {
+    "message": "Erweitert"
+  },
+
+  "advancedSettings": {
+    "message": "Erweiterte Einstellungen"
+  },
+
+  "analyzerType": {
+    "message": "Analyse-Art"
+  },
+  "analyzerTypeHelp": {
+    "message": "Die Erweiterung unterstützt unterschiedliche Arten der Lautstärken-Analyse, um in unterschieden Kontexten das beste Ergebnis zu erzielen."
+  },
+  "analyzerTypeReload": {
+    "message": "Ändern der Analyse-Art erfordert das neu-laden der Seite. Jetzt neu laden?"
+  },
+  "analyzerTypeTabCapture": {
+    "message": "Tab-Ausgabe Analyse"
+  },
+  "analyzerTypeElement": {
+    "message": "Element Analyse"
+  },
+  "analyzerTypeDisplayMedia": {
+    "message": "Bildschirm-Aufnahme"
+  },
+  "analyzerTypeDefault": {
+    "message": "Standard"
+  },
+
+  "sampleThreshold": {
+    "message": "Abtastungsschwelle"
+  },
+  "sampleThresholdHelp": {
+    "message": "Die Anzahl der Abtastungen, die bei der Ermittlung von leisen Sektionen verwendet werden. Dies wird dazu verwendet, um in den kurzen Pausen zwischen Sätzen und Wörtern nicht die Geschwindigkeit zu ändern."
+  },
+
+  "muteSilence": {
+    "message": "Leise Sektionen stummschalten"
+  },
+  "muteSilenceHelp": {
+    "message": "Schalte leise Sektionen stumm, wenn sie abgespielt werden. Dies kann eventuelle Klick-Geräusche verhindern."
+  },
+
+  "keepAudioInSync": {
+    "message": "Audio synchronisieren"
+  },
+  "keepAudioInSyncHelp": {
+    "message": "Chrome und Browser, die auf Chromium basieren (z. B. Edge), haben derzeit einen Fehler, der dazu führt, dass Audio und Video nicht synchronisiert werden, wenn die Geschwindigkeit häufig geändert wird.\n Da \"Skip Silence\" die Videogeschwindigkeit häufig ändert, kann dieses Problem auftreten.\n Wenn diese Einstellung aktiviert ist, versucht Skip Silence, dieses Problem zu beheben, indem es die beiden Geschwindigkeiten regelmäßig wieder synchronisiert.\n Bitte beachten Sie, dass diese Einstellung bei einigen Websites dazu führen kann, dass die Medien alle 30 Sekunden neu gepuffert werden."
+  },
+
+  "enableCommandBarIcon": {
+    "message": "Befehlsleiste-Symbol aktivieren"
+  },
+  "enableCommandBarIconHelp": {
+    "message": "Falls Sie das kleine Symbol in der rechten unteren Ecke nicht angezeigt bekommen möchten, schalten Sie diese Option ab. Alternativ kann die Befehlzeile mit dem Shortcut \"ALT/Option + Shift + S\" aktiviert werden."
+  },
+
+  "showSavedTimeInfo": {
+    "message": "Gesparte Zeit anzeigen"
+  },
+  "showSavedTimeInfoHelp": {
+    "message": "Die Erweiterung kann auf manchen Seiten Informationen zur gesparten Zeit pro Medium nach dessen Ende anzeigen. Deaktivieren Sie diese Option, um diese Informationen zu verbergen."
+  },
+
+  "allowAnonymousAnalytics": {
+    "message": "Anonyme Analysen erlauben"
+  },
+  "allowAnonymousAnalyticsHelp": {
+    "message": "\"Skip Silence\" verwendet Simple Analytics (https://simpleanalytics.com/) und Plausible, um einige anonymisierte Analysen zu sammeln, ohne Ihre Privatsphäre einzuschränken.\nDiese Daten ermöglichen es uns, besser zu verstehen, wie die Benutzer unsere Erweiterung nutzen und wie wir sie verbessern können.\nWir verstehen, dass einige Leute die Zusendung anonymisierter Analysen nicht mögen, daher können Sie dies komplett abwählen!"
+  },
+
+  "savedTimeText": {
+    "message": "Mit dieser Erweiterung haben Sie :time (MM:SS) gespart."
+  },
+
+  "developedBy": {
+    "message": "Entwickelt von"
+  },
+
+  "showTheTrainingScreenAgain": {
+    "message": "Das Training erneut anzeigen"
+  },
+
+  "plusInfoHeader": {
+    "message": "Nutzen Sie Skip Silence Plus für noch mehr Funktionen"
+  },
+
+  "plusInfoThankYou": {
+    "message": "Danke, dass Sie die Erweiterung zur Verbesserung Ihrer Produktivität nutzen!"
+  },
+
+  "plusInfoWhatIsIt": {
+    "message": "Um die Entwicklung von \"Skip Silence\" am Leben zu erhalten und die Ausweitung auf weitere Browser zu unterstützen, erfordern einige erweiterte Funktionen \"Skip Silence Plus\"."
+  },
+
+  "plusInfoPricing": {
+    "message": "\"Skip Silence Plus\" muss nur einmalig erworben werden und ermöglicht Ihnen die Aktivierung von Plus für alle Ihre persönlichen Geräte - Sie müssen also nicht mehrere Lizenzen erwerben!"
+  },
+
+  "plusInfoLearnMore": {
+    "message": "Mehr erfahren und Lizenz kaufen"
+  },
+
+  "plusInfoActivateLicense": {
+    "message": "Lizenz aktivieren"
+  },
+
+  "plusInfoLicenseKey": {
+    "message": "Lizenzschlüssel"
+  },
+
+  "plusInfoLicenseKeyRequired": {
+    "message": "Lizenzschlüssel erforderlich"
+  },
+
+  "plusInfoValidating": {
+    "message": "Validiere Lizenz..."
+  },
+
+  "plusInfoInvalidKey": {
+    "message": "Dieser Lizenzschlüssel ist ungültig."
+  },
+
+  "plusInfoGoBack": {
+    "message": "Zurück"
+  },
+
+  "plusInfoClose": {
+    "message": "Schließen"
+  },
+
+  "plusInfoActivationSuccess": {
+    "message": "Skip Silence Plus wurde erfolgreich aktiviert."
+  },
+
+  "plusInfoActivationSuccessThanks": {
+    "message": "Vielen Dank, dass Sie Skip Silence Plus gekauft haben. Ihre Spende hilft, Skip Silence weiterzuentwickeln!"
+  },
+
+  "plusInfoActivationSuccessInfo": {
+    "message": "Sie können nun alle Funktionen von Skip Silence ohne Einschränkungen nutzen."
+  },
+
+  "plusInfoActivationSuccessClose": {
+    "message": "Jetzt probieren"
+  },
+
+  "introHeader": {
+    "message": "Willkommen bei Skip Silence! Ich kann dich herumführen, wenn du willst - ansonsten klicke einfach auf das X"
+  },
+
+  "introVuMeter": {
+    "message": "Diese Leiste zeigt die aktuelle Lautstärke des abgespielten Mediums an.<br />Ist die Lautstärke niedriger als die orangefarbene Linie, beschleunigt Skip Silence das Video.<br />Färbt sich die Leiste orange, wird das Video gerade beschleunigt."
+  },
+
+  "introEnabled": {
+    "message": "Klicken Sie auf diesen Schalter, um Skip Silence auf der aktuellen Seite zu aktivieren oder zu deaktivieren. Wenn Sie Stille überspringen deaktivieren, wird der Lautstärkepegel nicht angezeigt."
+  },
+
+  "introSpeed": {
+    "message": "Sie können auswählen, mit welcher Geschwindigkeit normale Teile und stille Teile des Mediums wiedergegeben werden sollen."
+  },
+
+  "introSilenceThreshold": {
+    "message": "Verwenden Sie diesen Schieberegler, um den Schwellenwert für die Stille zu wählen. Dieser wird auch durch die orangefarbene Linie in der Lautstärkeleiste oben dargestellt."
+  },
+
+  "introMuteSilence": {
+    "message": "Wenn Sie beim Beschleunigen oder Verlangsamen Probleme mit dem Klicken des Tons haben, versuchen Sie, \"Stummschaltung\" in den erweiterten Einstellungen zu aktivieren."
+  },
+
+  "savedInMediaInfo": {
+    "message": "Skip Silence spart Ihnen :time bei diesem Medium"
+  },
+
+  "commandBarListening": {
+    "message": "Warte auf Kommando..."
+  },
+
+  "commandBarAreYouNew": {
+    "message": "Sind Sie neu hier?"
+  },
+
+  "commandBarLearn": {
+    "message": "Erfahren Sie mehr"
+  }
+}

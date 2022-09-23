@@ -1,0 +1,19 @@
+.alert {
+  background-color: #3D474C;
+  width: 100%;
+  border-radius: 7px;
+  box-sizing: border-box;
+
+  padding: 0.3rem 1rem;
+  margin: 1rem 0;
+
+  h2 {
+    font-size: 1.05rem;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  a {
+    color: #FADC4B;
+  }
+}
