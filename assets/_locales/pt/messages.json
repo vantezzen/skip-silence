@@ -1,0 +1,237 @@
+{
+  "extensionName": {
+    "message": "Skip Silence"
+  },
+
+  "extensionDescription": {
+    "message": "Pule partes silenciosas de vídeos e áudios."
+  },
+
+  "enable": {
+    "message": "Habilitar Skip Silence"
+  },
+
+  "sectionSpeed": {
+    "message": "Velocidade"
+  },
+
+  "playbackSpeed": {
+    "message": "Velocidade de reprodução"
+  },
+  "playbackSpeedHelp": {
+    "message": "Velocidade normal, na qual parte não-silenciosas de mídia são reproduzidas."
+  },
+
+  "silenceSpeed": {
+    "message": "Velocidade no silêncio"
+  },
+  "silenceSpeedHelp": {
+    "message": "Velocidade na qual partes \"silenciosas\" de mídia são reproduzidas."
+  },
+
+  "sectionThreshold": {
+    "message": "Limiar"
+  },
+
+  "useDynamicThreshold": {
+    "message": "Usar limiar dinâmico"
+  },
+  "useDynamicThresholdHelp": {
+    "message": "Limiar dinâmico irá tentar automaticamente calcular o volume das partes silenciosas da sua mídia.\nDesta maneira, você não vai ter que manualmente ajustar o volume do limiar para cada mídia."
+  },
+
+  "volumeThreshold": {
+    "message": "Limiar de volume"
+  },
+  "volumeThresholdHelp": {
+    "message": "Se o volume estiver abaixo desse limiar, o vídeo irá acelerar.\nVocê também pode ver esse limiar no medidor de volume acima"
+  },
+
+  "sectionAdvanced": {
+    "message": "Avançado"
+  },
+
+  "advancedSettings": {
+    "message": "Ajustes avançados"
+  },
+
+  "analyzerType": {
+    "message": "Tipo de analizador"
+  },
+  "analyzerTypeHelp": {
+    "message": "Essa extensão suporta diferentes tipos de analizadores para arquivar o melhor resultado em diferentes contextos."
+  },
+  "analyzerTypeReload": {
+    "message": "Mudar o tipo de analizador requer recarregamento da págima. Você quer recarregar agora?"
+  },
+  "analyzerTypeTabCapture": {
+    "message": "TODO: Tab output analyzer"
+  },
+  "analyzerTypeElement": {
+    "message": "Analizador de elemento"
+  },
+  "analyzerTypeDisplayMedia": {
+    "message": "Captura de Tela"
+  },
+  "analyzerTypeDefault": {
+    "message": "Padrão"
+  },
+
+  "sampleThreshold": {
+    "message": "Limiar da amostra"
+  },
+  "sampleThresholdHelp": {
+    "message": "Intervalo de silêncio necessário antes de acelerar.\nIsso é feito para assegurar que não seja haja aceleração devida a curtos intervalos de silêncio entre palavras e sentenças."
+  },
+
+  "muteSilence": {
+    "message": "Mutar silêncio"
+  },
+  "muteSilenceHelp": {
+    "message": "Se você estiver com problemas de cliques no áudio ou não quer ouvir nenhum som durante a aceleração, habilite esta opção."
+  },
+
+  "keepAudioInSync": {
+    "message": "Manter sincronia de áudio."
+  },
+  "keepAudioInSyncHelp": {
+    "message": "Chrome e navegadores a base do Chromium (ex. Edge) atualmente possuem um bug que irá resultar em áudio e video desincronizado quando há mudanças constantes na velocidade de reprodução.\n Como \"Skip Silence\" muda a velocidade do video frequentemente, você poderá experienciar esse problema.\n Quando este ajuste é habilitado, Skip Silence irá tentar reparar a sincronização periodicamente.\n Favor notar que esse ajuste poderá acarretar no vídeo recarregando a cada 30s em alguns websites."
+  },
+
+  "enableCommandBarIcon": {
+    "message": "Habilitar o ícone na barra de comandos"
+  },
+  "enableCommandBarIconHelp": {
+    "message": "Se você não gosta da miniatura do ícone na barra de comando, você pode desabilitá-lo completamente. \nVocê ainda poderá abrir a barra de comandos usando o atalho \"ALT/Option + Shift + S\"."
+  },
+
+  "showSavedTimeInfo": {
+    "message": "Mostrar informação de tempo economizado"
+  },
+  "showSavedTimeInfoHelp": {
+    "message": "Depois que um video ou áudio acabar, \"Skip Silence\" irá mostrar uma pequena mensagem no canto inferior esquerdo, informando quanto tempo você economizou nessa mídia apenas. \nSe você não gostar de ver essa mensagem, poderá desabilitá-la."
+  },
+
+  "allowAnonymousAnalytics": {
+    "message": "Permitir análise de dados anônimos"
+  },
+  "allowAnonymousAnalyticsHelp": {
+    "message": "\"Skip Silence\" usa Simple Analytics (https://simpleanalytics.com/) e Plausible para coletar alguns dados de análise anônimos sem reduzir sua privacidade.\nEsses dados permitem que nós entendamos melhor as necessidades dos usuários para que possamos melhorar a aplicação.\nEntendemos que algumas pessoas podem não gostar de compartilhar dados anônimos, então você poderá optar não habilitar essa opção!"
+  },
+
+  "savedTimeText": {
+    "message": "Usando essa extensão você economizou :time (MM:SS) do seu tempo."
+  },
+
+  "developedBy": {
+    "message": "Desenvolvido por"
+  },
+
+  "showTheTrainingScreenAgain": {
+    "message": "Mostrar a tela de tutorial novamente."
+  },
+
+  "plusInfoHeader": {
+    "message": "Aproveite todos os recursos de Skip Silence com o Skip Silence Plus"
+  },
+
+  "plusInfoThankYou": {
+    "message": "Obrigado por usar \"Skip Silence\" para aumentar a sua produtividade."
+  },
+
+  "plusInfoWhatIsIt": {
+    "message": "Para ajudar o desenvolvimento contínuo de \"Skip Silence\" e auxiliar na implementação em mais navegadores, alguns dos recursos mais avançados requerem a ativação do \"Skip Silence Plus\"."
+  },
+
+  "plusInfoPricing": {
+    "message": "\"Skip Silence Plus\" é um pagamento único que permite que você ative as funções avançadas em todos os seus dispositivos pessoais - assim você não precisará comprar múltiplas licensas!"
+  },
+
+  "plusInfoLearnMore": {
+    "message": "Saiba mais e compre a licença"
+  },
+
+  "plusInfoActivateLicense": {
+    "message": "Ativar a licença"
+  },
+
+  "plusInfoLicenseKey": {
+    "message": "Chave da licença"
+  },
+
+  "plusInfoLicenseKeyRequired": {
+    "message": "Por favor insira a sua chave de licença"
+  },
+
+  "plusInfoValidating": {
+    "message": "Validando a sua licença..."
+  },
+
+  "plusInfoInvalidKey": {
+    "message": "Essa chave de licença não é válida."
+  },
+
+  "plusInfoGoBack": {
+    "message": "Voltar"
+  },
+
+  "plusInfoClose": {
+    "message": "Fechar"
+  },
+
+  "plusInfoActivationSuccess": {
+    "message": "Skip Silence Plus foi ativado!"
+  },
+
+  "plusInfoActivationSuccessThanks": {
+    "message": "Obrigado por comprar o Skip Silence Plus. Sua doação nos ajuda a continuar desenvolvendo o Skip Silence!"
+  },
+
+  "plusInfoActivationSuccessInfo": {
+    "message": "Agora você pode usar todos os recursos do Skip Silence."
+  },
+
+  "plusInfoActivationSuccessClose": {
+    "message": "Comece a usar o Skip Silence Plus"
+  },
+
+  "introHeader": {
+    "message": "Bem vindo ao Skip Silence! Posso lhe apresentar as funções, se você quiser - caso contrário clique no X a qualquer momento"
+  },
+
+  "introVuMeter": {
+    "message": "Essa barra irá mostrar o atual volume da mídia que estiver reproduzindo.<br />Se o volume estiver abaixo da linha laranja, o Skip Silence irá acelerar o vídeo.<br />Quando a barra estiver laranja, significa que o vídeo está acelerado."
+  },
+
+  "introEnabled": {
+    "message": "Clique nesse botão para habilitar ou desabilitar o Skip Silence nesta página. Se você desabilitar Skip Silence, o indicador de volume acima não será mostrado."
+  },
+
+  "introSpeed": {
+    "message": "Você pode ajustar a velocidade de reprodução de partes normais (\"Velocidade de Reprodução\") e partes silenciosas (\"Velocidade em Silêncio\") da mídia."
+  },
+
+  "introSilenceThreshold": {
+    "message": "Use esta barra deslizante para ajustar o seu limiar de silêncio. Isto será representado pela linha laranja no indicador de volume acima."
+  },
+
+  "introMuteSilence": {
+    "message": "Se você estiver com problemas de áudio \"clicando\" com a mudança na velocidade de reprodução, tente habilitar \"Mutar silêncio\" nos ajustes avançados."
+  },
+
+  "savedInMediaInfo": {
+    "message": "Skip Silence lhe economizou :time da duração desta mídia"
+  },
+
+  "commandBarListening": {
+    "message": "Aguardando por comandos..."
+  },
+
+  "commandBarAreYouNew": {
+    "message": "Você não tem familiaridade com os comandos?"
+  },
+
+  "commandBarLearn": {
+    "message": "Aprenda mais sobre eles"
+  }
+}
