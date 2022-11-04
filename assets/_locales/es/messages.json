@@ -1,0 +1,237 @@
+{
+  "extensionName": {
+    "message": "Skip Silence"
+  },
+
+  "extensionDescription": {
+    "message": "Omite las partes silenciosas de los vídeos y archivos de audio."
+  },
+
+  "enable": {
+    "message": "Activar Skip Silence"
+  },
+
+  "sectionSpeed": {
+    "message": "Velocidad"
+  },
+
+  "playbackSpeed": {
+    "message": "Velocidad de Reproducción"
+  },
+  "playbackSpeedHelp": {
+    "message": "Velocidad a la que se reproducen las partes normales (\"no silenciosas\")."
+  },
+
+  "silenceSpeed": {
+    "message": "Velocidad del Silencio"
+  },
+  "silenceSpeedHelp": {
+    "message": "Velocidad a la que se reproducen las partes \"silenciosas\"."
+  },
+
+  "sectionThreshold": {
+    "message": "Umbral"
+  },
+
+  "useDynamicThreshold": {
+    "message": "Usar umbral dinámico"
+  },
+  "useDynamicThresholdHelp": {
+    "message": "El umbral dinámico intentará calcular automáticamente el volumen del silencio,\nasí no tendrás que ajustar manualmente el umbral de volumen para cada vídeo."
+  },
+
+  "volumeThreshold": {
+    "message": "Umbral de volumen"
+  },
+  "volumeThresholdHelp": {
+    "message": "Si el volumen está por debajo de este umbral, el vídeo se acelerará.\nTambién puedes ver este umbral en el medidor de arriba."
+  },
+
+  "sectionAdvanced": {
+    "message": "Avanzado"
+  },
+
+  "advancedSettings": {
+    "message": "Configuración Avanzada"
+  },
+
+  "analyzerType": {
+    "message": "Tipo de Analizador"
+  },
+  "analyzerTypeHelp": {
+    "message": "La extensión admite diferentes tipos de analizadores para lograr el mejor resultado en diferentes contextos."
+  },
+  "analyzerTypeReload": {
+    "message": "Cambiar el tipo de analizador requiere recargar la página. Quieres recargar ahora?"
+  },
+  "analyzerTypeTabCapture": {
+    "message": "Analizador de salida de la pestaña"
+  },
+  "analyzerTypeElement": {
+    "message": "Analizador del elemento"
+  },
+  "analyzerTypeDisplayMedia": {
+    "message": "Captura de pantalla"
+  },
+  "analyzerTypeDefault": {
+    "message": "Por defecto"
+  },
+
+  "sampleThreshold": {
+    "message": "Umbral de muestreo"
+  },
+  "sampleThresholdHelp": {
+    "message": "Duración del fragmento de silencio necesario antes de acelerar.\nEsto es para asegurar que no se acelere debido al corto silencio entre palabras y frases."
+  },
+
+  "muteSilence": {
+    "message": "Mutear silencio"
+  },
+  "muteSilenceHelp": {
+    "message": "Si tienes problemas con los cortes de audio o no quieres escuchar el audio cuando se acelera, activa esta opción."
+  },
+
+  "keepAudioInSync": {
+    "message": "Mantener el audio sincronizado"
+  },
+  "keepAudioInSyncHelp": {
+    "message": "Chrome y los navegadores basados en Chromium (por ejemplo, Edge) tienen actualmente un error que hace que el audio y el vídeo se desincronicen cuando se cambia la velocidad frecuentemente.\nComo \"Skip Silence\" cambiará la velocidad del vídeo a menudo, es posible que experimente este problema.\nCuando esta configuración está activada, Skip Silence intentará arreglar este problema volviendo a sincronizarlos periódicamente.\nTenga en cuenta que esta configuración puede hacer que los medios se vuelvan a almacenar en el búfer cada 30 segundos en algunos sitios web."
+  },
+
+  "enableCommandBarIcon": {
+    "message": "Habilitar el icono de la barra de comandos"
+  },
+  "enableCommandBarIconHelp": {
+    "message": "Si no te gusta el pequeño logo de la barra de comandos en la parte inferior derecha, puedes desactivarlo completamente.\nTodavía puedes abrir la barra de comandos utilizando el atajo de teclado \"ALT/Opción + Shift + S\"."
+  },
+
+  "showSavedTimeInfo": {
+    "message": "Mostrar datos sobre el tiempo ahorrado"
+  },
+  "showSavedTimeInfoHelp": {
+    "message": "Después de que un vídeo o audio haya terminado, \"Skip Silence\" mostrará un pequeño mensaje en la esquina inferior izquierda, mostrando cuánto tiempo ahorraste en este video.\nSi no te gusta este mensaje puede desactivarlo."
+  },
+
+  "allowAnonymousAnalytics": {
+    "message": "Permitir estadísticas anónimas"
+  },
+  "allowAnonymousAnalyticsHelp": {
+    "message": "\"Skip Silence\" utiliza Simple Analytics (https://simpleanalytics.com/) y Plausible para recopilar algunas estadísticas anónimas sin afectar tu privacidad. Estos datos nos permiten comprender mejor cómo utilizan los usuarios nuestra extensión y cómo podemos mejorarla.\nSi prefieres no enviar estos datos anónimos, puedes desactivarlo aquí."
+  },
+
+  "savedTimeText": {
+    "message": "Usando esta extensión ahorraste :time (MM:SS)."
+  },
+
+  "developedBy": {
+    "message": "Desarrollado por"
+  },
+
+  "showTheTrainingScreenAgain": {
+    "message": "Volver a mostrar la pantalla de inicio"
+  },
+
+  "plusInfoHeader": {
+    "message": "Aproveche al máximo Skip Silence con Skip Silence Plus"
+  },
+
+  "plusInfoThankYou": {
+    "message": "Gracias por usar \"Skip Silence\" para mejorar tu productividad."
+  },
+
+  "plusInfoWhatIsIt": {
+    "message": "Para ayudar a mantener el desarrollo de \"Skip Silence\" y expandirlo a más navegadores, algunas funciones más avanzadas requieren \"Skip Silence Plus\"."
+  },
+
+  "plusInfoPricing": {
+    "message": "\"Skip Silence Plus\" es un pago único y te permite activar Plus en todos tus dispositivos personales, por lo que no tendrás que comprar varias licencias!"
+  },
+
+  "plusInfoLearnMore": {
+    "message": "Más información y comprar licencia"
+  },
+
+  "plusInfoActivateLicense": {
+    "message": "Activar Licencia"
+  },
+
+  "plusInfoLicenseKey": {
+    "message": "Clave de Licencia"
+  },
+
+  "plusInfoLicenseKeyRequired": {
+    "message": "Por favor, introduzca una clave de licencia"
+  },
+
+  "plusInfoValidating": {
+    "message": "Validando su licencia..."
+  },
+
+  "plusInfoInvalidKey": {
+    "message": "Esta clave de licencia no es válida."
+  },
+
+  "plusInfoGoBack": {
+    "message": "Volver"
+  },
+
+  "plusInfoClose": {
+    "message": "Cerrar"
+  },
+
+  "plusInfoActivationSuccess": {
+    "message": "¡Skip Silence Plus ha sido activado!"
+  },
+
+  "plusInfoActivationSuccessThanks": {
+    "message": "Gracias por comprar Skip Silence Plus. Tu donación ayuda a seguir desarrollando Skip Silence."
+  },
+
+  "plusInfoActivationSuccessInfo": {
+    "message": "Ahora puedes usar todas las características de Skip Silence"
+  },
+
+  "plusInfoActivationSuccessClose": {
+    "message": "Comenzar a utilizar Skip Silence Plus"
+  },
+
+  "introHeader": {
+    "message": "¡Bienvenido a Skip Silence! Puedo mostrarte el lugar, si quieres. Si no, haz clic en la X en cualquier momento"
+  },
+
+  "introVuMeter": {
+    "message": "Esta barra le mostrará el volumen actual del audio o video que en reproducción.<br />Si el volumen es inferior a la línea naranja, Skip Silence acelerará el vídeo.<br />Si la barra se vuelve naranja, el vídeo está siendo acelerado en ese momento."
+  },
+
+  "introEnabled": {
+    "message": "Haz clic en este interruptor para habilitar o deshabilitar Skip Silence en la página actual. Si desactivas Skip Silence no verás el nivel de volumen arriba."
+  },
+
+  "introSpeed": {
+    "message": "Puede elegir a qué velocidad reproducir las partes normales (\"Velocidad de reproducción\") y las partes silenciosas (\"Velocidad de silencio\")."
+  },
+
+  "introSilenceThreshold": {
+    "message": "Utiliza este slider para elegir tu umbral de silencio. Esto también está representado por la línea naranja en la barra de volumen de arriba."
+  },
+
+  "introMuteSilence": {
+    "message": "Si tienes problemas con el \"chasquido\" del audio cuando se acelera, prueba a activar \"Mutear silencio\" en la configuración avanzada."
+  },
+
+  "savedInMediaInfo": {
+    "message": "Skip Silence the ha ahorrado :time en este video"
+  },
+
+  "commandBarListening": {
+    "message": "Esperando comandos..."
+  },
+
+  "commandBarAreYouNew": {
+    "message": "¿Eres nuevo utilizando los comandos?"
+  },
+
+  "commandBarLearn": {
+    "message": "Aprenda sobre ellos"
+  }
+}
