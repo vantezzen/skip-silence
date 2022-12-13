@@ -10,7 +10,7 @@
         <img src="img/edge.png" alt="Available on Edge Add-ons" width="150">
     </a>
     <a href="https://www.buymeacoffee.com/vantezzen" target="_blank">
-      <img src="src/assets/img/bmc.png" alt="Buy Me A Coffee" width="150">
+      <img src="assets/bmc.png" alt="Buy Me A Coffee" width="150">
     </a>
 </p>
 
