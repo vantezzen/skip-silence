@@ -15,6 +15,7 @@ import __ from "../shared/i18n"
 import verifyLicense from "../shared/license"
 import "./Popup.scss"
 import Footer from "./components/Footer"
+import NeonFin from "./components/NeonFin"
 import SettingsForm from "./components/SettingsForm"
 import Header from "./components/header"
 import PlusInfo from "./components/plusInfo"
@@ -180,6 +181,8 @@ class Popup extends Component {
                 showPlusPopup={() => this.showPlusPopup()}
                 isSecureContext={this.state.isSecureContext}
               />
+
+              {!this.state.isPlus && <NeonFin />}
             </>
           )}
         </div>
