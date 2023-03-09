@@ -1,4 +1,5 @@
 import debugging from "debug"
+import inspectMediaElements from "./inspectMediaElements"
 
 import type { MediaElement } from "../../shared/types"
 
@@ -100,18 +101,7 @@ export default class SpeedController {
   }
 
   setPlaybackRate(rate: number) {
-    this.elements = [
-      ...document.querySelectorAll("video, audio")
-    ] as MediaElement[]
-    debug(
-      "Setting playback rate to",
-      rate,
-      "on",
-      this.elements.length,
-      "elements"
-    )
-
-    this.elements.forEach((element) => {
+    inspectMediaElements((element: MediaElement) => {
       this.setPlaybackRateForElement(rate, element)
     })
   }
