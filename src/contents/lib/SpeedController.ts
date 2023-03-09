@@ -17,6 +17,12 @@ export default class SpeedController {
 
   elements: MediaElement[] = []
 
+  constructor() {
+    inspectMediaElements((element: MediaElement) => {
+      this.elements.push(element)
+    })
+  }
+
   /**
    * Fixes issues changing the playback rate by temporarily blocking `ratechange` event listeners.
    */
@@ -101,7 +107,7 @@ export default class SpeedController {
   }
 
   setPlaybackRate(rate: number) {
-    inspectMediaElements((element: MediaElement) => {
+    this.elements.forEach((element) => {
       this.setPlaybackRateForElement(rate, element)
     })
   }
