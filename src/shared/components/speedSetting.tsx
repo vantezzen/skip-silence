@@ -29,6 +29,7 @@ const SpeedSetting = ({
   const value = config.current[name] as number
   const isCustomValue = config.current[`${name}_is_custom` as IsCustomKeys]
   const [isOpen, setIsOpen] = React.useState(false)
+  const [tempValue, setTempValue] = React.useState<string | null>(null)
 
   let selector
   if (isCustomValue) {
@@ -37,9 +38,15 @@ const SpeedSetting = ({
       <div className="custom-value-container">
         <input
           type="number"
-          value={value}
+          value={tempValue ?? value}
           onChange={(evt) => {
-            config.current[name] = parseInt(evt.target.value)
+            // Handle incomplete numbers (e.g. "12,")
+            if (!/[0-9]$/.test(evt.target.value)) {
+              setTempValue(evt.target.value)
+            }
+
+            config.current[name] = parseFloat(evt.target.value)
+            setTempValue(null)
 
             if (config.environment === StateEnvironment.Popup) {
               window.sa_event(`speed_${name}_custom_${evt.target.value}`)
@@ -49,7 +56,7 @@ const SpeedSetting = ({
             }
           }}
           step={0.1}
-          min={0.0625}
+          min={0.06}
           max={16}
         />
         <button
