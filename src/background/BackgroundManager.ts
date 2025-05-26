@@ -21,13 +21,14 @@ export default class BackgroundManager {
   private isOffscreenDocumentReady = false;
   // Using chrome.runtime.getURL to ensure the path is correct after build
   private OFFSCREEN_DOCUMENT_PATH = browser.runtime.getURL("src/offscreen/offscreen.html");
+  private PLASMO_SYNC_STORAGE_KEY = "plasmo-sync"; // Key used by plasmo-state for storage.sync
 
 
   constructor() {
     this.setupOffscreenDocument();
     this.attachToTabsRequestingActivation();
     this.provideTabIdApi();
-    this.listenForOffscreenMessages();
+    this.listenForExtensionMessages(); // Renamed from listenForOffscreenMessages
   }
 
   private async hasOffscreenDocument(): Promise<boolean> {
@@ -84,51 +85,111 @@ export default class BackgroundManager {
     }
   }
 
-  private listenForOffscreenMessages() {
+  // Renamed from listenForOffscreenMessages to handle more message types
+  private listenForExtensionMessages() { 
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.target !== 'service-worker') {
-        return false; // Indicate that we are not handling this message if it's not for the service-worker
+      // Handle messages specifically targeted to 'service-worker'
+      if (request.target === 'service-worker') {
+        if (request.command === 'offscreen-ready') {
+          debug('Service Worker: Offscreen document is ready.');
+          this.isOffscreenDocumentReady = true;
+          sendResponse({ success: true });
+          return true; 
+        } else if (request.command === 'initiate-tab-capture') {
+          debug('Service Worker: Received initiate-tab-capture request for tab', request.tabId);
+          (async () => {
+            try {
+              await this.ensureOffscreenDocumentIsReady();
+              debug('Service Worker: Offscreen document is ready, sending start-tab-capture to offscreen for tab', request.tabId);
+              const offscreenResponse = await browser.runtime.sendMessage({
+                target: 'offscreen',
+                command: 'start-tab-capture',
+                tabId: request.tabId,
+              });
+              sendResponse(offscreenResponse);
+            } catch (error) {
+              console.error('Service Worker: Error during initiate-tab-capture:', error);
+              sendResponse({ success: false, error: error.message });
+            }
+          })();
+          return true; 
+        } else if (request.command === 'audio-update') {
+          const { tabId, volume } = request;
+          const tabReference = this.tabReferences[tabId];
+          if (tabReference && tabReference.silenceSkipper) {
+            tabReference.silenceSkipper.processOffscreenVolume(volume);
+          }
+          return false; // One-way message
+        }
       }
 
-      if (request.command === 'offscreen-ready') {
-        debug('Service Worker: Offscreen document is ready.');
-        this.isOffscreenDocumentReady = true;
-        sendResponse({ success: true });
-        return true; 
-      } else if (request.command === 'initiate-tab-capture') {
-        debug('Service Worker: Received initiate-tab-capture request for tab', request.tabId);
-        (async () => {
-          try {
-            await this.ensureOffscreenDocumentIsReady();
-            debug('Service Worker: Offscreen document is ready, sending start-tab-capture to offscreen for tab', request.tabId);
-            // Forward the request to the offscreen document
-            const offscreenResponse = await browser.runtime.sendMessage({
-              target: 'offscreen',
-              command: 'start-tab-capture',
-              tabId: request.tabId,
-            });
-            sendResponse(offscreenResponse); // Forward response from offscreen document
-          } catch (error) {
-            console.error('Service Worker: Error during initiate-tab-capture:', error);
-            sendResponse({ success: false, error: error.message });
+      // Handle plasmo-state sync messages (these might not have `target: 'service-worker'`)
+      // Based on plasmo-state internal structure, it uses message type "sync"
+      // and actions "push" / "pull". The persistence layer uses storage.sync with key "plasmo-sync".
+      // This handler assumes it's acting as the central authority for browser.storage.sync.
+      if (request.type === 'sync' && request.tabId === -1) { // -1 typically denotes messages for global state / from background contexts
+        // This condition `request.tabId === -1` is an assumption for how plasmo-state might differentiate global syncs.
+        // Actual plasmo-state might send to specific tabs or use other identifiers.
+        // For now, we'll assume messages of type 'sync' without a specific service-worker target are for plasmo-state.
+        // A more robust check would be `request.source === "plasmo-state-internal"` or similar, if available.
+        
+        debug('Service Worker: Received plasmo-state sync message:', request);
+
+        if (request.action === 'pull') { // Corresponds to PULL_STATE
+          (async () => {
+            try {
+              const result = await browser.storage.sync.get(this.PLASMO_SYNC_STORAGE_KEY);
+              const stateDataString = result[this.PLASMO_SYNC_STORAGE_KEY];
+              debug('Service Worker (plasmo-state PULL): Retrieved from storage.sync:', stateDataString);
+              // plasmo-state expects the raw stringified data, it will parse internally.
+              // However, the `Persistence` class in plasmo-state sends back the *parsed* object.
+              // Let's align with what its `configUpdateListener` expects for a "pull" response.
+              // The `Persistence.onBrowserStorageUpdate` calls `state.replace(parsedValue)`.
+              // The `ExtensionSyncModule.onAfterPull` returns the parsed object.
+              // So, we should return the parsed object.
+              sendResponse(stateDataString ? JSON.parse(stateDataString) : {});
+            } catch (error) {
+              console.error('Service Worker (plasmo-state PULL): Error getting state:', error);
+              // sendResponse({}); // Send empty object on error, or error structure
+              // Actual plasmo-state might expect undefined or specific error. For now, empty object.
+              sendResponse(undefined); // plasmo-state's pull mechanism might expect undefined on error.
+            }
+          })();
+          return true; // Indicate async response
+        } else if (request.action === 'push') { // Corresponds to PUSH_STATE
+          // The data in request.data is already a stringified JSON of all persistent keys.
+          // This is because plasmo-state's Persistence class does this:
+          // `JSON.stringify(Object.fromEntries(Object.entries(this.state.currentRaw).filter(([key]) => this.state.keyIsPersistent(key))))`
+          // And then it sets this string to storage.sync under "plasmo-sync" key.
+          // So, if we receive a "push" from another context, it should ideally already be this string.
+          // However, the `ExtensionSyncModule` sends `data: this.state.currentRaw` (the object) for push.
+          // Let's assume `request.data` is the full state object for persistent keys.
+          const stateDataToStore = request.data; 
+          if (typeof stateDataToStore !== 'object' || stateDataToStore === null) {
+            console.error('Service Worker (plasmo-state PUSH): Invalid data payload:', stateDataToStore);
+            sendResponse({ success: false, error: "Invalid data payload for PUSH_STATE" });
+            return false; // Sync error response
           }
-        })();
-        return true; // Indicate that we will send a response asynchronously
-      } else if (request.command === 'audio-update') {
-        // debug('Service Worker: Received audio-update from offscreen:', request);
-        const { tabId, volume } = request;
-        const tabReference = this.tabReferences[tabId];
-        if (tabReference && tabReference.silenceSkipper) {
-          // The actual processing logic will be in SilenceSkipper.ts
-          // For now, we just acknowledge receipt and log.
-          // In a subsequent step, SilenceSkipper will have a method like processOffscreenVolume(volume)
-          tabReference.silenceSkipper.processOffscreenVolume(volume);
-        } else {
-          // debug(`Service Worker: No active skipper for tab ${tabId} to process audio-update.`);
+          
+          (async () => {
+            try {
+              // The `Persistence` class in plasmo-state stringifies the object.
+              await browser.storage.sync.set({ [this.PLASMO_SYNC_STORAGE_KEY]: JSON.stringify(stateDataToStore) });
+              debug('Service Worker (plasmo-state PUSH): State saved to storage.sync.');
+              sendResponse({ success: true }); 
+              // `browser.storage.onChanged` will notify other parts of the extension, including
+              // the `Persistence` instances in each `TabState` in this `BackgroundManager`.
+            } catch (error) {
+              console.error('Service Worker (plasmo-state PUSH): Error setting state:', error);
+              sendResponse({ success: false, error: error.message });
+            }
+          })();
+          return true; // Indicate async response
         }
-        // This is typically a one-way message, no response needed unless specified.
-        return false; // No response sent back to offscreen for audio-updates
       }
+      
+      // If the message was not handled by any of the conditions above.
+      debug("Service Worker: Message not handled by listenForExtensionMessages", request);
       return false; 
     });
   }
