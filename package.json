@@ -22,7 +22,7 @@
     "@parcel/core": "^2.6.1",
     "@types/debug": "^4.1.7",
     "@types/webextension-polyfill": "^0.9.0",
-    "@vantezzen/plasmo-state": "^2.0.4",
+    "@vantezzen/plasmo-state": "2.1.3",
     "debug": "^4.3.4",
     "fontsource-poppins": "^4.0.0",
     "intro.js": "^5.1.0",
@@ -65,13 +65,24 @@
     "permissions": [
       "activeTab",
       "storage",
-      "tabCapture"
+      "tabCapture",
+      "offscreen"
     ],
     "default_locale": "en",
     "browser_specific_settings": {
       "gecko": {
         "id": "skip-silence@vantezzen.io"
       }
-    }
+    },
+    "web_accessible_resources": [
+      {
+        "resources": [
+          "assets/icon-32.png"
+        ],
+        "matches": [
+          "<all_urls>"
+        ]
+      }
+    ]
   }
 }

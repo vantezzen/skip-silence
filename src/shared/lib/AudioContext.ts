@@ -30,3 +30,27 @@ export default function createAudioContextSecure(): Promise<AudioContext> {
     }
   });
 }
+
+/**
+ * Create an audio context for the offscreen document.
+ * This will create a normal context. If the context is suspended,
+ * it will attempt to resume it. If resumption fails, it throws an error.
+ * 
+ * @returns Audio Context
+ */
+export async function createAudioContextForOffscreenDocument(): Promise<AudioContext> {
+  // Consider desired sample rate if needed, e.g. new AudioContext({ sampleRate: 44100 });
+  const audioContext = new AudioContext(); 
+  if (audioContext.state === 'suspended') {
+    console.log('AudioContext (offscreen) is suspended, attempting to resume.');
+    try {
+      await audioContext.resume();
+      console.log('AudioContext (offscreen) resumed successfully.');
+    } catch (e) {
+      console.error('Failed to resume AudioContext (offscreen):', e);
+      // Propagate the error to be caught by the caller in the offscreen document
+      throw new Error('AudioContext (offscreen) could not be resumed. User interaction might be required on the main page before capture.');
+    }
+  }
+  return audioContext;
+}

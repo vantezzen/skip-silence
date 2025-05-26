@@ -33,7 +33,10 @@ export default class SpeedController {
     const playbackSpeed = this.skipper.config.current.playback_speed
 
     this.skipper.isSpedUp = false
-    this.skipper.sampleInspector.samplesUnderThreshold = 0
+    // this.skipper.sampleInspector.samplesUnderThreshold = 0; // SampleInspector is removed
+    // currentSamples is the equivalent field now directly on SilenceSkipper, reset there or not needed here.
+    // The logic in SilenceSkipper.processOffscreenVolume resets currentSamples when volume is above threshold.
+    // So, no direct reset of skipper.currentSamples is needed here.
 
     this.skipper._sendCommand("slowDown")
     this.setPlaybackRate(playbackSpeed)
